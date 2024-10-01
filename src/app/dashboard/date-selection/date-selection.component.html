@@ -1,0 +1,31 @@
+<div style="display: flex; justify-content: space-between;">
+    <h1 mat-dialog-title> <img src="assets/images/calendar.png" height="30" width="30" />  Date Selection</h1>
+    <h1 style="font-size: xx-large;" mat-dialog-title mat-dialog-close> &times; </h1>
+</div>
+<hr style="margin-top: -10px;" >
+<div mat-dialog-content style="overflow: hidden;">
+    
+    <mat-form-field >                
+        <mat-label>From Date</mat-label>
+        <input matInput  [(ngModel)]="fromSelected" [matDatepicker]="frompicker" name="fromdate" #fromdate readonly="" >
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="frompicker"></mat-datepicker-toggle>
+        <mat-datepicker  #frompicker></mat-datepicker>
+    </mat-form-field>
+    <br>
+    <br>
+    <mat-form-field >                
+        <mat-label>To Date</mat-label>
+        <input matInput [(ngModel)]="toSelected" [matDatepicker]="topicker" name="todate" #todate readonly="" >
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="topicker"></mat-datepicker-toggle>
+        <mat-datepicker #topicker></mat-datepicker>
+    </mat-form-field>
+</div>
+<br>
+
+<hr>
+<div mat-dialog-actions style="justify-content: end;" >
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button (click)="closeDialog()" cdkFocusInitial>Apply</button>
+</div>

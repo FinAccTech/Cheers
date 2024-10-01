@@ -1,0 +1,26 @@
+<div style="display: flex; justify-content: space-between;">
+    <h1 mat-dialog-title> <img src="assets/images/share.png" height="30" width="30" />&nbsp;&nbsp;  Share Link  </h1>
+    <h1 style="font-size: xx-large;" mat-dialog-title mat-dialog-close> &times; </h1>
+</div>
+<hr style="margin-top: -10px;" >
+<div mat-dialog-content style="overflow: hidden;">
+    
+    <div class="imgOption">
+        <mat-select [(value)]="ImageType"  >
+            <mat-option value="with" >With Images</mat-option>
+            <mat-option value="without"> Without Images</mat-option>
+        </mat-select>
+        <button class="btn" (click)="CreateLink()" >Create Link</button>
+    </div>
+    
+
+    <mat-form-field class="full-width">        
+        <input matInput placeholder="Link" value="{{LinkData}}" >
+    </mat-form-field>    
+    
+</div>
+
+<div mat-dialog-actions style="justify-content: end;" >
+    <button mat-button [cdkCopyToClipboard]="LinkData" mat-dialog-close> <mat-icon>content_copy</mat-icon> Copy Link</button>
+    <button mat-button (click)="closeDialog()"> <mat-icon>input</mat-icon> &nbsp;  Open Link</button>
+</div>

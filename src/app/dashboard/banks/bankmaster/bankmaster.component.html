@@ -1,0 +1,120 @@
+<div style="float: left;">
+    <img src="assets/images/banks.png" height="40" width="40" /> &nbsp; <h1 style="display: inline;" >Banks</h1> 
+</div>
+<div style="float: right; font-size: xx-large;cursor: pointer;" (click)="onNoClick()" >
+    &times;
+</div>
+<br>
+<br>
+<hr>
+<form *ngIf="BankForm"  [formGroup]="BankForm" #ngForm="ngForm" class="form-container" (ngSubmit)="SaveBank()">
+    <mat-card>
+      <mat-card-header class="velCardheader"> 
+        
+        
+        
+      </mat-card-header>
+      <br>
+
+      <mat-card-content>        
+        <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                
+                <div class="col-md-12">
+                  <mat-form-field class="full-width">
+                    <input formControlName="BankSno" type="hidden" >
+                    <input formControlName="Bank_Name" matInput placeholder="Bank Name">
+                  </mat-form-field>
+                </div>
+              </div>  
+
+              <div class="row" style="margin-top: 10px;" >
+                <div class="col-md-12">
+
+                    
+                        <!-- <mat-label>Account Category</mat-label>                        
+                        <select formControlName="Acc_Cat" class="form-control" >
+                            <option>Own Bank</option>
+                            <option>Borrower Bank</option>
+                        </select> -->
+                      
+                        <mat-form-field>
+                          <mat-label>Choose Category</mat-label>
+                          
+                          <mat-select formControlName="Acc_Cat" [(value)]="SelectedAccCategory">
+                            <mat-option [value]="option.value" *ngFor="let option of AccCategories">{{ option.text }}</mat-option>
+                          </mat-select>
+
+                        </mat-form-field>
+
+                </div>
+              </div>
+
+              <div class="row" style="margin-top: 10px;" >
+
+                <div class="col-md-12">  
+                    <mat-form-field class="full-width">                        
+                        <input formControlName="Acc_Name" matInput placeholder="Account Name">
+                    </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top: 10px;">
+                <div class="col-md-12">  
+                    <mat-form-field class="full-width">                        
+                        <input formControlName="Acc_No" matInput placeholder="A/c Number">
+                    </mat-form-field>
+                </div>
+            </div>
+              
+              <div class="row" style="margin-top: 10px;" >
+
+                <div class="col-md-12">  
+                    <!-- <mat-form-field class="full-width">                        
+                        <input formControlName="Acc_Type" matInput placeholder="Account Type">
+                    </mat-form-field> -->
+
+                    <mat-form-field>
+                      <mat-label>Choose Account Type</mat-label>
+                      <mat-select formControlName="Acc_Type" [(value)]="SelectedAccType">
+                        <mat-option [value]="option.value" *ngFor="let option of AccTypes">{{ option.text }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                </div>
+
+              
+
+              </div>
+
+          </div>
+
+        </div>
+         
+      
+
+      </mat-card-content>
+
+  
+    </mat-card>
+  </form>
+  
+  <br>
+
+  <mat-card-actions style="margin-left: 0px;" >
+    <button type="submit" (click)="SaveBank()" style="color: green;" mat-stroked-button color="primary" >
+        <mat-icon>save</mat-icon>
+        Save Bank
+    </button>
+
+    <button (click)="AddNewBank()"  mat-stroked-button color="primary" >
+      <mat-icon>save</mat-icon>
+      New Bank
+    </button>
+
+    <button (click)="DeleteBank()" mat-stroked-button color="warn" >
+      <mat-icon>delete</mat-icon>      
+      Delete
+    </button>
+  </mat-card-actions>

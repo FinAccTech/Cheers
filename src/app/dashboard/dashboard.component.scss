@@ -1,0 +1,243 @@
+.mainBody{
+    background: #fff;
+  }
+  
+  .velIcon
+  {
+      width: 200px;
+      height: 42px;
+  }
+
+  mat-toolbar {  
+    background: #fff;    
+    padding: 10px;
+    box-shadow: 0px 2px 5px 3px lightgray;
+    height: 60px;
+    position: relative;
+    z-index: 10;
+    }
+    
+    mat-sidenav {        
+      width: 200px;
+      border-right: none;    
+      background-color: #fff;
+      box-shadow: 0px 2px 5px 1px lightgray;
+      //color: rgb(80,103,162);  For Icons
+      color: rgb(183,184,189);
+      // color: rgb(23,57,73); FOr Main Heeding
+      border-radius: 2px;
+      padding-top: 10px;
+      padding-left: 15px;
+      text-align: left;
+      font-weight: lighter;
+      
+    }
+    
+    .content {
+      height: auto;
+      border-radius: 2px;
+       margin: 10px;
+       padding: 10px;
+      // margin-left: 32px;
+      // background: #fff;
+      // padding: 16px;  
+      // overflow:auto;
+    }
+    
+    mat-sidenav-container {
+      height: calc(100vh - 65px);
+    }
+    
+    .menu-button {
+      width: 100%;
+      display: flex;
+          
+      font-size: 14px;
+      font-family: 'Open Sans', "PingFang SC", Helvetica, Arial, sans-serif;
+      font-style: lighter;
+      
+      color: gray;
+      
+      mat-icon {
+        margin-right: 4px;
+        color: rgb(80,103,162);  
+        font-size: 24px;
+      }
+    }
+    
+    .avatar {
+      
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+    
+    .name {
+      margin-top: 8px;
+      font-weight: normal;
+    }
+    
+    .designation {
+      margin-top: 2px;
+      font-size: 0.7rem;
+      color: lightgrey;
+    }
+    
+    mat-divider {
+      margin-top: 4px;
+      margin-bottom: 4px;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .flexExpand {
+      flex: 1 1 auto;
+  }
+  
+  .flexSpaceBetween {
+    justify-content: space-between;
+  }
+  
+  .small
+  {
+    font-size: 14px;
+    font-weight: lighter;
+  } 
+  
+  mat-menu-item
+  {
+    font-size: 10px;
+  }
+  
+  .quicklink{    
+      margin-top: 5px;
+      display: inline;
+  }
+  
+  .linkIcon
+  {
+      margin-right: 70px;
+  }
+  
+  .quicklink:hover{
+      border-top: 3px solid green;
+  }
+
+  .subtreemenu{
+    color: rgb(23,57,73);
+    cursor: pointer;
+  }
+
+  .subtreemenu:hover {
+    color: orange;    
+  }
+
+  .maintreemenu
+  {
+    display: inline; 
+    font-weight: normal;
+  }
+
+  .maintreemenu:hover {
+    color: rgb(23,57,73);    
+    font-weight: 500;
+  }
+
+  .mainHeader
+  {
+    text-align: center;
+  }
+
+  .mainHeader{
+    border: none;    
+    padding: 0px;
+    position:absolute;
+    right:20px;
+    top:9px;
+    z-index:99;
+    background-color: #fff;
+    border-top: 0px solid green;    
+    border-width: 0;
+    transition: border-width 3s;
+}
+
+.mainHeader:hover{
+  border-width: 100%;
+  border-top: 3px solid green;
+  cursor: pointer;
+}
+
+.dashhdeader{
+  color: rgb(80,103,162);
+  text-align: center;
+  font-weight: 500;
+}
+
+table {
+  width: 100%;
+}
+
+tr{
+  cursor: pointer;
+  
+}
+
+tr:hover{
+  background-color: rgb(220, 224, 235);
+  font-weight: bold;
+}
+
+
+th{
+  
+  color: #fff;
+  font-size: 13px;    
+  height: 10px;
+}
+
+.custhead {
+  background-color: #48ad3d;
+}
+
+.borhead {
+  background-color: #4eabd9;
+}
+
+.bnkhead {
+  background-color: #565c5e;
+}
+
+
+.btn:hover
+{
+  background-color: whitesmoke;
+}
+  
+.alink {
+  text-decoration: none;
+  color: black;
+}
+
+.menuhr{
+  background-color: black;
+  height: 1px;
+  padding: 0px;
+  margin: 0px;  
+
+}
+
+
+.gldRate {
+  display: inline;
+
+  span{
+    color: transparent;
+    text-shadow: 0 0 8px #000;
+    font-size: 1.32em;
+  }
+
+  span:hover{
+    color: #fff;
+    text-shadow: 0 0 8px black;
+  }
+  
+}

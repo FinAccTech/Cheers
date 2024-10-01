@@ -1,0 +1,27 @@
+table {
+    width: 100%;
+  }
+  
+  tr{
+    cursor: pointer;
+    
+  }
+  
+  tr:hover{
+    background-color: rgb(220, 224, 235);
+    font-weight: bold;
+  }
+  
+  
+  th{
+    
+    color: #fff;
+    font-size: 13px;    
+    height: 10px;
+  }
+
+  .borhead {
+    background-color: #4eabd9;
+  }
+
+  

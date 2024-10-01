@@ -1,0 +1,133 @@
+<div class="container-fluid">
+    <div class="row" style="padding: 5px;" > 
+      <div class="col-md-12">
+        <div style="float: left; cursor: pointer;" (click)="OpenMainReport()">      
+          <!-- <img src="assets/images/backicon.png" height="30" width="30" /> &nbsp; &nbsp; &nbsp; -->
+          <img src="assets/images/banks.png" height="30" width="30" /> 
+          <h1 style="display: inline;padding: 14px; "> {{ Bank.Bank_Name}} <span style="font-size: 18px;" > {{MainReportActive == false ? " - Repledge History" : null }}  </span></h1>
+        </div>
+
+        <div style="float: right;">                      
+          <button mat-button [matMenuTriggerFor]="menuRep"><img src="assets/images/reports1.png" width="25" height="30" />  <h4 style="display: inline;"> &nbsp; Reports</h4></button>
+          <mat-menu #menuRep="matMenu">
+            <button mat-menu-item (click)="OpenRpHistory()" > <img src="assets/images/repledge.png" height="30" width="30" /> &nbsp; <span> Repledge History</span> </button>            
+            <button mat-menu-item > <img src="assets/images/transfer1.png" height="30" width="30" /> &nbsp; <span> Image Gallery </span> </button>               
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+  
+    
+</div>
+
+  <hr style="margin-top: -1px;" >
+  <ng-container *ngIf="MainReportActive == true" >
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-md-6">  
+          <div class="row">
+            <div class="col-md-4">
+              <h3>Total Credit Amount</h3>
+            </div>
+            <div class="col-md-8" style="color: green;" >
+              {{TotalCreditAmount.toLocaleString('en-IN')}}
+            </div>
+          </div>
+          <div class="row"  >
+            <div class="col-md-4">
+              <h3>Total Debit Amount</h3>
+            </div>
+            <div class="col-md-8" style="color: red;">
+              {{TotalDebitAmount.toLocaleString('en-IN')}}
+            </div>
+          </div>      
+          <div class="row" >
+            <div class="col-md-4">
+              <h3><b>Balance</b></h3>
+            </div>
+            <div class="col-md-8" style="font-weight: bolder;" >
+              <span [style.color]="TotalDebitAmount- TotalCreditAmount > 0 ? 'green' : 'red'"> {{(TotalDebitAmount - TotalCreditAmount).toLocaleString('en-IN') }} </span>
+              <br>
+              <span style="font-weight: 400;" >{{BalanceInWords}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: -15px;" >
+        <div class="col-md-12">
+    
+            <ng-container *ngIf="loadingData" >                    
+                <div style="text-align:center; width: 100%;" >
+                    <img src="assets/images/loading.gif" height="60px" width="60px" />
+                </div>                
+            </ng-container>
+    
+            <ng-container *ngIf="dataError" >
+                <h3 style="color: red;">Error!!! Unale to get Payments from the Server</h3> 
+                <p>{{errDetails}}</p>
+            </ng-container>
+    
+            <ng-container *ngIf="!dataError && !loadingData" >
+                <div class="row">           
+                    <div class="col-md-4" >
+                        <mat-form-field appearance="standard">
+                            <mat-label>Search</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" placeholder="Type here to Search" #input>
+                        </mat-form-field>
+                    </div>
+                </div>
+    
+                <div class="mat-elevation-z8">
+    
+                    <table mat-table [dataSource]="dataSource" matSort>
+                  
+                      <ng-container matColumnDef="Trans_Date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                        <td mat-cell *matCellDef="let row"> {{row.Trans_Date | intToDate | date:'dd/MM/yyyy' }} </td>
+                        <td mat-footer-cell *matFooterCellDef> </td>
+                      </ng-container>
+    
+                      <ng-container matColumnDef="Particulars">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Particulars </th>
+                        <td mat-cell *matCellDef="let row" [style.color]="row.SeriesSno == 7 ? '#BA8915' : '#31302C' " > {{row.Particulars}} <br> <span style="font-size: 12px; color: darkgray;" ><i> ({{row.Remarks}})</i></span>  </td>
+                        <td mat-footer-cell *matFooterCellDef> </td>                    
+                      </ng-container>
+                      
+                  
+                      <ng-container matColumnDef="CrAmount">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cr Amount </th>
+                        <td mat-cell *matCellDef="let row" style="color: green;"> {{ row.CrAmount < 1 ? "" : row.CrAmount.toLocaleString('en-IN') }} </td>
+                        <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ (CrAmountTotal() | numberDifferentiation) + ' L' }}</td>
+                      </ng-container>
+                
+                      <ng-container matColumnDef="DrAmount">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Dr Amount </th>
+                        <td mat-cell *matCellDef="let row" style="color: red;"> {{row.DrAmount < 1 ? "" : row.DrAmount.toLocaleString('en-IN') }} </td>
+                        <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ (DrAmountTotal() | numberDifferentiation )+ ' L' }}</td>
+                      </ng-container>
+    
+              
+                        <tr style="height: 40px;" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr style="height: 40px;" mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+                        <tr mat-footer-row  *matFooterRowDef="displayedColumns; sticky: true"></tr> 
+                  
+                      <!-- Row shown when there is no matching data. -->
+                      <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                      </tr>
+                    </table>
+                  
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 100 aria-label="Select page of users"></mat-paginator>
+                </div>
+            </ng-container>   
+    
+          </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="RpHistoryActive == true">
+    <app-repledgehistorybanks [BankSno]="BankSno"></app-repledgehistorybanks>
+  </ng-container>

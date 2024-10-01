@@ -1,0 +1,83 @@
+<h2 style="margin-left: 15px;color:darkgreen ;">Borrower Analysis</h2>
+
+<div class="container-fluid">
+    <div class="row">        
+
+        <div class="col-md-12" style="margin-top: -30px;" >
+            <ng-container *ngIf="loadingData" >                    
+                <div style="text-align:center; width: 100%;" >
+                    <img src="assets/images/loading.gif" height="60px" width="60px" />
+                </div>                
+            </ng-container>
+    
+            <ng-container *ngIf="dataError" >
+                <h3 style="color: red;">Error!!! Unale to get Payments from the Server</h3> 
+                <p>{{errDetails}}</p>
+            </ng-container>
+    
+            <ng-container *ngIf="!dataError && !loadingData" >
+                <div class="row">           
+                    <div class="col-md-4" >
+                        <mat-form-field appearance="standard">
+                            <mat-label>Search</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" placeholder="Type here to Search" #input>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2" style="text-align: right;">
+                    
+                    </div>
+                    <div class="col-md-6" style="text-align: right;">
+                        <button class="btn" (click)="exportAsExcel()"> <img src="assets/images/excelicon.png" height="50" width="50" /> </button>
+                    </div>
+
+                </div> 
+                <div class="mat-elevation-z8" #TABLE >
+                    <table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows >
+
+                        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                          <th style="height: 30px;" mat-header-cell *matHeaderCellDef mat-sort-header > {{column.replace("_"," ")}} </th>
+                          <td mat-cell *matCellDef="let element" > 
+                          {{ 
+                                column == "RpGrams" ? element[column].toFixed(3) :
+                                column == "RpValue" ? (element[column] | numberDifferentiation) :
+                                column == "Principal_Paid" ? (element[column] | numberDifferentiation) :
+                                column == "Interest_Paid" ? (element[column] | numberDifferentiation) :
+                                column == "Other_Charges" ? (element[column] | numberDifferentiation) :
+                                element[column]
+                        }} 
+                          </td>
+
+                          <td mat-footer-cell *matFooterCellDef >                     
+                            {{                              
+                               column == "Party_Name" ? "Total"                                        
+                              : column == "RpGrams" ? (RpGramsTotal().toFixed(3) )
+                              : column == "RpValue" ? (RpValueTotal() | numberDifferentiation) + ' L' 
+                              : column == "Principal_Paid" ? (Principal_PaidTotal() | numberDifferentiation ) + ' L'
+                              : column == "Interest_Paid" ? (Interest_PaidTotal() | numberDifferentiation ) + ' L'
+                              : column == "Other_Charges" ? (Other_ChargesTotal() | numberDifferentiation ) + ' L'
+                              
+                              : null
+                            }}       </td>
+
+                        </ng-container>
+                      
+                        
+                        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                        
+                        <tr mat-header-row *matHeaderRowDef ="columnsToDisplay"></tr>
+                        <tr style="border: 1px dotted gray;" mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+                         (click)="rowdetails(element)"  >
+                        </tr>
+                        <tr mat-footer-row  *matFooterRowDef="['Party_Name','RpGrams','RpValue','Principal_Paid','Interest_Paid','Other_Charges']  ; sticky: true"></tr> 
+                        
+                      </table>
+                      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 100 aria-label="Select page of users"></mat-paginator>
+                </div>
+              
+              
+
+            </ng-container>   
+        </div>
+    </div>
+</div>

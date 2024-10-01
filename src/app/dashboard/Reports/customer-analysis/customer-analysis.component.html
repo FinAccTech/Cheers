@@ -1,0 +1,96 @@
+<h2 style="margin-left: 15px;color:darkgreen ;">Customer Analysis</h2>
+
+<div class="container-fluid">
+    <div class="row">        
+
+        <div class="col-md-12" style="margin-top: -30px;" >
+            <ng-container *ngIf="loadingData" >                    
+                <div style="text-align:center; width: 100%;" >
+                    <img src="assets/images/loading.gif" height="60px" width="60px" />
+                </div>                
+            </ng-container>
+    
+            <ng-container *ngIf="dataError" >
+                <h3 style="color: red;">Error!!! Unale to get Payments from the Server</h3> 
+                <p>{{errDetails}}</p>
+            </ng-container>
+    
+            <ng-container *ngIf="!dataError && !loadingData" >
+                <div class="row">           
+                    <div class="col-md-4" >
+                        <mat-form-field appearance="standard">
+                            <mat-label>Search</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" placeholder="Type here to Search" #input>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2" style="text-align: right;">
+                    
+                    </div>
+                    <div class="col-md-6" style="text-align: right;">
+                        <button class="btn" (click)="exportAsExcel()"> <img src="assets/images/excelicon.png" height="50" width="50" /> </button>
+                    </div>
+
+                </div> 
+                <div class="mat-elevation-z8" #TABLE >
+                    <table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows >
+
+                        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                          <th style="height: 30px;" mat-header-cell *matHeaderCellDef mat-sort-header > 
+                            
+                            {{column.replace("_"," ")}} 
+                            
+                          </th> 
+
+                          <td mat-cell *matCellDef="let element" [style.color]=" element['Difference'] < 0 ? 'red' : 'green'" > 
+                          {{ 
+                                column == "Wt916" ? element[column].toFixed(3) :
+                                column == "Non916Wt" ? element[column].toFixed(3) :
+                                column == "PureWt" ? element[column].toFixed(3) :
+                                column == "Sale_Value" ? (element[column] | numberDifferentiation) :
+                                column == "Release_Value" ? (element[column] | numberDifferentiation) :
+                                column == "Difference" ? (element[column] | numberDifferentiation) :
+                                column == "Ratio" ? element[column].toFixed(2) :
+                                column == "RpGrams" ? element[column].toFixed(3) :
+                                column == "RpValue" ? (element[column] | numberDifferentiation) :
+                                column == "NonRpGrams" ? element[column].toFixed(3) :
+                                column == "IntPostDate" ? (element[column] | intToDate | date:'dd/MM/yyyy') :
+                                element[column]
+                        }}  
+                          </td>
+
+                          <td mat-footer-cell *matFooterCellDef >                     
+                            {{
+                              column == "Wt916" ? Wt916Total().toFixed(3) 
+                              : column == "Party_Name" ? "Total"          
+                              : column == "Non916Wt" ? Non916WtTotal().toFixed(3)   
+                              : column == "PureWt" ? PureWtTotal().toFixed(3) 
+                              : column == "Sale_Value" ? (Sale_ValueTotal() | numberDifferentiation ) + ' L'
+                              : column == "Release_Value" ? (Release_ValueTotal() | numberDifferentiation ) + ' L'
+                              : column == "Difference" ? (DifferenceTotal() | numberDifferentiation ) + ' L'
+                              : column == "RpGrams" ? RpGramsTotal().toFixed(3) 
+                              : column == "RpValue" ? (RpValueTotal() | numberDifferentiation ) + ' L'
+                              : column == "NonRpGrams" ? NonRpGramsTotal().toFixed(3)                                        
+                              : null
+                            }}       </td>
+
+                        </ng-container>
+                      
+                        
+                        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                        
+                        <tr mat-header-row *matHeaderRowDef ="columnsToDisplay"></tr>
+                        <tr style="border: 1px dotted gray;" mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+                         (click)="rowdetails(element)"  >
+                        </tr> 
+                        <tr mat-footer-row  *matFooterRowDef="['Party_Name','Wt916','Non916Wt','PureWt','Sale_Value','Release_Value','Difference','Ratio','IntPostDate','RpGrams','RpValue','NonRpGrams']  ; sticky: true"></tr> 
+                      </table>
+                      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 100 aria-label="Select page of users"></mat-paginator>
+                </div>
+              
+              
+
+            </ng-container>   
+        </div>
+    </div>
+</div>

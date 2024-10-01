@@ -1,0 +1,101 @@
+<div class="container-fluid"> 
+    <div class="row">
+        <div class="col-md-12">
+            <div *ngIf="data.DialogType == 0 " style="text-align: center;">             <!-- - Progress Dialog -->
+                <img src="assets/images/loading.gif" height="50" width="50" />
+                <h4>{{data.Message}}</h4>
+            </div>
+            
+             <ng-container *ngIf="data.DialogType == 1">  <!-- - Error Dialog --> 
+
+                <div class="errorDialog">
+                    <div class="header">
+                        <p class="title">
+                            Cheers
+                        </p>
+                        <span class="close" mat-dialog-close>
+                            &times;
+                        </span>
+                    </div>
+                    <hr class="hr">
+                    <div class="body">
+                        <img src="assets/images/error.png" alt="" class="icon">
+                        <p class="message"> {{data.Message}} </p>
+                            
+                    </div>
+                    <div class="footer">
+                        <button class="btn" mat-dialog-close>Ok</button>
+                    </div>
+                </div>
+                <!-- <div mat-dialog-content>
+                    <div class="container-fluid">
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div style="float: left;">
+                                    <mat-card-title> Cheers </mat-card-title>
+                                </div>                
+                                <div style="float: right; font-size: xx-large;cursor: pointer;" (click)="onNoClick()" >
+                                    &times;
+                                </div>
+                            </div>
+                        </div>
+                    
+
+                        <div class="row" style="margin-top: 15px;" >
+                            <div class="col-md-2">
+                                <img src="assets/images/error.png" height="50" width="50" />
+                            </div>
+                            <div class="col-md-10">
+                                <span >{{data.Message}} </span>
+                                
+                            </div>
+                        </div>
+            
+                        <div class="row">
+                            <div class="col-md-9">
+                                
+                            </div>
+                            <div class="col-md-2" style="margin-top: 10px;">
+                                <button mat-stroked-button [mat-dialog-close]>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </ng-container>
+            
+            <ng-container *ngIf="data.DialogType == 2"  >
+                <h2 mat-dialog-title> Cheers </h2>
+                
+                <div mat-dialog-content>
+                    <img src="assets/images/info.png" height="50" width="50" />
+                    {{data.Message}} 
+                </div>
+            
+                <div mat-dialog-actions>
+                    <button mat-button cdkFocusInitial mat-dialog-close>Ok</button>
+                </div>
+            </ng-container> 
+            
+            
+            
+            <ng-container *ngIf="data.DialogType == 3"  >
+                <h2 mat-dialog-title> Cheers </h2>
+                
+                <div mat-dialog-content>
+                    <img src="assets/images/question.png" height="50" width="50" />
+                    {{data.Message}} 
+                </div>
+            
+                <div mat-dialog-actions>
+                 
+                    <button mat-button (click)="CloseDialog(1)">Yes</button>
+                    <button mat-button cdkFocusInitial (click)="CloseDialog(0)">No</button>
+                </div>
+            </ng-container> 
+            
+            
+            
+        </div>
+    </div>
+</div>

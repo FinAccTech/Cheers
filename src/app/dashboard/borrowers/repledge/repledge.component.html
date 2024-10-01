@@ -1,0 +1,269 @@
+<!-- <mat-dialog-content> -->
+<div class="container">
+    <div class="row" >
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="float: left;">
+                        <img src="assets/images/repledge.png" height="40" width="40" /> &nbsp; <h1 style="display: inline;" >Repledge</h1> 
+                    </div>
+                    <div style="float: right; font-size: xx-large;cursor: pointer;" (click)="onNoClick()" >
+                        &times;
+                    </div>
+                    <br>
+                    <br>
+                    <hr>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <mat-card>      
+                        <mat-card-content>     
+                            <form *ngIf="RepledgeForm"  [formGroup]="RepledgeForm" #ngForm="ngForm" class="form-container" (ngSubmit)="SaveRepledge()">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                    <div class="row">                    
+                                        <div class="col-md-6">
+                                        <mat-form-field class="full-width">
+                                            <input formControlName="TransSno" type="hidden" >                    
+                                            <input formControlName="Trans_No" matInput placeholder="Repledge No" readonly>
+                                        </mat-form-field>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <mat-form-field >                
+                                                <mat-label>Repledge Date</mat-label>
+                                                <input matInput formControlName = "Trans_Date" [matDatepicker]="picker" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="transdate" #transdate readonly="" >
+                                                <mat-hint>DD/MM/YYYY</mat-hint>
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>  
+
+                                    <div class="row" style="margin-top: 10px;" >
+                                        <div class="col-md-6">  
+                                            <mat-form-field class="example-full-width" appearance="fill">
+                                                <mat-label>Select Bank Account</mat-label>
+                                                <input matInput #bank
+                                                    aria-label="Select Bank Account"
+                                                    [matAutocomplete]="autoBank"
+                                                    formControlName ="Bank"  (focus)="LoadBanks()"  />
+                                                <mat-autocomplete #autoBank="matAutocomplete" [displayWith]="displayBank">
+                                                <mat-option *ngFor="let bnk of filteredBanks | async" [value]="bnk">                        
+                                                    <span>{{bnk.Bank_Name}}</span>                         
+                                                </mat-option>
+                                                </mat-autocomplete>                        
+                                            </mat-form-field>                    
+                                        </div>
+
+                                        <div class="col-md-6">  
+                                            <mat-form-field class="example-full-width" appearance="fill">
+                                                <mat-label>Select Branch</mat-label>
+                                                <input matInput #branch
+                                                    aria-label="Select Branch"
+                                                    [matAutocomplete]="autoBranch"
+                                                    formControlName ="BankBranch"  (focus)="LoadBranches()"  />
+                                                <mat-autocomplete #autoBranch="matAutocomplete" [displayWith]="displayBranch">
+                                                <mat-option *ngFor="let brch of filteredBranches | async" [value]="brch">                        
+                                                    <span>{{brch.Branch_Name}}</span>                         
+                                                </mat-option>
+                                                </mat-autocomplete>                        
+                                            </mat-form-field>                    
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row" style="margin-top: 10px;" >
+                                        <div class="col-md-6"> 
+                                            <mat-form-field class="full-width">                        
+                                                <input formControlName="Ref_No" matInput placeholder="Bank Ref No" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="refno"  #refno >
+                                            </mat-form-field>                         
+                                        </div>
+                                        <div class="col-md-6"> 
+                                            <mat-form-field>
+                                                <mat-label>Choose Loan Type</mat-label>
+                                                <mat-select formControlName="Loan_Type" [(value)]="SelectedLoanType" >
+                                                <mat-option [value]="option.value" *ngFor="let option of LoanTypes">{{ option.text }}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>                         
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <mat-form-field class="full-width">                        
+                                                <input formControlName="Tenure" matInput placeholder="Tenure" type="number" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="tenure" #tenure >
+                                            </mat-form-field>
+                                        </div>
+                    
+                                        <div class="col-md-3">
+                                            <mat-form-field class="full-width">                        
+                                                <input formControlName="Roi" matInput placeholder="Roi" type="number" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="roi" #roi >
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <mat-form-field class="full-width">                        
+                                                <input formControlName="CrAmount" matInput placeholder="Amount" type="number" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="cramount" #cramount >
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <mat-form-field class="full-width">                        
+                                                <input formControlName="Other_Charges" matInput placeholder="Other_Charges" type="number" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="othercharges" #othercharges >
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" style="margin-top: 10px;" >
+                                        <div class="col-md-6">  
+                                            <mat-form-field class="example-full-width" appearance="fill">
+                                            <mat-label>Select Customer</mat-label>
+                                            <input matInput #party
+                                                aria-label="Select Customer"
+                                                [matAutocomplete]="autoPty"
+                                                formControlName ="Party"  (focus)="LoadParties()"  />
+                                            <mat-autocomplete #autoPty="matAutocomplete" [displayWith]="displayParty" >
+                                                <mat-option *ngFor="let pty of filteredParties | async" [value]="pty" (onSelectionChange)="GetWeightBalance(pty)">                        
+                                                    <span>{{pty.Party_Name}}</span>                         
+                                                </mat-option>
+                                            </mat-autocomplete>                        
+                                        </mat-form-field>                    
+                                        </div>
+
+                                        <div class="col-md-6">  
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <span style="font-size: 12px;font-weight: bold;">Weight Details</span>
+                                                    <br>
+                                                    <span style="font-size: 12px;">Balance available : <span style="font-size: 16px;" [style.color]="WeightBalance < 0 ? 'red' : 'green'"   > {{ WeightBalance.toFixed(3) }} </span> </span>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <span style="font-size: 12px;font-weight: bold;">Repledge Details</span>
+                                                    <br>
+                                                    <span style="font-size: 12px;">Repledged : <span style="font-size: 16px;" [style.color]="RepledgedWeight < 0 ? 'red' : 'green'"   > {{ RepledgedWeight.toFixed(3) }} </span> </span>
+                                                    <br>
+                                                    <span style="font-size: 12px;">Non Repledged : <span style="font-size: 16px;" [style.color]="NonRepledgedWeight < 0 ? 'red' : 'green'"   > {{ NonRepledgedWeight.toFixed(3) }} </span> </span>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="row" style="margin-top: 10px;" >               
+                                        <div class="col-md-12">  
+                                            <mat-form-field class="full-width">                        
+                                                <input formControlName="Remarks" matInput placeholder="Remarks" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="remarks"  #remarks >
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                </div>
+                            </form>
+
+                            <div style="border: 1px solid orange;padding: 10px;">
+                                <div class="row" style="margin-top: 10px;" >               
+                                    <div class="col-md-3">
+                                        <h4>916 Item</h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field class="full-width">                        
+                                            <input  matInput placeholder="Gross Wt" type="number"  [(ngModel)]="GrossWt" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)"  name="grosswt" #grosswt >
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field class="full-width">                        
+                                            <input  matInput placeholder="Nett Wt" type="number" [(ngModel)]="NettWt" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="nettwt" #nettwt>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field class="full-width">                        
+                                            <input  matInput placeholder="Purity" type="number" readonly="" [(ngModel)]="Purity" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="purity" #purity>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-top: 0px;" >               
+                                    <div class="col-md-3">
+                                        <h4>Non 916 Item</h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field class="full-width">                        
+                                            <input  matInput placeholder="Gross Wt" type="number" [(ngModel)]="N916GrossWt" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="ngrosswt" #ngrosswt >
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field class="full-width">                        
+                                            <input  matInput placeholder="Nett Wt" type="number" [(ngModel)]="N916NettWt" (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="nnettwt" #nnettwt>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field class="full-width">                        
+                                            <input  matInput placeholder="Purity" type="number" [(ngModel)]="N916Purity"  (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="npurity" #npurity >
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br> 
+
+                            <button class="btn" (click)="OpenImagesCreation()" style="border: 1px solid lightgray;" > <img src="assets/images/images.png" height="20" width="20" />  Images </button>
+                            &nbsp; {{imagesCount}} <i> Images added </i>
+                            <mat-grid-list cols="10" rowHeight="1:1">
+                                <mat-grid-tile *ngFor="let img of TransImages;"  >                    
+                                    <div *ngIf="img.DelStatus == 0" style="position: relative;">                         
+                                        <img [src]="img.SrcType == 0  ? img.Image_File : img.Image_Url" width="30x" height="30px"  />
+                                    </div>                    
+                                </mat-grid-tile>
+                            </mat-grid-list>   
+
+                        </mat-card-content>
+                    </mat-card>
+                </div>                
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <mat-card-actions style="margin-left: 0px;" >
+                        <button type="submit" (click)="SaveRepledge()" style="color: green;" mat-stroked-button color="primary" >
+                            <mat-icon>save</mat-icon>
+                            Save Repledge
+                        </button>
+
+                        <button (click)="AddNewRepledge()"  mat-stroked-button color="primary" >
+                        <mat-icon>save</mat-icon>
+                        New Repledge
+                        </button>
+
+                        <button (click)="DeleteRepledge()" mat-stroked-button color="warn" >
+                        <mat-icon>delete</mat-icon>      
+                        Delete
+                        </button>
+
+                        <ng-container *ngIf="CurrentTransSno != 0" >
+                            <button (click)="CreateRpPayment()" style="color: brown;"  mat-stroked-button color="primary" >
+                                <img src="assets/images/rppayment.png" height="20" width="20" />
+                                RP Payment
+                            </button> 
+
+                            <button (click)="CreateRelease()"   mat-stroked-button color="primary" >
+                                <mat-icon>refresh</mat-icon>      
+                                Release
+                            </button> 
+                        </ng-container>
+                    </mat-card-actions>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+  
+<!-- </mat-dialog-content>   -->

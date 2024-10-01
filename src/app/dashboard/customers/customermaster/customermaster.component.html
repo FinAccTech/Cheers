@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="col-md-12"  >
+  
+    <div style="float: left;">
+        <img src="assets/images/customers.png" height="40" width="40" /> &nbsp; <h1 style="display: inline;" >{{PartyType}}</h1> 
+    </div>
+    <div style="float: right; font-size: xx-large;cursor: pointer;" (click)="onNoClick()" >
+        &times;
+    </div>
+
+    <br>
+    <hr>
+    <form *ngIf="PartyForm"  [formGroup]="PartyForm" #ngForm="ngForm" class="form-container" (ngSubmit)="SaveParty()">
+        <mat-card>
+          <mat-card-content>        
+            <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <img [src]="CustomerImage" height="150" width="150" (click)="fileUpload.click()" style="cursor: pointer;" />
+                      <input type="file" class="file-input"  #fileUpload style="display: none;" (change)="selectFile($event)"/>
+                    </div>
+
+                    <div class="col-md-7">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <mat-form-field class="full-width">
+                            <input formControlName="PartySno" type="hidden" >
+                            <input formControlName="Party_Name" matInput placeholder="Name">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      
+                      <div class="row">
+                        <div class="col-md-12">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Mobile</mat-label>
+                            <span matPrefix>+91 &nbsp;</span>
+                            <input type="tel" formControlName="Mobile"  matInput placeholder="555-555-1234">
+                            <mat-icon matSuffix>mode_edit</mat-icon>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>  
+
+                  <div class="row" style="margin-top: 15px;" >
+                    <div class="col-md-6">
+                      <mat-form-field class="full-width">                        
+                        <input formControlName="Roi" type="number" matInput placeholder="Roi" required="">
+                      </mat-form-field>                    
+                    </div>
+
+                    <div class="col-md-6">
+                      <mat-form-field>
+                        <mat-label>Choose Scheme</mat-label>
+                        <mat-select formControlName="Scheme" [(value)]="SelectedScheme">
+                          <mat-option [value]="option.value" *ngFor="let option of Schemes">{{ option.text }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top: 10px;" >
+                    <div class="col-md-12">
+
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Address</mat-label>
+                            <textarea matInput formControlName="Address" placeholder="Ex. 100 Main St">1600 Amphitheatre Pkwy</textarea>
+                        </mat-form-field>                    
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top: 10px;" >
+
+                    <div class="col-md-6">  
+                        <mat-form-field class="full-width">                        
+                            <input formControlName="City" matInput placeholder="City">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">  
+                      <mat-form-field class="full-width">                        
+                        <input formControlName="Email" matInput placeholder="Email">
+                      </mat-form-field>
+                    </div>
+
+                  </div>              
+          
+              </div>
+
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <mat-form-field class="full-width" >                
+                  <input formControlName="Remarks" matInput #Remarks placeholder="Remarks">
+                </mat-form-field>
+              </div>
+
+              
+            </div>
+
+          </mat-card-content>
+
+      
+        </mat-card>
+    </form>
+      
+      <br>
+
+      <mat-card-actions style="margin-left: 0px;" >
+        <button type="submit" (click)="SaveParty()" style="color: green;" mat-stroked-button color="primary" >
+            <mat-icon>save</mat-icon>
+            Save {{PartyType}}
+        </button>
+
+        <button (click)="AddNewParty()"  mat-stroked-button color="primary" >
+          <mat-icon>save</mat-icon>
+          New {{PartyType}}
+        </button>
+
+        <button (click)="DeleteParty()" mat-stroked-button color="warn" >
+          <mat-icon>delete</mat-icon>      
+          Delete
+        </button>
+      </mat-card-actions>
+  </div>
+</div>

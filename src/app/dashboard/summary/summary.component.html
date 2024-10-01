@@ -1,0 +1,128 @@
+<div class="container">
+    <div class="row" style="margin-top: 10px;" >      
+      <div class="col-md-4"> 
+        <mat-card class="example-card">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"> <img src="assets/images/customers.png" height="40" width="40" /> </div>
+            <mat-card-title>Customers</mat-card-title>
+            <mat-card-subtitle>Consolidated</mat-card-subtitle>
+          </mat-card-header>
+          <hr style="margin-top: -10px">
+          <mat-card-content >
+            <div class="row">
+              <div class="col-md-12" style="display: flex;">
+                <ul  class="prebullet" >
+                  <li> PureWt </li>
+                  <li> Sale Value </li>
+                  <li> Release Value </li>
+                  <li> Ratio </li>
+                  <hr>
+                  <li> Rp Grams </li>
+                  <li> Non Rp Grams </li>
+                  <li> Rp Value </li>    
+                </ul>
+    
+                <ul style="list-style: none;">
+                  <li> {{PureWt.toFixed(3)}} </li>
+                  <li> {{Sale_Value | numberDifferentiationFull }} </li  >
+                  <li> {{Release_Value | numberDifferentiationFull }} </li>
+                  <li> {{Ratio.toFixed(2) }} % </li>
+                  <hr>
+                  <li> {{RpGrams.toFixed(2)}} </li>
+                  <li> {{NonRpGrams.toFixed(2)}} </li>
+                  <li> {{RpValue | numberDifferentiationFull }} </li>       
+                </ul>
+              </div>
+            </div>
+            
+          </mat-card-content>
+          
+          <mat-card-actions style="margin-top: -30px;">
+            <button mat-raised-button color="warn" [routerLink]="['customeranalysis/']" routerLinkActive="active">More Info</button>            
+          </mat-card-actions>
+        </mat-card>        
+      </div>
+
+      <div class="col-md-4">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"> <img src="assets/images/borrower.png" height="40" width="40" /> </div>
+            <mat-card-title>Borrowers</mat-card-title>
+            <mat-card-subtitle>Consolidated</mat-card-subtitle>
+          </mat-card-header>
+          <hr style="margin-top: -10px" >
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-12" style="display: flex;">
+                <ul class="prebullet">                  
+                  <li> Principal Paid </li>
+                  <li> Interest Paid </li>
+                  <li> Other Charges </li>
+                  <hr>
+                  <li> Rp Grams </li>
+                  <li> Rp Value </li>
+                </ul>    
+                            
+                <ul style="list-style: none; "   >                  
+                  <li> {{Principal_Paid}} </li>
+                  <li> {{Interest_Paid}}</li>
+                  <li> {{Other_Charges}}</li>
+                  <hr>
+                  <li> {{RpGramsBwr}} </li>
+                  <li> {{RpvalueBwr}} </li>
+                </ul>
+              </div>
+            </div>
+            
+          </mat-card-content>
+          <mat-card-actions style="margin-top: -30px;" >
+            <button mat-raised-button color="warn" [routerLink]="['bwranalysis/']" routerLinkActive="active">More Info</button>         
+          </mat-card-actions>
+        </mat-card>
+        
+      </div>
+
+      <div class="col-md-4">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"> <img src="assets/images/stock.png" height="40" width="40" /> </div>
+            <mat-card-title>Stock Summary</mat-card-title>
+            <mat-card-subtitle>Consolidated</mat-card-subtitle>
+          </mat-card-header>
+          <hr style="margin-top: -10px">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-6">
+                <ul class="prebullet">
+                  <li> Wt 916 </li>
+                  <li> Non 916 Wt </li>
+                  <li> RP Grams </li>
+                  <li> Non RP Grams </li>                  
+                </ul>    
+              </div>
+
+              <div class="col-md-6">
+                <ul style="list-style: none; "   >
+                  <li> {{StkWt916.toFixed(3)}} </li>
+                  <li> {{StkNon916.toFixed(3)}} </li>
+                  <li> {{StkRpGrams.toFixed(3)}} </li>
+                  <li> {{StkNonRpGrams.toFixed(3)}}</li>                  
+                </ul>
+              </div>
+            </div>
+            
+          </mat-card-content>
+          <mat-card-actions style="margin-top: -30px;" >
+            <button mat-raised-button color="warn" [routerLink]="['stockreport/']" routerLinkActive="active">More Info</button>         
+          </mat-card-actions>
+        </mat-card>
+        
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;" >
+      <div class="col-md-12">
+          <button (click)="PostInterestForAll()"  [disabled]="btnDisabled" class="btn btn-primary"> Post Interest For All Customers </button>
+      </div>
+    </div>
+</div>

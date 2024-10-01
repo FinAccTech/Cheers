@@ -1,0 +1,65 @@
+.errorDialog{
+    display: flex-start;
+    flex-direction: column;
+    padding: -15px;
+    margin: -15px;
+    justify-items: start;
+    position: relative;
+
+    .hr{
+        position: absolute;
+        top :11px;
+        left: 0;
+        border: 1px solid orange;
+        width: 100%;
+    }
+
+    .header{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        
+        
+        
+        .title{
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .close{
+            font-size: 24px;
+            font-weight: bold;
+            padding: 0;
+            cursor: pointer;
+        }
+    }
+
+    .body{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 10px;
+
+        .icon {
+            height: 30px;
+            width: 30px;            
+        }
+
+        .message{
+            font-size: 14px;
+        }
+    }
+
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+
+        .btn {
+            padding: 5px;
+            border: 1px solid lightgray;
+            font-size: 12px;
+            min-width: 70px;
+        }
+
+    }
+}

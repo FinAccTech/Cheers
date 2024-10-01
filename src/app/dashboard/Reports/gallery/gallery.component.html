@@ -1,0 +1,81 @@
+ 
+<h2 style="margin-left: 15px;color: darkgreen;">Images Gallery</h2>
+
+<div class="container-fluid">
+    <div class="row">        
+        <div [ngClass]="AllCustomers == true ? 'col-md-2': 'col-md-0'" *ngIf="AllCustomers == true" >
+            <table class="table table-bordered table-hover" >
+                <tbody>
+                    <tr *ngFor="let cust of Customers">
+                        <td (click)="LoadImages(cust.PartySno)" > {{cust.Party_Name}} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
+
+        <div [ngClass]="AllCustomers == true ? 'col-md-10': 'col-md-12'" style="margin-top: -10px;" >
+            <div class="row" *ngIf="(PartyType < 2 )">
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <mat-label>Filter Images</mat-label>
+                        <mat-select (selectionChange)="FilterImage($event)" >
+                          <mat-option [value]="0">All Images</mat-option>
+                          <mat-option [value]="1">Customer Images</mat-option>
+                          <mat-option [value]="2">Repledge Images</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">                
+                <div *ngIf="(PartyType < 2 ) &&  (FilterImageValue == 0 || FilterImageValue == 1)"  [ngClass]="FilterImageValue == 0 ? 'col-md-6' : FilterImageValue == 1 ? 'col-md-12': FilterImageValue == 2 ? 'col-md-0' : 'col-md-0'" >                    
+                    <mat-grid-list [cols]="FilterImageValue == 0 ? 3 : FilterImageValue == 1 ? 6 : 3" rowHeight="1:1" class="imgGrp">
+                        <h3 style="text-align: right;color: coral; font-weight: bold; ">Customer Images</h3>
+                        <mat-grid-tile *ngFor="let img of CustImages; let i = index">                    
+                            <div style="position: relative;"   >                                
+                                <img [src]="img.Image_Url" width="200px" height="200px"   (click)="OpenPreview(img)" matTooltip="Click for Image Preview"/>                                
+                                
+                                <br>
+                                <div class="lnkSpan" [matTooltipPosition]="'above'"  matTooltip="Click to Open Transaction"(click)="LoadTransaction(img)">
+                                    <span> Date: {{img.Trans_Date | intToDate | date:'dd/MM/yyyy' }} </span> 
+                                    <br>
+                                    <span> Gross: {{img.GrossWt}} </span> 
+                                    <br>
+                                    <span> Nett : {{img.NettWt}} </span> 
+                                    <br>
+                                </div>
+                                                                
+                            </div>                    
+                        </mat-grid-tile>
+                    </mat-grid-list> 
+                </div>
+
+                <div *ngIf=" FilterImageValue == 0 || FilterImageValue == 2" [ngClass]="PartyType > 1 ? 'col-md-12' : ( FilterImageValue == 0 ? 'col-md-6' : FilterImageValue == 2 ? 'col-md-12': FilterImageValue == 1 ? 'col-md-0' : 'col-md-0') " >                    
+                    <mat-grid-list [cols]="FilterImageValue == 0 ? 3 : FilterImageValue == 2 ? 6 : 3" rowHeight="1:1" class="imgGrp">
+                        <h3 style="text-align: right;color: coral; font-weight: bold; ">Repledge Images</h3>
+                        <mat-grid-tile *ngFor="let img of RpImages; let i = index">                    
+                            <div style="position: relative; "   >                                
+                                <img [src]="img.Image_Url" width="200px" height="200px" (click)="OpenPreview(img)" matTooltip="Click for Image Preview" />
+                                <br>
+                                <div class="lnkSpan" [matTooltipPosition]="'above'"  matTooltip="Click to Open Transaction"(click)="LoadTransaction(img)">
+                                    <span> <b> {{img.Borrower_Name}} </b> </span> 
+                                    <br>
+                                    <span> Date: {{img.Trans_Date | intToDate | date:'dd/MM/yyyy' }} </span> 
+                                    <br>
+                                    <span> Gross: {{img.GrossWt}} </span> 
+                                    
+                                    <span> Nett : {{img.NettWt}} </span> 
+                                    <br>
+                                    <span> Bank : {{img.Bank_Name}} </span> 
+                                    <br>
+                                    <span> Branch : {{img.Branch_Name}} </span> 
+                                    <br>
+                                </div>
+                            </div>                    
+                        </mat-grid-tile>
+                    </mat-grid-list> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

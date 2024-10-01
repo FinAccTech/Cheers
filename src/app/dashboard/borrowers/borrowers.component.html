@@ -1,0 +1,79 @@
+<div class="row"> 
+    <div class="col-md-12">
+      
+        <ng-container *ngIf="loadingData" >                    
+            <div style="text-align:center; width: 100%;" >
+                <img src="assets/images/loading.gif" height="100px" width="100px" />
+            </div>                
+        </ng-container>
+
+        <ng-container *ngIf="dataError" >
+            <h3 style="color: red;">Error!!! Unale to get Payments from the Server</h3> 
+            <p>{{errDetails}}</p>
+        </ng-container>
+
+        <ng-container *ngIf="!dataError && !loadingData" >
+            <div class="row">   
+                
+                <div class="col-md-6">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Search</mat-label>
+                        <input matInput (keyup)="applyFilterBwr($event)" placeholder="Type here to Search" #inputBwr>
+                    </mat-form-field>
+                </div>
+                
+                <div class="col-md-6" style="margin-top: 5px; text-align: right;">
+                  <button class="btn " (click)="OpenBorrowerCreation()"> <img src="assets/images/addborrower.png" width="30" height="30" />  Add New Borrower</button>
+                </div>
+                
+                
+            </div>
+
+            <div class="mat-elevation-z8"> 
+
+                <table mat-table [dataSource]="dataSourceBwr" matSort>
+                  <ng-container matColumnDef="Sno">
+                    <th mat-header-cell class="borhead" *matHeaderCellDef mat-sort-header> # </th>
+                    <td mat-cell *matCellDef="let row; let i = index" [routerLink]="['borrowerdetailed/', row.PartySno, row.Party_Name]" routerLinkActive="active"> {{i + 1}} </td>
+                  </ng-container> 
+                  
+                  <ng-container matColumnDef="Party_Name">
+                    <th mat-header-cell class="borhead" *matHeaderCellDef mat-sort-header> Name </th>
+                    <td mat-cell *matCellDef="let row" [routerLink]="['borrowerdetailed/', row.PartySno, row.Party_Name]" routerLinkActive="active"> {{row.Party_Name}} </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="City">
+                    <th mat-header-cell class="borhead" *matHeaderCellDef mat-sort-header> City </th>
+                    <td mat-cell *matCellDef="let row" [routerLink]="['borrowerdetailed/', row.PartySno, row.Party_Name]" routerLinkActive="active"> {{row.City }} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Mobile">
+                    <th mat-header-cell class="borhead" *matHeaderCellDef mat-sort-header> Mobile </th>
+                    <td mat-cell *matCellDef="let row" [routerLink]="['borrowerdetailed/', row.PartySno, row.Party_Name]" routerLinkActive="active"> {{row.Mobile}} </td>
+                  </ng-container>
+                                               
+                  <ng-container matColumnDef="Crud">
+                    <th mat-header-cell  class="borhead" *matHeaderCellDef mat-sort-header>  Actions </th>
+                    <td mat-cell *matCellDef="let row" > 
+                      <img src="assets/images/editicon.png" height="20" width="20" (click)="AlterBorrower(row)" /> 
+                      &nbsp;&nbsp;&nbsp; 
+                      <img src="assets/images/delete.png" height="20" width="20" (click)="DeleteBorrower(row)" /> </td>
+                  </ng-container>
+
+                     <tr style="height: 40px;" mat-header-row *matHeaderRowDef="displayedBwrColumns"></tr>
+                    <tr style="height: 40px;" mat-row *matRowDef="let row; columns: displayedBwrColumns;"></tr>
+              
+                  
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{inputBwr.value}}"</td>
+                  </tr>
+                </table>
+              
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 100 aria-label="Select page of users"></mat-paginator>
+            </div>
+        </ng-container>                
+      
+    </div>
+  </div>
+  

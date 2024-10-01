@@ -1,0 +1,210 @@
+
+
+<div class="container-fluid">    
+
+  <div class="row" *ngIf="BankSno == 0" >
+    <div class="col-md-12">
+      <h1 style="padding: 10px;">Repledge History - Banks</h1>
+    </div>
+  </div>
+
+    <div class="row">
+        <div [ngClass]="AllBanks == true ? 'col-md-2' : 'col-md-0'" *ngIf="AllBanks == true" >
+            <!-- <table class="table table-bordered table-hover" >
+                <tbody>
+                    <tr *ngFor="let cust of Customers">
+                        <td (click)="LoadRepledgeHistory(cust.PartySno)" > {{cust.Party_Name}} </td>
+                    </tr>
+                </tbody>
+            </table> -->
+
+            <mat-form-field appearance="standard">
+              <mat-label>Search</mat-label>
+              <input matInput (keyup)="applyFilterCust($event)" placeholder="Type here to Search" #inputCust>
+            </mat-form-field>
+
+               <div class="mat-elevation-z8">
+    
+                    <table mat-table [dataSource]="dataSourceBnk" matSort>
+                     
+                      <ng-container matColumnDef="Bank_Name">
+                        <th style="background-color: #615C5C;" mat-header-cell *matHeaderCellDef mat-sort-header (click)="LoadRepledgeHistory(0)" > All Banks </th>
+                        <td mat-cell *matCellDef="let row"> {{ row.Bank_Name}} </td>                        
+                      </ng-container>
+    
+                        <tr style="height: 40px;" mat-header-row *matHeaderRowDef="displayedCustColumns"></tr>
+                        <tr style="height: 40px;" mat-row *matRowDef="let row; columns: displayedCustColumns;" (click)="LoadRepledgeHistory(row.BankSno)"  ></tr>                        
+                  
+                      <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No data matching the filter "{{inputCust.value}}"</td>
+                      </tr>
+                    </table>
+                </div> 
+          
+        </div>
+
+        <div [ngClass]="AllBanks == true ? 'col-md-10' : 'col-md-12'" style="margin-top: -30px;" >
+            <ng-container *ngIf="loadingData" >                    
+                <div style="text-align:center; width: 100%;" >
+                    <img src="assets/images/loading.gif" height="60px" width="60px" />
+                </div>                
+            </ng-container>
+    
+            <ng-container *ngIf="dataError" >
+                <h3 style="color: red;">Error!!! Unale to get Payments from the Server</h3> 
+                <p>{{errDetails}}</p>
+            </ng-container>
+    
+            <ng-container *ngIf="!dataError && !loadingData" >
+
+              <div style="display: flex; width: 100%; margin-top: 20px; background-color: lightgray; color: red;padding: 10px; border-radius: 10px; font-weight: bold;" >
+                <div style="text-align: center;width: 20%;color: green;">
+                  Total Amount <br>
+                  {{TotalAmount.toLocaleString('en-IN')}}
+                </div>
+                <div style="text-align: center;width: 20%;">
+                  Principal Paid <br>
+                  {{PrincipalPaid.toLocaleString('en-IN')}}
+                </div>
+                <div style="text-align: center;width: 20%;">
+                  Interest Paid <br>
+                  {{InterestPaid.toLocaleString('en-IN')}}
+                </div>
+                <div style="text-align: center;width: 20%;" [style.color]="BalanceAmount  > 0 ? 'green' : 'red'">
+                  Balance <br>
+                  
+                  {{(BalanceAmount ).toLocaleString('en-IN') }}
+
+                </div>
+                <div style="text-align: center;width: 20%;color: green;">
+                  Repledged Weight <br>
+                  {{RpWeight.toLocaleString('en-IN')}}
+                </div>
+              </div>
+          
+                <div class="row"  >           
+                    <div class="col-md-4" >
+                        <mat-form-field appearance="standard">
+                            <mat-label>Search</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" placeholder="Type here to Search" #input> 
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2" style="margin-top: 14px;" >
+                      <mat-form-field>
+                        <mat-label>Repledge Status</mat-label>
+                        <mat-select [(value)]="SelectedRpStatus" (selectionChange)="FilterByStatus()" >
+                          <mat-option [value]="option.value" *ngFor="let option of RpStatusList">{{ option.text }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>                      
+                    </div>
+
+                    <div class="col-md-6" style="text-align: right;">
+                      <button class="btn" (click)="exportAsExcel()"> <img src="assets/images/excelicon.png" height="50" width="50" /> </button>
+                    </div>
+
+                </div>
+    
+              <div class="mat-elevation-z8" #TABLE>
+                <table mat-table [dataSource]="dataSource" matSort  multiTemplateDataRows class="mat-elevation-z8">
+
+                  <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                    
+                      <th style="height: 30px;" mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="ShowBankName == false && column == 'Bank_Name'" > {{column.replace("_"," ")}} </th>
+                      <td mat-cell *matCellDef="let element" [hidden]="ShowBankName == false && column == 'Bank_Name'" [style.color]="element['RpStatus'] == 1 ? 'green' : element['RpStatus'] == 2 ? 'lightgray' : element['RpStatus'] == 3 ? 'red' : 'black'" > 
+                        {{ 
+                          column == "RpStatus"  
+                            ? element[column] == 1 
+                              ? "Live" : element[column] == 2 
+                              ? "Closed" : element[column] == 3  
+                              ? "Overdue" 
+                              : null 
+
+                          : column == "ImgCount" 
+                            ? ""
+                          
+                          : column == "Trans_Date" 
+                            ? (element[column] | intToDate | date:'dd/MM/yyyy')       
+
+                          : element[column]      
+                          
+                        }} 
+                        <img *ngIf='column == "ImgCount" && element[column] > 0 ' src='assets/images/images.png' height='20' width='20' (click)="OpenSlideshow(element); $event.stopPropagation();" />
+                      </td>        
+                      <td mat-footer-cell *matFooterCellDef >                     
+                        {{
+                          column == "CrAmount" ? (CrAmountTotal() | numberDifferentiation ) + " L"  
+                          : column == "DrAmount" ? (DrAmountTotal() | numberDifferentiation ) + " L"  
+                          : column == "CrWeight" ? CrWeightTotal().toFixed(3) 
+                          : column == "DrWeight" ? DrWeightTotal().toFixed(3) 
+                          : column == "Branch_Name" ? "Total"
+                          : null
+                        }}       </td>     
+                  </ng-container>
+                
+                  <ng-container matColumnDef="expand">
+                    <th mat-header-cell *matHeaderCellDef  aria-label="row actions">&nbsp;</th>
+                    <td mat-cell *matCellDef="let element" >
+                      <button *ngIf="element['Payments'][0].TransSno > 1 "  mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">                                            
+                        <img src="assets/images/downarrow.png" *ngIf="expandedElement !== element" height="30" width="30" />
+                        <img src="assets/images/uparrow.png" *ngIf="expandedElement === element" height="30" width="30" />
+                        <!-- <mat-icon style="font-weight: bolder;" *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon> -->                      
+                        <!-- <mat-icon style="font-weight: bolder;" *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon> -->
+                        
+                      </button>
+                    </td>
+                  </ng-container> 
+                
+                  <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                  <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length" style="text-align: center;">
+                      <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <!-- <div class="example-element-diagram">
+                          <div class="example-element-position"> {{element.position}} </div>
+                          <div class="example-element-symbol"> {{element.symbol}} </div>
+                          <div class="example-element-name"> {{element.name}} </div>
+                          <div class="example-element-weight"> {{element.weight}} </div>
+                        </div> -->
+                        <!-- <div *ngFor="let desc of element.description" class="example-element-description">
+                            {{desc.Trans_No}}  
+                        </div> -->
+                        
+                        <table class="table table-bordered table-hover subtable"  style="width: 75%;margin-top: 5px;" *ngIf="element.Payments[0].TransSno > 1">
+                            <thead > 
+                              <th>Trans No</th> 
+                              <th>Date</th> 
+                              <th>Cr Amount</th> 
+                              <th>Dr Amount</th>  
+                              <th>Bank</th> </thead>
+                            <tbody>
+                                <tr *ngFor="let desc of element.Payments" (click)="LoadTransaction(desc)">
+                                    <td>{{desc.Trans_No}}  </td>
+                                    <td>{{desc.Trans_Date | intToDate | date:'dd/MM/yyyy'}}  </td>                            
+                                    <td>{{desc.CrAmount}}  </td>
+                                    <td>{{desc.DrAmount}}  </td>
+                                    <td>{{desc.Bank_Name}}  </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                
+                        <!-- <div class="example-element-description">
+                          {{element.description}}
+                          <span class="example-element-description-attribution"> -- Wikipedia </span>
+                        </div> -->
+                      </div>
+                    </td>
+                  </ng-container>
+                
+                  <tr mat-header-row *matHeaderRowDef ="columnsToDisplayWithExpand; sticky:true "></tr>
+                  <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+                  (click)="LoadTransaction(element)"  [style.color]=" element.RpStatus == 3 ? '#FFD2C8' : element.RpStatus == 1 ? '#DAF7A6' : element.RpStatus == 2 ? '#D2D1D1 ': '#fff'"  >
+                  </tr>
+                  <tr mat-footer-row  *matFooterRowDef="ShowBankName == true ? ['RpStatus','RpStatus', 'ImgCount', 'Trans_No','Trans_Date', 'Duration', 'Tenure','Party_Name', 'Borrower_Name','Bank_Name', 'Branch_Name','Roi','CrAmount','DrAmount','Balance','CrWeight','DrWeight'] : ['RpStatus','RpStatus', 'ImgCount', 'Trans_No','Trans_Date', 'Duration', 'Tenure','Party_Name', 'Borrower_Name','Branch_Name','Roi','CrAmount','DrAmount','Balance','CrWeight','DrWeight']  ; sticky: true"></tr> 
+                  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 100 aria-label="Select page of users"></mat-paginator>
+              </div>
+
+            </ng-container>   
+        </div>
+    </div>
+</div>

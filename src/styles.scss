@@ -1,0 +1,81 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import '~@angular/cdk/overlay-prebuilt.css';
+
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    //font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: 'Open Sans', "PingFang SC", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+h3, h4{
+    font-size: 14px;    
+}
+
+p.formHeader{
+    padding: 0px ;   
+    font-size: 20px;
+    font-weight: 500;
+   }
+   
+   hr {
+       position: relative;    
+       border: none;
+       height: 3px;
+       background: darkorange;    
+   }
+   
+   .velBtn {
+       background-color: rgb(84,112,196);
+       color: #fff;
+   }
+
+   .blue-snackbar {
+    background: rgb(84,112,196);
+    color: #fff;
+  }
+
+//   mat-form-field
+// {
+//     width: 100%;
+// }
+
+mat-form-field
+{
+    width: 100%;
+}
+
+mat-option
+{
+    background-color:lightgoldenrodyellow;
+}
+
+// .mat-elevation-z8 {
+//     box-shadow: 0px 0px 0px 0px;
+//     border-bottom: 0.5px dotted grey;
+//     border-left: 0.5px dotted grey;
+//     border-right: 0.5px dotted grey;
+//     overflow: hidden;
+    
+// }
+
+.btn:hover
+{
+    border: 1px solid darkgray;
+    background-color: lightgray;
+}

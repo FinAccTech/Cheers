@@ -1,0 +1,47 @@
+
+<div style="display: flex;justify-content: space-between;">
+    <h1> {{ImageName}} </h1>
+    <span mat-dialog-close style="font-size: 36px;" >&times;</span>
+</div>
+
+<hr style="margin-top: -10px;" >
+<div *ngIf="TransImages && TransImages.length > 0">
+    <div class="btn-carousel">
+        <div class="btn-prev">        
+            <i class="fas fa-arrow-circle-left icon-carousel icon-prev"
+            (click)="onPrevClick()"
+            >            
+            </i>
+        </div>
+        <p> {{ImageDetails}} </p>
+        <div class="btn-next">        
+            <i class="fas fa-arrow-circle-right icon-carousel icon-next"
+            (click)="onPrevClick()"
+            >            
+            </i>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="TransImages && TransImages.length > 0" class="carousel-container">
+
+
+    <img *ngFor="let image of TransImages; let i = index" 
+    [src] ="image.Image_Url" 
+    [ngClass]="{'image-active': selectedIndex === i}"
+    
+    
+    />
+
+    <div class="carousel-dot-container">
+        <span   *ngFor="let dot of TransImages; let i=index" 
+                class="dot"
+            [ngClass]="{'active': selectedIndex === i}"
+            (click)="selectImage(i)"
+        >
+        </span>
+    </div>
+
+</div> 
+
+

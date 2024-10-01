@@ -1,0 +1,40 @@
+<div class="mobLogo">
+    <img class="image" src="assets/images/logo.jpg"  height="210px" width="210px"/>
+</div>
+
+
+<div class="loginContainer">
+    <div class="loginModal">
+
+        <div class="modalLeft">
+            <img class="image" src="assets/images/logo.jpg"  />
+            <h1 class="tag"> Cheers Money</h1>
+        </div>
+
+        <div class="modalRight">
+            <p class="welcome" >Welcome Back !!!</p>
+            <p>Sign in to Continue <strong> Cheers App </strong></p>
+
+            <label>UserName</label>
+            <input class="inputBox" type="text" placeholder="Enter Username"  [(ngModel)]="username">
+            
+            <br>
+
+            <label>Password</label>
+            <input class="inputBox" type="password" placeholder="Enter Password" [(ngModel)]="password">
+
+            <br>
+
+            <div class="checkBox">
+                <input  type="checkbox" name="check" /> 
+                <span>Remember me</span>
+            </div>
+
+            <br>
+            <br>
+            <button class="btn" (click)="login()" >Sign In</button>
+
+        </div>
+
+    </div>
+</div>

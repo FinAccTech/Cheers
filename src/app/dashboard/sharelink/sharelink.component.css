@@ -1,0 +1,15 @@
+.example-form-field {
+    margin-right: 20px;
+  }
+
+  .imgOption{
+    width: 100%;
+    display: flex;
+    align-content: space-between;
+    justify-content: space-between;
+
+    .btn{
+      width: 100%;
+      border: 1px solid #ccc;
+    }
+  }

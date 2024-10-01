@@ -1,0 +1,85 @@
+<div style="float: left;">
+    <h1>Capture Images</h1>
+</div>
+<div style="float: right;">
+    <h1 style="font-size: xx-large; cursor: pointer;" [mat-dialog-close]="TransImages" >&times;</h1>
+</div>
+<br>
+<br>
+<hr>
+<ng-container *ngIf="uploadProgress != 0">
+    <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress">              
+    </mat-progress-bar>              
+    <!-- <mat-icon class="cancel-upload" >delete_forever</mat-icon>               -->
+</ng-container>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="file" class="file-input" multiple (change)="selectFiles($event)" #fileUpload>
+            
+            <div class="file-upload">
+                <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+                    <mat-icon>attach_file</mat-icon>                    
+                </button>
+                &nbsp;<span (click)="fileUpload.click()" style="cursor: pointer;" > Select Files </span>
+            </div>
+            <br>
+            
+            <img *ngIf="SelectedImage" [src]="SelectedImage" width="285px" height="300px" />
+            <img *ngIf="!SelectedImage" src="assets/images/nullimage.png" width="285px" height="300px" />
+            <br>
+            <br>
+            <button mat-mini-fab color="accent" (click)="CloseDialog()" >
+                <mat-icon>done_all</mat-icon>                    
+            </button>
+            
+            &nbsp; <span>Save & Close</span>
+            
+           
+        </div>
+
+        <div class="col-md-8">            
+
+            
+            <mat-grid-list cols="2" rowHeight="1:1">
+                <mat-grid-tile *ngFor="let img of TransImages; let i = index"  >                    
+                    <div *ngIf="img.DelStatus == 0" style="position: relative;" >                                                
+                        <span class="btn-remove-image" (click)="RemoveImage(i)" >X</span>
+                        <img [src]="img.SrcType == 0  ? img.Image_File : img.Image_Url " width="200px" height="200px" (click)="LoadImage(i)" />
+                        <input type="text"  style="font-size: 14px; padding: 0px;" class="form-control" value="{{img.Image_Name}}" />
+                    </div>                    
+                    
+                </mat-grid-tile>
+            </mat-grid-list> 
+              
+        </div>
+    </div>
+</div>
+
+
+
+            <!-- <div *ngFor="let img of urls">
+                <img [src]="img" width="100px" height="100px"/>
+            </div> -->
+            
+                     <!-- <mat-grid-list cols="4" rowHeight="4:2">
+                        <mat-grid-tile *ngFor="let img of urls" >
+                            
+                                <img [src]="img" width="100px" height="100px"/>
+                            
+                        </mat-grid-tile>
+                    </mat-grid-list>              -->
+<!-- 
+                    <mat-grid-list cols="3" rowHeight="2:1">
+    
+                        <mat-grid-tile *ngFor="let img of urls">
+                            <img [src]="img" />
+                        </mat-grid-tile>
+                       
+                        
+                      </mat-grid-list> -->
+
+ <!-- <img *ngFor = "let url of urls" [src]="url" width="100" height="100" />
+ <input type="file" (change)="selectFiles($event)" multiple/> -->

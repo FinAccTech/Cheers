@@ -1,0 +1,96 @@
+<div class="row">
+                
+    <div class="col-md-12">
+      
+        <ng-container *ngIf="loadingData" >                    
+            <div style="text-align:center; width: 100%;" >
+                <img src="assets/images/loading.gif" height="100px" width="100px" />
+            </div>                
+        </ng-container>
+
+        <ng-container *ngIf="dataError" >
+            <h3 style="color: red;">Error!!! Unale to get Payments from the Server</h3> 
+            <p>{{errDetails}}</p>
+        </ng-container>
+
+        <ng-container *ngIf="!dataError && !loadingData" >
+            <div class="row">   
+            
+                <div class="col-md-6">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Search</mat-label>
+                        <input matInput (keyup)="applyFilterTrans($event)" placeholder="Type here to Search" #inputTrans>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-2" style="padding: 10px;">
+                  
+                </div>                
+                
+            </div> 
+
+            <div class="mat-elevation-z8">
+
+                <table mat-table [dataSource]="dataSourceTrans" matSort>
+              
+                  <ng-container matColumnDef="Sno">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> # </th>
+                    <td mat-cell *matCellDef="let row; let i = index"> {{i + 1}} </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="ImgCount">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header>  </th>
+                    <td mat-cell *matCellDef="let row">  
+                        <img *ngIf='row.ImgCount > 0 ' src='assets/images/images.png' height='20' width='20'  (click)="OpenSlideshow(row); $event.stopPropagation();"/>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Trans_Date">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> Date </th>
+                    <td mat-cell *matCellDef="let row"> {{row.Trans_Date | intToDate | date:'dd/MM/yyyy'}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Series_Name">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> Particulars </th>
+                    <td mat-cell *matCellDef="let row"> {{row.Series_Name }} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Party_Name">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> Party Name </th>
+                    <td mat-cell *matCellDef="let row"> {{row.Party_Name}} </td>
+                  </ng-container>
+                                              
+                  <ng-container matColumnDef="Borrower_Name">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> Borrower </th>
+                    <td mat-cell *matCellDef="let row"> {{ row.Borrower_Name }} </td>
+                  </ng-container>
+             
+                  <ng-container matColumnDef="Bank_Name">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> Bank Name </th>
+                    <td mat-cell *matCellDef="let row"> {{ row.Bank_Name }} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Amount">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> Amount </th>
+                    <td mat-cell *matCellDef="let row"> {{ (row.Amount | numberDifferentiation) + (row.Amount > 99000 ? ' L' : '') }} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Weight">
+                    <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> Weight </th>
+                    <td mat-cell *matCellDef="let row"> {{ row.Weight.toFixed(3) }} </td>
+                  </ng-container>
+
+                  <tr style="height: 40px;" mat-header-row *matHeaderRowDef="displayedTransColumns"></tr>
+                  <tr style="height: 40px;" mat-row *matRowDef="let row; columns: displayedTransColumns;" (click)="LoadTransaction(row)" ></tr>
+              
+                  
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{inputTrans.value}}"</td>
+                  </tr>
+                </table>
+              
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 25 aria-label="Select page of users"></mat-paginator>
+            </div>
+        </ng-container>                
+      
+    </div>
+  </div>

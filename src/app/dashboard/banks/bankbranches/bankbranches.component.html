@@ -1,0 +1,103 @@
+<div style="float: left;">
+    <img src="assets/images/branches.png" height="40" width="40" /> &nbsp; <h1 style="display: inline;" >Bank Branches</h1> 
+</div>
+<div style="float: right; font-size: xx-large;cursor: pointer;" (click)="onNoClick()" >
+    &times;
+</div>
+<br>
+<br>
+<hr>
+<form *ngIf="BranchForm"  [formGroup]="BranchForm" #ngForm="ngForm" class="form-container" (ngSubmit)="SaveBankBranch()">
+    <mat-card>
+      <mat-card-header class="velCardheader"> 
+        
+        
+        
+      </mat-card-header>
+      <br>
+
+      <mat-card-content>        
+        <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                
+                <div class="col-md-12">
+                  <mat-form-field class="full-width">
+                    <input formControlName="BranchSno" type="hidden" >
+                    <input formControlName="Branch_Name" matInput placeholder="Branch Name">
+                  </mat-form-field>
+                </div>
+              </div>  
+
+              <div class="row" style="margin-top: 10px;" >
+                <div class="col-md-12">
+
+                    
+                  <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Select Bank</mat-label>
+                    <input matInput                      
+                          aria-label="Select Bank"
+                          [matAutocomplete]="autoBnk"
+                          formControlName ="Bank"  (focus)="LoadBanks()"  />
+                    <mat-autocomplete #autoBnk="matAutocomplete" [displayWith]="displayBank">
+                      <mat-option *ngFor="let bnk of filteredBanks | async" [value]="bnk">                        
+                        <span>{{bnk.Bank_Name}}</span>                         
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+
+                      
+                </div>
+              </div>
+
+              <div class="row" style="margin-top: 10px;" >
+
+                <div class="col-md-12">  
+                    <mat-form-field class="full-width">                        
+                        
+                        <textarea formControlName="Branch_Address" matInput placeholder="Address" rows="5">
+
+                        </textarea>
+                    </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top: 10px;">
+                <div class="col-md-12">  
+                    <mat-form-field class="full-width">                        
+                        <input formControlName="Remarks" matInput placeholder="Remarks">
+                    </mat-form-field>
+                </div>
+            </div>
+            
+
+          </div>
+
+        </div>
+         
+      
+
+      </mat-card-content>
+
+  
+    </mat-card>
+  </form>
+  
+  <br>
+
+  <mat-card-actions style="margin-left: 0px;" >
+    <button type="submit" (click)="SaveBankBranch()" style="color: green;" mat-stroked-button color="primary" >
+        <mat-icon>save</mat-icon>
+        Save Branch
+    </button>
+
+    <button (click)="AddNewBankBranch()"  mat-stroked-button color="primary" >
+      <mat-icon>save</mat-icon>
+      New Branch
+    </button>
+
+    <button (click)="DeleteBankBranch()" mat-stroked-button color="warn" >
+      <mat-icon>delete</mat-icon>      
+      Delete
+    </button>
+  </mat-card-actions>
