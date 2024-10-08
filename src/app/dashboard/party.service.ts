@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AppGlobalsService } from './app-globals.service';
 import { TypeParties } from './types/TypeParties';
+import { TypeAccounts } from './types/TypeAccounts';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,16 @@ export class PartyService {
       "Email"               :   Pty.Email,
       "Remarks"             :   Pty.Remarks,    
       "Roi"                 :   Pty.Roi,    
-      "Scheme"              :   Pty.Scheme
+      "Scheme"              :   Pty.Scheme,
+      "Salutation"          :   Pty.Salutation,
+      "Sex"                 :   Pty.Sex,
+      "Aadhar_No"           :   Pty.Aadhar_No,
+      "Pan_No"              :   Pty.Pan_No,
+      "Ratings"             :   Pty.Ratings,
+      "Customer_Type"       :   Pty.Customer_Type,
+      "fileSource"          :   Pty.fileSource,
+      "Party_Image"          :   Pty.Party_Image,
+
    });    
    
      let params = new HttpParams()
@@ -88,6 +98,70 @@ deleteParty(Pty: TypeParties)
    header.set('Access-Control-Allow-Origin', '*');
   
    return this.http.delete<TypeParties>(apiURL, {params} )   
+}
+
+getAccounts(AccountSno: number, PartySno: number):Observable<any>
+ {    
+   let edata: string =JSON.stringify({"AccountSno" :  AccountSno, "PartySno" :  PartySno, }); 
+   
+    let params = new HttpParams()
+    .set('data', edata)
+        
+    let apiURL: string = this.globals.baseApiURL + "/getAccounts";
+   
+   return this.http.get<any>(apiURL, { params })
+     .pipe(map(datarecd => {            
+       
+       if (datarecd.queryStatus == 0)
+         {              
+           return (0);                
+         }         
+         else
+         {            
+           return ( JSON.parse (datarecd.apiData));            
+         }                      
+     }));
+ } 
+
+saveAccount(Acc: TypeAccounts):Observable<TypeAccounts>
+  { 
+    let edata: string =JSON.stringify
+    ({      
+      "AccountSno"         :   Acc.AccountSno,
+      "Account_No"         :   Acc.Account_No,
+      "Account_Date"       :   Acc.Account_Date,
+      "PartySno"           :   Acc.Party!.PartySno,
+      "Roi"                :   Acc.Roi,            
+      "Scheme"             :   Acc.Scheme,          
+      "Remarks"            :   Acc.Remarks,
+   });    
+   
+     let params = new HttpParams()
+     .set('data', edata)
+     
+     let apiURL: string = this.globals.baseApiURL + "/InsertAccount";
+     let header = new HttpHeaders();
+     header.set('Access-Control-Allow-Origin', '*');
+    
+     return this.http.post<TypeAccounts>(apiURL, params )          
+  }
+
+  
+deleteAccount(Acc: TypeAccounts)
+{    
+  let edata: string =JSON.stringify
+  ({    
+    "AccountSno"    :  Acc.AccountSno
+  }); 
+  
+   let params = new HttpParams()
+   .set('data', edata)
+      
+   let apiURL: string = this.globals.baseApiURL + "/DeleteAccount";
+   let header = new HttpHeaders();
+   header.set('Access-Control-Allow-Origin', '*');
+  
+   return this.http.delete<TypeAccounts>(apiURL, {params} )   
 }
 
 

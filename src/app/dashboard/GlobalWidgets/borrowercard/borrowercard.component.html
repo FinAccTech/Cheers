@@ -1,0 +1,23 @@
+<div class="profileContainer" *ngIf="Party" >
+    <div class="editButton">
+        <i class='bx bxs-edit' style='color:#5ba329' (click)="AlterAlert()" ></i>
+    </div>
+    
+
+    <div class="imgArea">
+        <ng-container *ngIf="Party.Party_Image" >
+            <img [src]="Party.Party_Image" />
+        </ng-container>
+        
+        <ng-container *ngIf="!Party.Party_Image">
+            <img src="assets/images/partyimagepreview.png" />
+        </ng-container>
+
+    </div>
+  
+
+    <div class="genInfo">
+        <p> <strong> {{Party.Party_Name}} </strong> </p>
+        <p> {{Party.Mobile}} </p>
+    </div>
+</div>

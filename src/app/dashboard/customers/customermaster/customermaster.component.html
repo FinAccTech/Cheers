@@ -17,13 +17,28 @@
                 <div class="col-md-12">
                   <div class="row">
                     <div class="col-md-5">
-                      <img [src]="CustomerImage" height="150" width="150" (click)="fileUpload.click()" style="cursor: pointer;" />
-                      <input type="file" class="file-input"  #fileUpload style="display: none;" (change)="selectFile($event)"/>
+                      <input type="file" style="display: none;" accept="image/*" (change)="selectFile($event)" #fileUpload>            
+                      <div (click)="fileUpload.click()">                    
+                          <ng-container *ngIf="TransImages && TransImages.Image_Url" >
+                              <img height="175" width="175" [src]="TransImages.SrcType == 0 ? TransImages.Image_File :  TransImages.Image_Url" />
+                          </ng-container>
+                          <ng-container *ngIf="!TransImages || !TransImages.Image_Url" >
+                              <img src="assets/images/partyimagepreview.png" />
+                          </ng-container>                    
+                      </div>
                     </div>
 
-                    <div class="col-md-7">
+                    <div class="col-md-7">                      
                       <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <mat-label></mat-label>
+                            <mat-select formControlName="Salutation" [(value)]="SelectedSalutation">
+                              <mat-option [value]="option.value" *ngFor="let option of Salutations">{{ option.text }}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-8">
                           <mat-form-field class="full-width">
                             <input formControlName="PartySno" type="hidden" >
                             <input formControlName="Party_Name" matInput placeholder="Name">
@@ -42,10 +57,26 @@
                         </div>
                       </div>
 
+                      <div class="row">
+                        <div class="col-md-4">
+                          <mat-form-field>
+                            <mat-label></mat-label>
+                            <mat-select formControlName="Sex" [(value)]="SelectedSex">
+                              <mat-option [value]="option.value" *ngFor="let option of Sexes">{{ option.text }}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-md-8">
+                          <app-ratings [rating]="rating" (retRating)="getNewRating($event)"                                          ></app-ratings>
+                        </div>
+
+                      </div>
+
                     </div>
                   </div>  
 
-                  <div class="row" style="margin-top: 15px;" >
+                  <div class="row" style="margin-top: .5rem;" >
                     <div class="col-md-6">
                       <mat-form-field class="full-width">                        
                         <input formControlName="Roi" type="number" matInput placeholder="Roi" required="">
@@ -62,44 +93,63 @@
                     </div>
                   </div>
 
-                  <div class="row" style="margin-top: 10px;" >
-                    <div class="col-md-12">
-
+                  <div class="row">
+                    <div class="col-md-6">
                         <mat-form-field class="example-full-width">
                             <mat-label>Address</mat-label>
-                            <textarea matInput formControlName="Address" placeholder="Ex. 100 Main St">1600 Amphitheatre Pkwy</textarea>
+                            <textarea matInput formControlName="Address" rows="4" placeholder="Ex. 100 Main St"></textarea>
                         </mat-form-field>                    
                     </div>
+                    <div class="col-md-6">
+                      <div class="row" style="margin-top: 10px;" >
+                        <div class="col-md-12">  
+                            <mat-form-field class="full-width">                        
+                                <input formControlName="City" matInput placeholder="City">
+                            </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">  
+                          <mat-form-field class="full-width">                        
+                            <input formControlName="Email" matInput placeholder="Email">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  <div class="row" style="margin-top: 10px;" >
-
-                    <div class="col-md-6">  
-                        <mat-form-field class="full-width">                        
-                            <input formControlName="City" matInput placeholder="City">
-                        </mat-form-field>
-                    </div>
-
-                    <div class="col-md-6">  
-                      <mat-form-field class="full-width">                        
-                        <input formControlName="Email" matInput placeholder="Email">
-                      </mat-form-field>
-                    </div>
-
-                  </div>              
-          
+                  
               </div>
 
             </div>
             
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
+                <mat-form-field class="full-width" >                
+                  <input formControlName="Aadhar_No" matInput #Remarks placeholder="Aadhar No">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="full-width" >                
+                  <input formControlName="Pan_No" matInput #Remarks placeholder="Pan No">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
                 <mat-form-field class="full-width" >                
                   <input formControlName="Remarks" matInput #Remarks placeholder="Remarks">
                 </mat-form-field>
               </div>
 
-              
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-label>Customer Type</mat-label>
+                  <mat-select formControlName="Customer_Type" [(value)]="SelectedCustomerType">
+                    <mat-option [value]="option.value" *ngFor="let option of CustomerTypes">{{ option.text }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
 
           </mat-card-content>

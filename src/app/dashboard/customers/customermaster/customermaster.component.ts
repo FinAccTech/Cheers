@@ -1,16 +1,31 @@
-
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-
 import { FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TypeParties } from '../../types/TypeParties';
 import { PartyService } from '../../party.service';
 import { MsgboxComponent } from '../../msgbox/msgbox.component';
+import { FileHandle } from '../../types/file-handle';
+import { DomSanitizer } from '@angular/platform-browser';
+import { AppGlobalsService } from '../../app-globals.service';
 
 interface Scheme {
   value : number;
+  text: string;
+}
+
+interface Salutation {
+  value : number;
+  text: string;
+}
+
+interface SexTypes{
+  value: number;
+  text: string;
+}
+
+interface TypeCustomerTypes{
+  value: number;
   text: string;
 }
 
@@ -20,20 +35,41 @@ interface Scheme {
   styleUrls: ['./customermaster.component.css']
 })
 
-
-
 export class CustomermasterComponent implements OnInit {
 
   PartyForm!: FormGroup;  
   PartyType: string ="";
-  CustomerImage: string =  "assets/images/person.jpeg";
 
+  TransImages!: FileHandle;
+  
   Schemes: Scheme[] = [
     {value: 1, text: "Simple"},
     {value: 2, text: "Compound"}
   ];
   
-  SelectedScheme = this.Schemes[0].value;
+  Salutations: Salutation[] = [
+    {value: 1, text: "Mr"},
+    {value: 2, text: "Mrs"}
+  ];
+
+  Sexes: SexTypes[] = [
+    {value: 1, text: "Male"},
+    {value: 2, text: "Female"}
+  ];
+
+  CustomerTypes: TypeCustomerTypes[] = [
+    {value: 1, text: "Good"},
+    {value: 2, text: "Very Good"},
+    {value: 3, text: "Average"},
+    {value: 4, text: "Bad"}    
+  ];
+
+  rating: number = 0;
+
+  SelectedScheme        = this.Schemes[0].value;
+  SelectedSalutation    = this.Salutations[0].value;
+  SelectedSex           = this.Sexes[0].value;
+  SelectedCustomerType  = this.CustomerTypes[0].value;
 
   constructor(
     public dialogRef: MatDialogRef<CustomermasterComponent>,
@@ -41,21 +77,25 @@ export class CustomermasterComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder:FormBuilder, 
     private PtyService:PartyService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private sanitizer: DomSanitizer,
+    private globals: AppGlobalsService
   ) {}
 
-  ngOnInit(): void {    
-     
+  ngOnInit(): void {         
     switch (this.data.Cust.Party_Type) {
       case 1:
-        this.PartyType = "Customers";        
+        this.PartyType = "Customer";        
         break;
       case 2:
-        this.PartyType = "Borrowers";        
+        this.PartyType = "Borrower";        
         break;      
     }
+    
     this.AddNewParty();    
-    this.LoadParty(this.data.Cust); 
+    if (this.data.Cust.PartySno !==0){
+      this.LoadParty(this.data.Cust); 
+    }    
   }
 
   onNoClick(): void {
@@ -66,24 +106,36 @@ export class CustomermasterComponent implements OnInit {
   {    
     this.PartyForm = this.formBuilder.group
     ({
-      PartySno        : [0, [Validators.required]],    
-      Party_Type      : [this.data.Party_Type, [Validators.required]],    
-      Party_Name      : ["", [Validators.required]],
-      Address         : [""],
-      City            : [""],
-      Mobile          : ["",],
-      Email           : [""],
-      Remarks         : [""],
-      Roi             : [0, [Validators.required]],
-      Scheme          : [1,],       
+      PartySno        :   [0, [Validators.required]],    
+      Party_Type      :   [this.data.Cust.Party_Type, [Validators.required]],                
+      Party_Name      :   ["", [Validators.required]],
+      Address         :   [""],
+      City            :   [""],
+      Mobile          :   ["",],
+      Email           :   [""],
+      Remarks         :   [""],
+      Roi             :   [0, [Validators.required]], 
+      Scheme          :   [1],       
+      Sex             :   [1],
+      Aadhar_No       :   [""],
+      Pan_No          :   [""],
+      Salutation      :   [1],
+      Ratings         :   [0],
+      Customer_Type   :   [1],
+      fileSource      :   [{"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""}],      
+      Party_Image     :   [""],
+      Image_Name      :   [""]
     });    
-    
+
+    this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""} ;    
   }
 
   LoadParty(Pty: TypeParties)
   { 
     this.PartyForm.controls['PartySno'].setValue(Pty.PartySno);    
     this.PartyForm.controls['Party_Type'].setValue(Pty.Party_Type);    
+    this.PartyForm.controls['Salutation'].setValue(Pty.Salutation);   
+    this.PartyForm.controls['Sex'].setValue(Pty.Sex);   
     this.PartyForm.controls['Party_Name'].setValue(Pty.Party_Name);    
     this.PartyForm.controls['Address'].setValue(Pty.Address);    
     this.PartyForm.controls['City'].setValue(Pty.City);    
@@ -92,6 +144,16 @@ export class CustomermasterComponent implements OnInit {
     this.PartyForm.controls['Remarks'].setValue(Pty.Remarks);        
     this.PartyForm.controls['Roi'].setValue(Pty.Roi);        
     this.PartyForm.controls['Scheme'].setValue(Pty.Scheme);        
+    this.PartyForm.controls['Aadhar_No'].setValue(Pty.Aadhar_No);        
+    this.PartyForm.controls['Pan_No'].setValue(Pty.Pan_No);  
+    this.PartyForm.controls['Ratings'].setValue(Pty.Ratings);  
+    this.PartyForm.controls['Customer_Type'].setValue(Pty.Customer_Type);  
+    this.PartyForm.controls['Party_Image'].setValue(Pty.Party_Image);  
+    this.PartyForm.controls['Image_Name'].setValue(Pty.Image_Name);  
+    this.PartyForm.controls['fileSource'].setValue({"DelStatus":0, "Image_File":null!, "Image_Url":Pty.Party_Image, "SrcType":1,"Image_Name":Pty.Image_Name});  
+    this.rating = Pty.Ratings!;
+    this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":Pty.Party_Image!, "SrcType":1,"Image_Name":Pty.Image_Name!} ;
+        
   }
   
   SaveParty(){   
@@ -100,6 +162,17 @@ export class CustomermasterComponent implements OnInit {
       this._snackBar.open('Rate of Interest cannot be zero.', 'Success',{horizontalPosition: 'center', verticalPosition: 'top', duration: 2000, panelClass: ['mat-toolbar', 'mat-primary'] });                        
       return;
     }
+    
+    if (!this.TransImages || this.TransImages.Image_Name ==''){
+      this.PartyForm.controls['Party_Image'].setValue('');
+    }
+    else{
+      this.PartyForm.controls['Party_Image'].setValue(this.globals.PartyImageUrl + '/'+ this.TransImages.Image_Name );
+    }
+
+    
+    this.PartyForm.controls['Image_Name'].setValue(this.TransImages.Image_Name);
+    this.PartyForm.controls['fileSource'].setValue(this.TransImages);
     if(this.PartyForm.valid){
 
       this.PtyService.saveParty (Object(this.PartyForm.value)).subscribe((data:any ) => {
@@ -108,7 +181,7 @@ export class CustomermasterComponent implements OnInit {
           case 0:
             alert ("Error!!! " + data.apiData );
             break;
-          case 1:                                                    
+          case 1:                                                                
             this._snackBar.open('Party created successfully', 'Success',{horizontalPosition: 'center', verticalPosition: 'top', duration: 2000, panelClass: ['mat-toolbar', 'mat-primary'] });                        
             this.dialogRef.close(Object(this.PartyForm.value));
             break;
@@ -162,15 +235,30 @@ export class CustomermasterComponent implements OnInit {
   }
 
   selectFile($event: any)
-  {
-    const file = $event?.target.files[0];
-    var reader = new FileReader();
-    reader.readAsDataURL($event.target.files[0]);    
+  {     
+    if ($event.target.files)
+    {  
+        const file = $event?.target.files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL($event.target.files[0]);
+        reader.onload = (event: any) => {
+          const fileHandle: FileHandle ={
+            Image_Name: file.name,
+            Image_File: event.target.result,  
+            Image_Url: this.sanitizer.bypassSecurityTrustUrl(
+              window.URL.createObjectURL(file),              
+            ),
+            SrcType:0,
+            DelStatus:0
+          };               
+          this.TransImages = (fileHandle);          
+        }
+      // }        
+    } 
+  }
 
-    reader.onload = (event: any) => {
-      this.CustomerImage = event.target.result;
-    
-    }
-
+  getNewRating($event: number){
+    this.rating = $event;
+    this.PartyForm.controls['Ratings'].setValue(this.rating);  
   }
 }

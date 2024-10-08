@@ -13,6 +13,7 @@ import { TransactionService } from './transaction.service';
 export class DashboardComponent  implements OnInit, OnDestroy 
  {
   
+  ShowSideNav: boolean = false;
   loggeduser: string ="";
   selectedcompname: string = "";
   GoldRate: number = 0;
@@ -101,5 +102,25 @@ export class DashboardComponent  implements OnInit, OnDestroy
     this.TransService.getGoldRates().subscribe(data => {
       this.GoldRate = data.PureRate;    
     });
+  }
+
+  OpenCustomers(){
+    this.router.navigate(['dashboard/customers']);
+    this.ShowSideNav = false;
+  }
+
+  OpenBorrowers(){
+    this.router.navigate(['dashboard/borrowers']);
+    this.ShowSideNav = false;
+  }
+
+  OpenBanks(){
+    this.router.navigate(['dashboard/banks']);
+    this.ShowSideNav = false;
+  }
+
+  OpenAccounts(){
+    this.router.navigate(['dashboard/accounts']);
+    this.ShowSideNav = false;
   }
 }

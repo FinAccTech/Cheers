@@ -8,6 +8,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TypeParties } from '../../types/TypeParties';
 import { PartyService } from '../../party.service';
 import { MsgboxComponent } from '../../msgbox/msgbox.component';
+import { FileHandle } from '../../types/file-handle';
+import { DomSanitizer } from '@angular/platform-browser';
+import { AppGlobalsService } from '../../app-globals.service';
 
 @Component({
   selector: 'app-borrowermaster',
@@ -22,7 +25,8 @@ export class BorrowermasterComponent implements OnInit {
   PartyForm!: FormGroup;  
   PartyType: string ="";
   SrcPath: string = ""
-
+  TransImages!: FileHandle;
+  
   constructor(
     public dialogRef: MatDialogRef<BorrowermasterComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -30,6 +34,8 @@ export class BorrowermasterComponent implements OnInit {
     private PtyService:PartyService,
     private _snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private sanitizer: DomSanitizer,
+    private globals: AppGlobalsService
   ) {}
 
   ngOnInit(): void {     
@@ -57,8 +63,18 @@ export class BorrowermasterComponent implements OnInit {
       Remarks         : [""],
       Roi             : [0],
       Scheme          : [1],
+      Sex             :   [1],
+      Aadhar_No       :   [""],
+      Pan_No          :   [""],
+      Salutation      :   [1],
+      Ratings         :   [0],
+      Customer_Type   :   [1],
+      fileSource      :   [{"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""}],      
+      Party_Image     :   [""],
+      Image_Name      :   [""]
     });    
-    
+    this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""} ;    
+
   }
  
   LoadParty(Pty: TypeParties)
@@ -70,10 +86,25 @@ export class BorrowermasterComponent implements OnInit {
     this.PartyForm.controls['City'].setValue(Pty.City);    
     this.PartyForm.controls['Mobile'].setValue(Pty.Mobile);    
     this.PartyForm.controls['Email'].setValue(Pty.Email);        
-    this.PartyForm.controls['Remarks'].setValue(Pty.Remarks);        
+    this.PartyForm.controls['Remarks'].setValue(Pty.Remarks);    
+    this.PartyForm.controls['Party_Image'].setValue(Pty.Party_Image);  
+    this.PartyForm.controls['Image_Name'].setValue(Pty.Image_Name);  
+    this.PartyForm.controls['fileSource'].setValue({"DelStatus":0, "Image_File":null!, "Image_Url":Pty.Party_Image, "SrcType":1,"Image_Name":Pty.Image_Name});      
+    this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":Pty.Party_Image!, "SrcType":1,"Image_Name":Pty.Image_Name!} ;    
   }
   
   SaveParty(){       
+    if (!this.TransImages || this.TransImages.Image_Name ==''){
+      this.PartyForm.controls['Party_Image'].setValue('');
+    }
+    else{
+      this.PartyForm.controls['Party_Image'].setValue(this.globals.PartyImageUrl + '/'+ this.TransImages.Image_Name );
+    }
+
+    
+    this.PartyForm.controls['Image_Name'].setValue(this.TransImages.Image_Name);
+    this.PartyForm.controls['fileSource'].setValue(this.TransImages);
+
     if(this.PartyForm.valid){
 
       this.PtyService.saveParty (Object(this.PartyForm.value)).subscribe((data:any ) => {
@@ -143,6 +174,29 @@ export class BorrowermasterComponent implements OnInit {
       
     }
     
+  }
+
+  selectFile($event: any)
+  {     
+    if ($event.target.files)
+    {  
+        const file = $event?.target.files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL($event.target.files[0]);
+        reader.onload = (event: any) => {
+          const fileHandle: FileHandle ={
+            Image_Name: file.name,
+            Image_File: event.target.result,  
+            Image_Url: this.sanitizer.bypassSecurityTrustUrl(
+              window.URL.createObjectURL(file),              
+            ),
+            SrcType:0,
+            DelStatus:0
+          };               
+          this.TransImages = (fileHandle);          
+        }
+      // }        
+    } 
   }
 
 }

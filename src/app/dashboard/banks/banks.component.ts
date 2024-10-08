@@ -28,6 +28,7 @@ export class BanksComponent implements OnInit {
   errDetails: string = "";
   loadingData: boolean = false;
 
+  searchText: string = "";
   BanksList: TypeBanks[] = [];
 
   constructor(private BnkService: BankService, public dialog: MatDialog, private _snackBar: MatSnackBar) { 

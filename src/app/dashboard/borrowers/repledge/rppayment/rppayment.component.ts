@@ -128,7 +128,7 @@
       this.RpPaymentForm.controls['Trans_Date'].setValue( Rpp.Trans_Date);    
       this.RpPaymentForm.controls['Ref_No'].setValue(Rpp.Ref_No);        
       this.RpPaymentForm.controls['Series'].setValue({SeriesSno: Rpp.Series.SeriesSno, Series_Name: Rpp.Series.Series_Name } );    
-      this.RpPaymentForm.controls['Party'].setValue({PartySno: Rpp.Party.PartySno, Party_Name: Rpp.Party.Party_Name } );    
+      this.RpPaymentForm.controls['Account'].setValue({AccountSno: Rpp.Account.AccountSno } );    
       this.RpPaymentForm.controls['Borrower'].setValue({BorrowerSno: Rpp.Borrower.BorrowerSno, Borrower_Name: Rpp.Borrower.Borrower_Name });        
       this.RpPaymentForm.controls['Bank'].patchValue({BankSno:Rpp.Bank.BankSno, Bank_Name: Rpp.Bank.Bank_Name});        
       this.RpPaymentForm.controls['BankBranch'].patchValue({BranchSno:Rpp.BankBranch.BranchSno, Branch_Name: Rpp.BankBranch.Branch_Name});        

@@ -215,6 +215,19 @@ th{
 .alink {
   text-decoration: none;
   color: black;
+  display: flex;
+  align-items: center;
+
+  img{
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  p{
+    font-size: 1.45rem;
+    font-weight: 500;
+    margin-top: 1rem;
+  }
 }
 
 .menuhr{
@@ -240,4 +253,57 @@ th{
     text-shadow: 0 0 8px black;
   }
   
+}
+
+.dashContainer{
+
+  background-color: #F0F0F9;
+  height: 100%;
+
+
+.animArrow{
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 999;
+  background-color: #fff;
+  border-radius: 0 1rem 1rem 0;
+  box-shadow: orange 0px 5px 15px;
+  i{
+    font-size: 4rem;
+    padding-right: 1rem;
+  }
+}
+.animArrow:hover{
+  cursor: pointer;
+}
+
+.sideNav{
+  position: absolute;
+  top: 30%;
+  left: 0;
+  z-index: 999;
+  padding: .3rem;
+  background-color: #fff;
+  border-radius: 0 2rem 2rem 0;
+  box-shadow: orangered 1.95px 1.95px 2.6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .navItem{
+    display: flex;
+    flex-direction: column;
+    align-items: center;   
+    padding: .4rem; 
+  }
+
+  .navItem:hover{    
+    cursor: pointer;
+    transition: transform 0.25s 0s; 
+    transform: scale(1.2); 
+  }
+
+  
+}
 }

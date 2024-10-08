@@ -8,7 +8,6 @@ import { TransactionService } from '../transaction.service';
 import { TypeTransactions } from '../types/TypeTransactions';
 import { ImageCarouselComponent } from '../image-carousel/image-carousel.component';
 import { AppGlobalsService } from '../app-globals.service';
-import { TypeRepledges } from '../types/TypeRepledges';
 import { RepledgeComponent } from '../borrowers/repledge/repledge.component';
 import { RppaymentComponent } from '../borrowers/repledge/rppayment/rppayment.component';
 import { ReleaseComponent } from '../borrowers/repledge/release/release.component';
@@ -33,7 +32,7 @@ export class RecenttransComponent implements OnInit {
   errDetails: string = "";
   loadingData: boolean = false;
 
-  TransList: TypeTransactions[] = [];
+  TransList: any[] = [];
 
   constructor(private transService: TransactionService, private globals: AppGlobalsService,  public dialog: MatDialog, private _snackBar: MatSnackBar) { 
     this.LoadTransactions();     
@@ -52,21 +51,22 @@ export class RecenttransComponent implements OnInit {
          this.dataError  = true;
          this.errDetails = data; 
        }
-       else{              
-        console.log (data);
-          this.TransList = data;                          
-          this.LoadTransactionsntoMatGrid();          
+       else{                      
+          this.TransList = data;                  
+          console.log(this.TransList);
+                  
+          // this.LoadTransactionsntoMatGrid();          
        }              
      });    
      this.loadingData = false;
    }
 
-   LoadTransactionsntoMatGrid() 
-   {      
-      this.dataSourceTrans = new MatTableDataSource<TypeTransactions> (this.TransList);         
-      setTimeout(() => this.dataSourceTrans.paginator = this.paginatorTrans);
-      setTimeout(() => this.dataSourceTrans.sort = this.sortTrans);
-   }
+  //  LoadTransactionsntoMatGrid() 
+  //  {      
+  //     this.dataSourceTrans = new MatTableDataSource<TypeTransactions> (this.TransList);         
+  //     setTimeout(() => this.dataSourceTrans.paginator = this.paginatorTrans);
+  //     setTimeout(() => this.dataSourceTrans.sort = this.sortTrans);
+  //  }
 
   
 OpenSlideshow(element: any)

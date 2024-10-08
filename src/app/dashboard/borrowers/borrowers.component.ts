@@ -26,6 +26,8 @@ export class BorrowersComponent implements OnInit {
 
   BwrList: TypeParties[] = [];
   
+  searchText: string = "";
+
   dataError: boolean = false;
   errDetails: string = "";
   loadingData: boolean = false;

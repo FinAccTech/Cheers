@@ -222,7 +222,7 @@ export class RepledgeComponent implements OnInit {
       Trans_Date      : [new Date, [Validators.required]],
       Ref_No          : [""],
       Series          : [{SeriesSno:this.globals.VtypRepledge, Series_Name:"Repledge"}],
-      Party           : [this.formBuilder.group( this.parties), [Validators.required]],
+      Account         : [this.formBuilder.group( this.parties), [Validators.required]],
       Borrower        : [{BorrowerSno:this.data.Rp.Party.PartySno, Borrower_Name:this.data.Rp.Party.Party_Name}],
       Bank            : [this.formBuilder.group( this.banks), [Validators.required]],      
       BankBranch      : [{BranchSno:0, Branch_Name:""} ],
@@ -248,7 +248,7 @@ export class RepledgeComponent implements OnInit {
     this.RepledgeForm.controls['Trans_Date'].setValue(Rp.Trans_Date);    
     this.RepledgeForm.controls['Ref_No'].setValue(Rp.Ref_No);        
     this.RepledgeForm.controls['Series'].setValue({SeriesSno: Rp.Series.SeriesSno, Series_Name: Rp.Series.Series_Name } );    
-    this.RepledgeForm.controls['Party'].setValue({PartySno: Rp.Party.PartySno, Party_Name: Rp.Party.Party_Name } );    
+    this.RepledgeForm.controls['Account'].setValue({AccountSno: Rp.Account.AccountSno } );    
     this.RepledgeForm.controls['Borrower'].setValue({BorrowerSno: Rp.Borrower.BorrowerSno, Borrower_Name: Rp.Borrower.Borrower_Name });        
     this.RepledgeForm.controls['Bank'].patchValue({BankSno:Rp.Bank.BankSno, Bank_Name: Rp.Bank.Bank_Name});        
     this.RepledgeForm.controls['BankBranch'].patchValue({BranchSno:Rp.BankBranch.BranchSno, Branch_Name: Rp.BankBranch.Branch_Name});  
@@ -441,7 +441,7 @@ export class RepledgeComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypRelease, Series_Name: "Release"},      
-      Party:  {PartySno: this.RepledgeForm.controls['Party'].value.PartySno, Party_Name: this.RepledgeForm.controls['Party'].value.Party_Name},
+      Account:  {AccountSno: this.RepledgeForm.controls['Account'].value.AccountSno,},
       Borrower: {BorrowerSno: this.RepledgeForm.controls['Borrower'].value.BorrowerSno, Borrower_Name: this.RepledgeForm.controls['Borrower'].value.Borrower_Name},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -461,7 +461,8 @@ export class RepledgeComponent implements OnInit {
       N916GrossWt: 0,
       N916NettWt: 0,
       N916Purity: 75,
-      fileSource:[]
+      fileSource:[],
+      CloseAccount:0,
     }
 
     this.TransService.getReleaseforRp(this.RepledgeForm.controls['TransSno'].value).subscribe((data:any )  =>   {      
@@ -498,7 +499,7 @@ export class RepledgeComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VTypRpPayment, Series_Name: "RP Payment"},      
-      Party:  {PartySno: this.RepledgeForm.controls['Party'].value.PartySno, Party_Name: this.RepledgeForm.controls['Party'].value.Party_Name},
+      Account:  {AccountSno: this.RepledgeForm.controls['Account'].value.AccountSno},
       Borrower: {BorrowerSno: this.RepledgeForm.controls['Borrower'].value.BorrowerSno, Borrower_Name: this.RepledgeForm.controls['Borrower'].value.Borrower_Name},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -518,7 +519,8 @@ export class RepledgeComponent implements OnInit {
       N916GrossWt: 0,
       N916NettWt: 0,
       N916Purity: 75,
-      fileSource:[]
+      fileSource:[],
+      CloseAccount:0,
     }
 
     const dialogRef = this.dialog.open(RppaymentComponent, 

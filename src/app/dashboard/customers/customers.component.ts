@@ -9,8 +9,10 @@ import { Router } from '@angular/router';
 import { PartyService } from '../party.service';
 import { MsgboxComponent } from '../msgbox/msgbox.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 
-@Component({
+@AutoUnsubscribe
+@Component({ 
   selector: 'app-customers',
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.css']
@@ -21,7 +23,9 @@ export class CustomersComponent implements OnInit {
   dataSource!: MatTableDataSource<TypeParties>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;  
-  
+
+  searchText: string = "";
+  SortBy: number  = 1;
   dataError: boolean = false;
   errDetails: string = "";
   loadingData: boolean = false;
@@ -43,7 +47,7 @@ export class CustomersComponent implements OnInit {
         this.dataError  = true;
         this.errDetails = data;
       }
-      else{              
+      else{                      
          this.CustomersList = data;            
          this.LoadCustomersListintoMatGrid();          
       }              
@@ -73,7 +77,7 @@ export class CustomersComponent implements OnInit {
   } 
     const dialogRef = this.dialog.open(CustomermasterComponent, 
       {
-      data: {Cust},
+      data: {Cust}, 
       });
       
       dialogRef.disableClose = true; 
@@ -90,8 +94,8 @@ export class CustomersComponent implements OnInit {
       });  
   }
 
-  AlterCustomer(Cust: TypeParties)
-  {
+  AlterCustomer( Cust: TypeParties)
+  {  
     const dialogRef = this.dialog.open(CustomermasterComponent, 
       {
       data: {Cust},
@@ -182,5 +186,35 @@ export class CustomersComponent implements OnInit {
     }
   }
 
+  SortList($event: any){
+    switch ($event.value) {
+      case 1:
+        this.CustomersList.sort((n1,n2) => {
+          if (n1.Party_Name > n2.Party_Name) {
+              return 1;
+          }
+      
+          if (n1.Party_Name < n2.Party_Name) {
+              return -1;
+          }      
+          return 0;
+        });        
+        break;
+      case 2:
+          this.CustomersList.sort((n1,n2) => {
+            if (n1.Ratings! > n2.Ratings!) {
+                return 1;
+            }
+            else if (n1.Ratings! < n2.Ratings!) {
+                return -1;
+            }    
+            else {
+              return 0;
+            }              
+          });        
+          break;
+    }
+    
+  }
 }
  

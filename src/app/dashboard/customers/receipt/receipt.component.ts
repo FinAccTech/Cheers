@@ -25,12 +25,14 @@ export class ReceiptComponent implements OnInit {
   filteredBanks!: Observable<TypeBanks[]>;   
   banks: TypeBanks[] = [ ];
 
+  Account_No: string = "";
   TransImages: FileHandle[] = [];
   imagesCount: number = 0;
 
   AmountInWords: string = "";
   IntAmountInWords: string = "";
 
+  CloseAccount: boolean = false;
   /* Ng Models */
   GrossWt: number = 0;
   NettWt: number = 0;
@@ -93,6 +95,7 @@ export class ReceiptComponent implements OnInit {
   ngOnInit(): void {
     this.AddNewReceipt();
     this.LoadReceipt(this.data.Rcpt);
+    this.Account_No = this.data.Rcpt.Account.Account_No;
   }
 
   onNoClick(): void {
@@ -132,7 +135,8 @@ export class ReceiptComponent implements OnInit {
       Trans_Date      : [new Date, [Validators.required]],
       Ref_No          : [""],
       Series          : [{SeriesSno:this.globals.VTypReceipt, Series_Name:"Receipt"}],
-      Party           : [{PartySno:this.data.Rcpt.PartySno, Party_Name:this.data.Rcpt.Party_Name}],
+      Account         : [{AccountSno:this.data.Rcpt.Account.AccountSno}],
+      Account_No      : [""],
       Borrower        : [{BorrowerSno:0, Borrower_Name:""}],
       Bank            : [this.formBuilder.group( this.banks), [Validators.required]],
       BankBranch      : [{BranchSno:0, Branch_Name:""} ],
@@ -147,6 +151,7 @@ export class ReceiptComponent implements OnInit {
       Ref             : [{RefSno:0, Ref_No:""} ],    
       Remarks         : ["" ],    
       fileSource      : [this.TransImages],   
+      CloseAccount    : [this.CloseAccount],   
     });    
     
   } 
@@ -158,7 +163,7 @@ export class ReceiptComponent implements OnInit {
     this.ReceiptForm.controls['Trans_Date'].setValue(Rcpt.Trans_Date);    
     this.ReceiptForm.controls['Ref_No'].setValue(Rcpt.Ref_No);        
     this.ReceiptForm.controls['Series'].setValue({SeriesSno: Rcpt.Series.SeriesSno, Series_Name: Rcpt.Series.Series_Name } );    
-    this.ReceiptForm.controls['Party'].setValue({PartySno: Rcpt.Party.PartySno, Party_Name: Rcpt.Party.Party_Name } );    
+    this.ReceiptForm.controls['Account'].setValue({AccountSno: Rcpt.Account.AccountSno} );    
     this.ReceiptForm.controls['Borrower'].setValue({BorrowerSno: Rcpt.Borrower.BorrowerSno, Borrower_Name: Rcpt.Borrower.Borrower_Name });        
     this.ReceiptForm.controls['Bank'].patchValue({BankSno:Rcpt.Bank.BankSno, Bank_Name: Rcpt.Bank.Bank_Name});        
     this.ReceiptForm.controls['BankBranch'].patchValue({BranchSno:Rcpt.BankBranch.BranchSno, Branch_Name: Rcpt.BankBranch.Branch_Name});        
@@ -171,6 +176,8 @@ export class ReceiptComponent implements OnInit {
     this.ReceiptForm.controls['Other_Charges'].setValue(Rcpt.Other_Charges);        
     this.ReceiptForm.controls['Ref'].patchValue({RefSno:Rcpt.Ref.RefSno, Ref_No: Rcpt.Ref.Ref_No});        
     this.ReceiptForm.controls['Remarks'].setValue(Rcpt.Remarks);       
+    this.ReceiptForm.controls['CloseAccount'].setValue(Rcpt.CloseAccount);      
+    this.CloseAccount = Rcpt.CloseAccount ==1 ? true : false; 
     this.GrossWt = Rcpt.GrossWt;
     this.NettWt = Rcpt.NettWt;
     this.Purity = Rcpt.Purity;
@@ -183,12 +190,12 @@ export class ReceiptComponent implements OnInit {
       this.ReceiptForm.controls['fileSource'].patchValue(data);  
       this.imagesCount = this.TransImages.length;
     });
+    
 
   }
   
   SaveReceipt(){          
     
-     
     if ((this.ReceiptForm.controls['PrincipalAmount'].value > 0) || (this.ReceiptForm.controls['IntAmount'].value > 0))
     {
       if (!this.ReceiptForm.controls['Bank'].value.BankSno)
@@ -254,6 +261,7 @@ export class ReceiptComponent implements OnInit {
     StrImageXml += "</Images>"
     StrImageXml += "</ROOT>"
 
+    this.ReceiptForm.controls['CloseAccount'].setValue(this.CloseAccount ? 1 : 0);    
 
     if(this.ReceiptForm.valid){
 
@@ -270,6 +278,7 @@ export class ReceiptComponent implements OnInit {
         );
         dialogRef.disableClose = true;
 
+        
       
       this.TransService.saveTransaction (Object(this.ReceiptForm.value),StrItemXml,StrImageXml).subscribe((data:any ) => {
 

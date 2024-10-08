@@ -1,6 +1,4 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { TypeParties } from '../../types/TypeParties';
-import { PartyService } from '../../party.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { TypeTransactions } from '../../types/TypeTransactions';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';

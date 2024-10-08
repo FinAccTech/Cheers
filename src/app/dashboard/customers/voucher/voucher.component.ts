@@ -25,7 +25,8 @@ export class VoucherComponent implements OnInit {
   VoucherForm!: FormGroup;  
   filteredBanks!: Observable<TypeBanks[]>;   
   banks: TypeBanks[] = [ ];
-  
+  Account_No: string = "";
+
 /*Element Refs for Focus */
   @ViewChild('transdate') transdate!: ElementRef;
   @ViewChild('dramount') dramount!: ElementRef;
@@ -79,6 +80,7 @@ export class VoucherComponent implements OnInit {
   ngOnInit(): void {
     this.AddNewVoucher();        
     this.LoadVoucher(this.data.Vou);    
+    this.Account_No = this.data.Vou.Account.Account_No;
   }
 
   onNoClick(): void {
@@ -95,7 +97,8 @@ export class VoucherComponent implements OnInit {
       Trans_Date      : [new Date, [Validators.required]],
       Ref_No          : [""],
       Series          : [{SeriesSno:this.globals.VtypVoucher, Series_Name:"Voucher"}],
-      Party           : [{PartySno:this.data.Vou.Party.PartySno, Party_Name:this.data.Vou.Party.Party_Name}],
+      // Party           : [{PartySno:this.data.Vou.Party.PartySno, Party_Name:this.data.Vou.Party.Party_Name}],
+      Account         : [{AccountSno:0}],
       Borrower        : [{BorrowerSno:0, Borrower_Name:""}],
       Bank            : [this.formBuilder.group( this.banks), [Validators.required]],      
       BankBranch      : [{BranchSno:0, Branch_Name:""} ],
@@ -120,7 +123,7 @@ export class VoucherComponent implements OnInit {
     this.VoucherForm.controls['Trans_Date'].setValue(Vou.Trans_Date);    
     this.VoucherForm.controls['Ref_No'].setValue(Vou.Ref_No);        
     this.VoucherForm.controls['Series'].setValue({SeriesSno: Vou.Series.SeriesSno, Series_Name: Vou.Series.Series_Name } );    
-    this.VoucherForm.controls['Party'].setValue({PartySno: Vou.Party.PartySno, Party_Name: Vou.Party.Party_Name } );    
+    this.VoucherForm.controls['Account'].setValue({AccountSno: Vou.Account.AccountSno} );    
     this.VoucherForm.controls['Borrower'].setValue({BorrowerSno: Vou.Borrower.BorrowerSno, Borrower_Name: Vou.Borrower.Borrower_Name });        
     this.VoucherForm.controls['Bank'].patchValue({BankSno:Vou.Bank.BankSno, Bank_Name: Vou.Bank.Bank_Name});        
     this.VoucherForm.controls['BankBranch'].patchValue({BranchSno:Vou.BankBranch.BranchSno, Branch_Name: Vou.BankBranch.Branch_Name});  

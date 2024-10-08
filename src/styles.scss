@@ -4,28 +4,30 @@
 
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
-html,
-body {
-    height: 100%;
-}
-
-body {
+* {
     margin: 0;
-    //font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-family: 'Open Sans', "PingFang SC", Helvetica, Arial, sans-serif;
-}
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
+    font-family: 'Roboto', sans-serif;        
+    font-size: 14px;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
 
-h1 {
-    font-size: 24px;
-}
-
-h2 {
-    font-size: 20px;
-}
-
-h3, h4{
-    font-size: 14px;    
-}
+  h1{
+    font-size: 2rem;
+  }
+  h2{
+    font-size: 1.25rem;
+  }
+  h3{
+    font-size: 1rem;
+  }
+  h4{
+    font-size: 1rem;
+  }
 
 p.formHeader{
     padding: 0px ;   
@@ -76,6 +78,47 @@ mat-option
 
 .btn:hover
 {
-    border: 1px solid darkgray;
-    background-color: lightgray;
+    border: 1px solid #ddd;
+    // background-color: lightgray;
+    transition: transform 0.25s 0s; 
+    transform: scale(1.1); 
+    font-size: 500;
 }
+
+.partyList{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+    
+  
+    .child{
+      flex: 1 0 16%; 
+      margin: 5px;
+    }
+  }
+
+  .matGroup{
+    position: relative;
+    .matSelect{
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 5px;
+      position: relative;
+    }
+  
+    .matLabel {
+      top: 0;
+      font-size: .8rem;
+      
+      position: absolute;    
+    }
+  }
+
+  .lockedInput{
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }

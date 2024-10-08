@@ -1,39 +1,39 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-
 @Injectable({
   providedIn: 'root'
 })
-
 
 export class AppGlobalsService 
 {
   constructor(private dialog: MatDialog){ }
 
-  baseApiURL:string = "https://www.finaccsaas.com/CheersApp/data/ClsRest.php";
-  baseImageURL: string = "https://www.finaccsaas.com/CheersApp/data/Images/";
-
+  baseApiURL:string = "https://www.finaccsaas.com/Cheers2/data/ClsRest.php";
+  baseImageURL: string = "https://www.finaccsaas.com/Cheers2/data/Images/";
+  PartyImageUrl: string = "https://www.finaccsaas.com/Cheers2/data/Images/CustomerImages";
   
-      PartyTypeCustomers:   number = 1;
-      PartyTypeBorrower:    number = 2;
-    
-      VtypPayment:          number = 1;     
-      VTypReceipt:          number = 2;
-      VtypRepledge:         number = 3;
-      VtypTransfer:         number = 4;
-      VtypVoucher:          number = 5;
-      VtypRelease:          number = 6;
-      VtypInterestPosting:  number = 7;
-      VTypRpPayment:        number = 8;
+  PartyTypeCustomers:   number = 1;
+  PartyTypeBorrower:    number = 2;
 
-      objItemGroups:        number = 1;
-      objParty:             number = 2;
-      objTransactions:      number = 3;
-      objAccVoucherSeries:  number = 4;
+  VtypPayment:          number = 1;     
+  VTypReceipt:          number = 2;
+  VtypRepledge:         number = 3;
+  VtypTransfer:         number = 4;
+  VtypVoucher:          number = 5;
+  VtypRelease:          number = 6;
+  VtypInterestPosting:  number = 7;
+  VTypRpPayment:        number = 8;
 
+  objItemGroups:        number = 1;
+  objParty:             number = 2;
+  objTransactions:      number = 3;
+  objAccVoucherSeries:  number = 4;
+
+ 
   DateToInt(inputDate: Date)
   {
+    
     let month: string = (inputDate.getMonth() + 1).toString();    
     let day: string = inputDate.getDate().toString();    
     if (month.length == 1) { month = "0" + month }
@@ -120,5 +120,6 @@ export class AppGlobalsService
   }
 
 
-
+  
+  
 }

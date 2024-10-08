@@ -14,13 +14,13 @@
         </ng-container>
 
         <ng-container *ngIf="!dataError && !loadingData" >
-            <div class="row">   
-            
+          <div class="container-fluid"  >
+            <div class="row" style="background-color: #fff; border-radius: .6rem; display: flex; align-items: center; ">
                 <div class="col-md-6">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Search</mat-label>
-                        <input matInput (keyup)="applyFilterBank($event)" placeholder="Type here to Search" #inputBank>
-                    </mat-form-field>
+                  <div style="display: flex; align-items: center; column-gap: .5rem;">
+                    <img src="assets/images/banks.png" width="30" height="30" />
+                    <h2>Banks</h2>
+                  </div>
                 </div>
                 <div class="col-md-2" style="padding: 10px;">
                   
@@ -34,7 +34,32 @@
                 
             </div> 
 
-            <div class="mat-elevation-z8">
+            <div class="row" style="background-color: #fff; margin-top: .5rem; border-radius: .6rem;">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field appearance="standard" >
+                      <mat-label>Search</mat-label>
+                      <input matInput [(ngModel)]="searchText" placeholder="Type here to Search">
+                    </mat-form-field>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="partyList">
+                      <div class="child" *ngFor="let bnk of BanksList | search: searchText" [routerLink]="['customeraccountslist/', bnk.BankSno, bnk.Bank_Name]" routerLinkActive="active">
+                        <app-profilecard [Party]="bnk" (retAlter)="AlterBank(bnk);" ></app-profilecard>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- <div class="mat-elevation-z8">
 
                 <table mat-table [dataSource]="dataSourceBank" matSort>
               
@@ -86,7 +111,8 @@
                 </table>
               
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 100 aria-label="Select page of users"></mat-paginator>
-            </div>
+            </div> -->
+          </div>
         </ng-container>                
       
     </div>

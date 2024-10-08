@@ -13,7 +13,7 @@ import { AppGlobalsService } from '../../app-globals.service';
 import { MsgboxComponent } from '../../msgbox/msgbox.component';
 import { TypeBanks } from '../../types/TypeBanks';
 import { FileHandle } from '../../types/file-handle';
-import { DomSanitizer } from '@angular/platform-browser';
+
 import { ToWords } from 'to-words';
 
 @Component({
@@ -39,6 +39,8 @@ export class PaymentComponent implements OnInit {
   N916NettWt: number = 0;
   N916Purity: number = 75;
 /*-------------------------------*/
+
+  Account_No: string = "";
 
 /*Element Refs for Focus */
   @ViewChild('transdate') transdate!: ElementRef;
@@ -93,6 +95,7 @@ export class PaymentComponent implements OnInit {
   ngOnInit(): void {
     this.AddNewPayment();        
     this.LoadPayment(this.data.Pmt);    
+    this.Account_No = this.data.Pmt.Account.Account_No;
   }
 
   onNoClick(): void {
@@ -135,20 +138,20 @@ export class PaymentComponent implements OnInit {
       Trans_Date      : [new Date, [Validators.required]],
       Ref_No          : [""],
       Series          : [{SeriesSno:this.globals.VtypPayment, Series_Name:"Payment"}],
-      Party           : [{PartySno:this.data.Pmt.Party.PartySno, Party_Name:this.data.Pmt.Party.Party_Name}],
+      Account         : [{AccountSno:this.data.Pmt.Account.AccountSno}],
       Borrower        : [{BorrowerSno:0, Borrower_Name:""}],
       Bank            : [this.formBuilder.group( this.banks), [Validators.required]],      
-      BankBranch      : [{BranchSno:0, Branch_Name:""} ],
-      Loan_Type       : [0, ],    
-      Roi             : [this.data.Pmt.Party.Roi,[Validators.required]],   
-      Tenure          : [0, ],    
-      DrAmount        : [0, ],    
-      CrAmount        : [0, ],    
-      PrincipalAmount : [0, ],    
-      IntAmount       : [0, ],    
-      Other_Charges   : [0, ],    
-      Ref             : [{RefSno:0, Ref_No:""} ],    
-      Remarks         : ["" ],   
+      BankBranch      : [{BranchSno:0, Branch_Name:""}],
+      Loan_Type       : [0,],    
+      Roi             : [this.data.Pmt.Account.Roi,[Validators.required]],   
+      Tenure          : [0,],    
+      DrAmount        : [0,],    
+      CrAmount        : [0,],    
+      PrincipalAmount : [0,],    
+      IntAmount       : [0,],    
+      Other_Charges   : [0,],    
+      Ref             : [{RefSno:0, Ref_No:""}],    
+      Remarks         : [""],   
       fileSource      : [this.TransImages],   
     });        
   }
@@ -160,7 +163,7 @@ export class PaymentComponent implements OnInit {
     this.PaymentForm.controls['Trans_Date'].setValue(Pmt.Trans_Date);    
     this.PaymentForm.controls['Ref_No'].setValue(Pmt.Ref_No);        
     this.PaymentForm.controls['Series'].setValue({SeriesSno: Pmt.Series.SeriesSno, Series_Name: Pmt.Series.Series_Name } );    
-    this.PaymentForm.controls['Party'].setValue({PartySno: Pmt.Party.PartySno, Party_Name: Pmt.Party.Party_Name } );    
+    this.PaymentForm.controls['Account'].setValue({AccountSno: Pmt.Account.AccountSno} );    
     this.PaymentForm.controls['Borrower'].setValue({BorrowerSno: Pmt.Borrower.BorrowerSno, Borrower_Name: Pmt.Borrower.Borrower_Name });        
     this.PaymentForm.controls['Bank'].patchValue({BankSno:Pmt.Bank.BankSno, Bank_Name: Pmt.Bank.Bank_Name});        
     this.PaymentForm.controls['BankBranch'].patchValue({BranchSno:Pmt.BankBranch.BranchSno, Branch_Name: Pmt.BankBranch.Branch_Name});  

@@ -57,7 +57,7 @@
                 </div>
                 
                 <div class="row" style="margin-top: 10px;" >
-                    <div class="col-md-12">  
+                    <div class="col-md-6">  
                         <mat-form-field class="example-full-width" appearance="fill">
                         <mat-label>Select Bank Account</mat-label>
                         <input matInput #bank
@@ -71,6 +71,12 @@
                         </mat-autocomplete>                        
                     </mat-form-field>                    
                     </div>              
+
+                    <div class="col-md-6">
+                        <mat-form-field class="full-width">                        
+                            <input style=" text-align: center;font-size: 1.2rem;font-weight: 600;" placeholder="Account No" formControlName="Account_No" [(ngModel)]="Account_No"  matInput type="text" readonly=""  >
+                        </mat-form-field>
+                    </div>   
                 </div>
                 
                 <div class="row" style="margin-top: 10px;" >               
@@ -127,6 +133,23 @@
                         <input  matInput placeholder="Purity" type="number" [(ngModel)]="N916Purity"  (focus)="NullCheck($event,1)" (focusout)="NullCheck($event,2)" (keyup)="MoveFocus($event)" name="npurity" #npurity >
                     </mat-form-field>
                 </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4" style="margin-top: .5rem;" >
+                    <div class="matGroup">
+                      <div class="matSelect">
+                          <mat-select [(value)]="CloseAccount" >
+                              <mat-option [value]="false">No</mat-option>
+                              <mat-option [value]="true">Yes</mat-option>                                                          
+                          </mat-select>
+                      </div>
+                      <div class="matLabel">
+                          &nbsp;&nbsp; Close Account
+                      </div>
+                    </div>
+                  </div>
             </div>
         </div>
 

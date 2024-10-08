@@ -122,6 +122,8 @@ export class TransactionService {
     // {
     //   Trans.CrAmount = Trans.CrAmount + Trans.IntAmount;
     // }
+    console.log(Trans);
+       
     
     let edata: string =JSON.stringify
     ({      
@@ -130,7 +132,7 @@ export class TransactionService {
       "Trans_Date"          :   this.globals.DateToInt (Trans.Trans_Date),
       "Ref_No"              :   Trans.Ref_No,
       "SeriesSno"           :   Trans.Series.SeriesSno,
-      "PartySno"            :   Trans.Party.PartySno,  
+      "AccountSno"          :   Trans.Account.AccountSno,  
       "BorrowerSno"         :   Trans.Borrower.BorrowerSno, 
       "BankSno"             :   Trans.Bank.BankSno, 
       "BankBranchSno"       :   Trans.BankBranch.BranchSno,
@@ -146,7 +148,9 @@ export class TransactionService {
       "Remarks"             :   Trans.Remarks,
       "ItemDetails"         :   ItemDetails, 
       "ImageDetails"        :   ImageDetails, 
-      "fileSource"          :   Trans.fileSource
+      "fileSource"          :   Trans.fileSource,
+      "CloseAccount"        :   Trans.CloseAccount,
+      "CompSno"             :   1
    }); 
 
      let params = new HttpParams()
@@ -228,6 +232,28 @@ getPartyStatement(PartySno: number, FromDate: Date, ToDate: Date):Observable<Typ
     .set('data', edata)
         
     let apiURL: string = this.globals.baseApiURL + "/getPartyStatement";
+  
+  return this.http.get<any>(apiURL, { params })
+    .pipe(map(datarecd => {                    
+      if (datarecd.queryStatus == 0)
+        {              
+          return (0);                
+        }         
+        else
+        {            
+          return ( datarecd);            
+        }                      
+    }));
+}
+
+getAccountStatement(AccountSno: number, FromDate: Date, ToDate: Date):Observable<TypePartyStatement>
+{ 
+  let edata: string =JSON.stringify({"AccountSno" :  AccountSno, "FromDate" :  this.globals.DateToInt(FromDate) , "ToDate" :  this.globals.DateToInt(ToDate) }); 
+  
+    let params = new HttpParams()
+    .set('data', edata)
+        
+    let apiURL: string = this.globals.baseApiURL + "/getAccountStatement";
   
   return this.http.get<any>(apiURL, { params })
     .pipe(map(datarecd => {                    

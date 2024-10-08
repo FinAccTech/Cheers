@@ -1,8 +1,8 @@
-USE cheersapp
+USE cheers2
 go
 
 ALTER PROCEDURE Ssp_Post_Interest
-@PartySno INT,
+@AccountSno INT,
 @PostMethod TINYINT,
 @AsonType TINYINT
 
@@ -26,20 +26,20 @@ BEGIN
 
 
   --CLEARING OLD POSTINGS
-    DELETE FROM Transactions WHERE SeriesSno=7 AND PartySno=@PartySno
-    UPDATE Party SET NewPrincipal=0, IntLastUpdate=(SELECT ISNULL([dbo].IntToDate(MIN(Trans_Date)),GETDATE()) FROM Transactions WHERE PartySno=@PartySno) WHERE PartySno=@PartySno
+    DELETE FROM Transactions WHERE SeriesSno=7 AND AccountSno=@AccountSno
+    UPDATE Accounts SET NewPrincipal=0, IntLastUpdate=(SELECT ISNULL([dbo].IntToDate(MIN(Trans_Date)),GETDATE()) FROM Transactions WHERE AccountSno=@AccountSno) WHERE AccountSno=@AccountSno
 
-	SELECT @NewPrincipal = ISNULL(NewPrincipal,0),@Roi = Roi,@Scheme=Scheme FROM Party WHERE PartySno=@PartySno
+	  SELECT @NewPrincipal = ISNULL(NewPrincipal,0),@Roi = Roi,@Scheme=Scheme FROM Accounts WHERE AccountSno=@AccountSno
 
-	IF EXISTS(SELECT TransSno FROM Transactions WHERE SeriesSno= 7 AND PartySno=@PartySno)
+	IF EXISTS(SELECT TransSno FROM Transactions WHERE SeriesSno= 7 AND AccountSno=@AccountSno)
 		BEGIN
-			SELECT @IntLastUpdate = [dbo].IntToDate(MAX(Trans_Date)) FROM Transactions WHERE SeriesSno= 7 AND PartySno=@PartySno		
+			SELECT @IntLastUpdate = [dbo].IntToDate(MAX(Trans_Date)) FROM Transactions WHERE SeriesSno= 7 AND AccountSno=@AccountSno		
 		END
 	
 	ELSE
 		BEGIN
 			--SELECT @IntLastUpdate = IntLastUpdate FROM Party WHERE PartySno=@PartySno
-      SELECT @IntLastUpdate = [dbo].IntToDate(MIN( Trans_Date)) FROM Transactions WHERE PartySno=@PartySno
+      SELECT @IntLastUpdate = [dbo].IntToDate(MIN( Trans_Date)) FROM Transactions WHERE AccountSno=@AccountSno
       IF @IntLastUpdate IS NULL
         BEGIN
           GOTO CloseNow
@@ -50,9 +50,9 @@ BEGIN
 
     SET @AsOn = CASE @PostMethod
                         WHEN  1 THEN
-                          CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE PartySno=@PartySno)
+                          CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE AccountSno=@AccountSno)
                             THEN
-                              (SELECT [dbo].IntToDate(MAX(Trans_Date)) FROM Transactions WHERE PartySno=@PartySno)
+                              (SELECT [dbo].IntToDate(MAX(Trans_Date)) FROM Transactions WHERE AccountSno=@AccountSno)
                             ELSE
                               GETDATE()
                           END
@@ -86,9 +86,9 @@ BEGIN
         		
 				SET @RegularInt = ((@Roi /100)*@NewPrincipal/12) -- * (DATEDIFF(DAY,@FromDate,@ToDate)) --Interest for Opening Balance (New Principal)
 
-        SET @DebitInt = [dbo].GetNewDebitInterest(@PartySno,@FromDate,@ToDate,@Roi)
-        SET @CreditInt  = [dbo].GetNewCreditInterest(@PartySno,@FromDate,@ToDate,@Roi)
-        SET @IntPaid = [dbo].GetInterestPaid(@PartySno,@FromDate, @ToDate)
+        SET @DebitInt = [dbo].GetNewDebitInterest(@AccountSno,@FromDate,@ToDate,@Roi)
+        SET @CreditInt  = [dbo].GetNewCreditInterest(@AccountSno,@FromDate,@ToDate,@Roi)
+        SET @IntPaid = [dbo].GetInterestPaid(@AccountSno,@FromDate, @ToDate)
 
 				SET @IntAccuredb4IntPaid = (@RegularInt	+	@DebitInt) -  (@CreditInt)
         SET @IntAccured = (@RegularInt	+	@DebitInt) -  (@CreditInt )
@@ -98,31 +98,31 @@ BEGIN
           --select @IntPaid, @IntAccuredb4IntPaid, @RegularInt, @DebitInt, @CreditInt, @ExcessInt, @IntAccured
         --SELECT @FromDate, @todate, [dbo].GetNewDebitInterest(@PartySno,@FromDate,@ToDate,@Roi), [dbo].GetNewCreditInterest(@PartySno,@FromDate,@ToDate,@Roi), [dbo].GetInterestPaid(@PartySno,@FromDate, @ToDate)
 
-  			SET @NewPrincipal = (@NewPrincipal	+ (SELECT ISNULL(SUM(DrAmount),0) FROM Transactions WHERE (SeriesSno = 1) AND (PartySno=@PartySno) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))))  
-															- (SELECT ISNULL(SUM(CrAmount-IntAmount),0) FROM Transactions WHERE (SeriesSno = 2) AND (PartySno=@PartySno) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))) 
+  			SET @NewPrincipal = (@NewPrincipal	+ (SELECT ISNULL(SUM(DrAmount),0) FROM Transactions WHERE (SeriesSno = 1) AND (AccountSno=@AccountSno) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))))  
+															- (SELECT ISNULL(SUM(CrAmount-IntAmount),0) FROM Transactions WHERE (SeriesSno = 2) AND (AccountSno=@AccountSno) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))) 
 
             
             IF @Scheme=1 --SIMPLE INTEREST
               BEGIN
-                UPDATE Party SET NewPrincipal = @NewPrincipal WHERE PartySno=@PartySno
+                UPDATE Accounts SET NewPrincipal = @NewPrincipal WHERE AccountSno=@AccountSno
                 SET @Remarks = 'Interest Posted '+ CAST(@FromDate as VARCHAR) + ' to '+ CAST(@ToDate AS VARCHAR)
 
-						    INSERT INTO Transactions  (Trans_No,Trans_Date,Ref_No,SeriesSno,PartySno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,DrAmount,CrAmount,IntAmount,Other_Charges,RefSno,Remarks,IntAccured)
-							              VALUES        (Dbo.[GenerateVoucherNo](7),[dbo].DateToInt(@IpDate),'',7,@PartySno,0,0,0,'',0,@IntAccured ,0,0,0,0,@Remarks,@IntAccuredb4IntPaid)
+						    INSERT INTO Transactions  (Trans_No,Trans_Date,Ref_No,SeriesSno,AccountSno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,DrAmount,CrAmount,IntAmount,Other_Charges,RefSno,Remarks,IntAccured)
+							              VALUES        (Dbo.[GenerateVoucherNo](7),[dbo].DateToInt(@IpDate),'',7,@AccountSno,0,0,0,'',0,@IntAccured ,0,0,0,0,@Remarks,@IntAccuredb4IntPaid)
 
                              UPDATE Voucher_Series SET Current_No=Current_No+1 WHERE SeriesSno=7
               END
             ELSE IF @Scheme=2 --COMPOUND INTEREST
               BEGIN
                 SET @NewPrincipal = @NewPrincipal + @IntAccured
-                UPDATE Party SET NewPrincipal = @NewPrincipal + @IntAccured WHERE PartySno=@PartySno
+                UPDATE Accounts SET NewPrincipal = @NewPrincipal + @IntAccured WHERE AccountSno=@AccountSno
                 SET @Remarks  = 'Interest for'+ CAST(@FromDate as VARCHAR) + ' to '+ CAST(@ToDate AS VARCHAR) + ' - ' + CAST(@IntAccured AS VARCHAR) + ' compounded to Principal'
 
-						    INSERT INTO Transactions  (Trans_No,Trans_Date,Ref_No,SeriesSno,PartySno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,DrAmount,CrAmount,IntAmount,Other_Charges,RefSno,Remarks,IntAccured)
-							              VALUES        (Dbo.[GenerateVoucherNo](7),[dbo].DateToInt(@IpDate),'',7,@PartySno,0,0,0,'',0,@IntAccured,0,0,0,0,@Remarks,@IntAccuredb4IntPaid)
+						    INSERT INTO Transactions  (Trans_No,Trans_Date,Ref_No,SeriesSno,AccountSno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,DrAmount,CrAmount,IntAmount,Other_Charges,RefSno,Remarks,IntAccured)
+							              VALUES        (Dbo.[GenerateVoucherNo](7),[dbo].DateToInt(@IpDate),'',7,@AccountSno,0,0,0,'',0,@IntAccured,0,0,0,0,@Remarks,@IntAccuredb4IntPaid)
               END
 
-				SELECT @IntLastUpdate = [dbo].IntToDate(MAX(Trans_Date)) FROM Transactions WHERE SeriesSno= 7 AND PartySno=@PartySno
+				SELECT @IntLastUpdate = [dbo].IntToDate(MAX(Trans_Date)) FROM Transactions WHERE SeriesSno= 7 AND AccountSno=@AccountSno
 			END
 
       FinalInt:
@@ -142,9 +142,9 @@ BEGIN
                                          ((((@Roi /100)*@NewPrincipal/12)/30) * 7) * ((DATEDIFF(DAY,@FromDate,@ToDate) / 7) + 1)
                             END
 
-          SET @DebitInt = [dbo].GetNewDebitInterest(@PartySno,@FromDate,@ToDate,@Roi)
-          SET @CreditInt  = [dbo].GetNewCreditInterest(@PartySno,@FromDate,@ToDate,@Roi)
-          SET @IntPaid = [dbo].GetInterestPaid(@PartySno,@FromDate, @ToDate)
+          SET @DebitInt = [dbo].GetNewDebitInterest(@AccountSno,@FromDate,@ToDate,@Roi)
+          SET @CreditInt  = [dbo].GetNewCreditInterest(@AccountSno,@FromDate,@ToDate,@Roi)
+          SET @IntPaid = [dbo].GetInterestPaid(@AccountSno,@FromDate, @ToDate)
 
         
           SET @IntAccuredb4IntPaid = (@RegularInt	+	@DebitInt) -  (@CreditInt)
@@ -153,8 +153,8 @@ BEGIN
 
           SET @Remarks = 'Interest for ' + CAST(@FromDate AS varchar) + ' to ' + CAST(@ToDate AS varchar)
 
-          INSERT INTO   Transactions  (Trans_No,Trans_Date,Ref_No,SeriesSno,PartySno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,DrAmount,CrAmount,IntAmount,Other_Charges,RefSno,Remarks,IntAccured)
-					VALUES        (Dbo.[GenerateVoucherNo](7),[dbo].DateToInt(@ToDate),'',7,@PartySno,0,0,0,'',0,@IntAccured,0,0,0,0,@Remarks,@IntAccuredb4IntPaid)
+          INSERT INTO   Transactions  (Trans_No,Trans_Date,Ref_No,SeriesSno,AccountSno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,DrAmount,CrAmount,IntAmount,Other_Charges,RefSno,Remarks,IntAccured)
+					VALUES        (Dbo.[GenerateVoucherNo](7),[dbo].DateToInt(@ToDate),'',7,@AccountSno,0,0,0,'',0,@IntAccured,0,0,0,0,@Remarks,@IntAccuredb4IntPaid)
 
           UPDATE Voucher_Series SET Current_No=Current_No+1 WHERE SeriesSno=7
 

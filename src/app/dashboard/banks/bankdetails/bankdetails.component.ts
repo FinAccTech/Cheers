@@ -1,18 +1,18 @@
 
 
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
-import { TypeTransactions } from '../../types/TypeTransactions';
+
 import { TransactionService } from '../../transaction.service';
-import { TypeParties } from '../../types/TypeParties';
+
 import { TypePartyStatement } from '../../types/TypePartyStatement';
 import { BroadcastserviceService } from '../../broadcast.service';
 import { Subscription, filter } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { PartyService } from '../../party.service';
+
 import { AppGlobalsService } from '../../app-globals.service';
 import { MsgboxComponent } from '../../msgbox/msgbox.component';
 import { MatSnackBar } from '@angular/material/snack-bar';

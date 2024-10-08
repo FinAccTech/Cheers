@@ -145,7 +145,7 @@ export class BorrowerdetailsComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypRepledge, Series_Name: "Repledge"},
-      Party:  {PartySno: 0, Party_Name: ""},
+      Account:  {AccountSno: 0},
       Borrower: {BorrowerSno: this.Party.PartySno, Borrower_Name: this.Party.Party_Name},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -165,7 +165,8 @@ export class BorrowerdetailsComponent implements OnInit {
       N916GrossWt: 0, 
       N916NettWt: 0,
       N916Purity: 75,
-      fileSource: []
+      fileSource: [],
+      CloseAccount:0,
     }
 
     const dialogRef = this.dialog.open(RepledgeComponent, 
@@ -188,7 +189,7 @@ export class BorrowerdetailsComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypTransfer, Series_Name: "Transfer"},
-      Party:  {PartySno: 0, Party_Name: ""},
+      Account:  {AccountSno: 0},
       Borrower: {BorrowerSno: this.Party.PartySno, Borrower_Name: this.Party.Party_Name},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -208,7 +209,8 @@ export class BorrowerdetailsComponent implements OnInit {
       N916GrossWt: 0, 
       N916NettWt: 0,
       N916Purity: 75,
-      fileSource: []
+      fileSource: [],
+      CloseAccount:0,
     }
 
     const dialogRef = this.dialog.open(TransferComponent, 

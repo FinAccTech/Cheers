@@ -16,16 +16,37 @@ import { CustomerAnalysisComponent } from './dashboard/Reports/customer-analysis
 import { StockreportComponent } from './dashboard/Reports/stockreport/stockreport.component';
 import { RepledgehistorybanksComponent } from './dashboard/Reports/repledgehistorybanks/repledgehistorybanks.component';
 import { SummaryComponent } from './dashboard/summary/summary.component';
+import { CustomeraccountslistComponent } from './dashboard/customers/customeraccountslist/customeraccountslist.component';
+import { RecenttransComponent } from './dashboard/recenttrans/recenttrans.component';
+import { CustomersComponent } from './dashboard/customers/customers.component';
+import { BorrowersComponent } from './dashboard/borrowers/borrowers.component';
+import { BanksComponent } from './dashboard/banks/banks.component';
+import { AccountsmastersComponent } from './dashboard/customers/accountsmasters/accountsmasters.component';
 
 
 const routes: Routes = [
   { path:'', component: LoginComponent},
   { path:'dashboard', component: DashboardComponent, children:[
-    { path:'', component: IndexpageComponent},
+    // { path:'', component: IndexpageComponent}, 
+    { path:'', component: RecenttransComponent}, 
     { path:'summary', component: SummaryComponent},
-    { path:'customerdetailed/:cust/:cust_name', component: CustomerdetailsComponent},
-    { path:'borrowerdetailed/:bwr/:bwr_name', component: BorrowerdetailsComponent},
-    { path:'bankdetailed/:bnk/:bank_name', component: BankdetailsComponent},
+
+    { path:'customers', component: CustomersComponent}, 
+    { path:'customers/customeraccountslist/:cust/:cust_name', component: CustomeraccountslistComponent},
+
+    { path:'borrowers', component: BorrowersComponent}, 
+    { path:'borrowers/borrowerdetailed/:bwr/:bwr_name', component: BorrowerdetailsComponent},
+    
+    { path:'banks', component: BanksComponent}, 
+    { path:'banks/bankdetailed/:bnk/:bank_name', component: BankdetailsComponent},
+    // { path:'customerdetailed/:cust/:cust_name', component: CustomerdetailsComponent},
+
+    { path:'accounts', component: AccountsmastersComponent}, 
+    
+    
+
+    
+    
     { path:'repledgehistory', component: RepledgehistoryComponent},
     { path:'repledgehistorybanks', component: RepledgehistorybanksComponent},
     { path:'gallery', component: GalleryComponent},

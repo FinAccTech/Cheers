@@ -11,7 +11,7 @@ import { TransactionService } from 'src/app/dashboard/transaction.service';
 import { BankService } from 'src/app/dashboard/banks/bank.service';
 import { TypeTransactions } from 'src/app/dashboard/types/TypeTransactions';
 import { MsgboxComponent } from 'src/app/dashboard/msgbox/msgbox.component';
-import { TypeRepledges } from 'src/app/dashboard/types/TypeRepledges';
+
 
 
 @Component({
@@ -150,7 +150,7 @@ export class TransferComponent implements OnInit {
     }      
     this.TransferForm.controls['Ref_No'].setValue(Trf.Ref_No);        
     this.TransferForm.controls['Series'].setValue({SeriesSno: Trf.Series.SeriesSno, Series_Name: Trf.Series.Series_Name } );    
-    this.TransferForm.controls['Party'].setValue({PartySno: Trf.Party.PartySno, Party_Name: Trf.Party.Party_Name } );    
+    this.TransferForm.controls['Accout'].setValue({AccountSno: Trf.Account.AccountSno } );    
     this.TransferForm.controls['Borrower'].setValue({BorrowerSno: Trf.Borrower.BorrowerSno, Borrower_Name: Trf.Borrower.Borrower_Name });        
     this.TransferForm.controls['Bank'].patchValue({BankSno:Trf.Bank.BankSno, Bank_Name: Trf.Bank.Bank_Name});        
     this.TransferForm.controls['BankBranch'].patchValue({BranchSno:Trf.BankBranch.BranchSno, Branch_Name: Trf.BankBranch.Branch_Name});        

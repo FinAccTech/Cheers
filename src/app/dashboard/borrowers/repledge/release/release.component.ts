@@ -10,7 +10,7 @@ import { TransactionService } from 'src/app/dashboard/transaction.service';
 import { BankService } from 'src/app/dashboard/banks/bank.service';
 import { TypeTransactions } from 'src/app/dashboard/types/TypeTransactions';
 import { MsgboxComponent } from 'src/app/dashboard/msgbox/msgbox.component';
-import { TypeRepledges } from 'src/app/dashboard/types/TypeRepledges';
+
 
 
 @Component({
@@ -138,7 +138,7 @@ RpAmount: number = 0;
     }      
     this.ReleaseForm.controls['Ref_No'].setValue(Rel.Ref_No);        
     this.ReleaseForm.controls['Series'].setValue({SeriesSno: Rel.Series.SeriesSno, Series_Name: Rel.Series.Series_Name } );    
-    this.ReleaseForm.controls['Party'].setValue({PartySno: Rel.Party.PartySno, Party_Name: Rel.Party.Party_Name } );    
+    this.ReleaseForm.controls['Account'].setValue({AccountSno: Rel.Account.AccountSno } );    
     this.ReleaseForm.controls['Borrower'].setValue({BorrowerSno: Rel.Borrower.BorrowerSno, Borrower_Name: Rel.Borrower.Borrower_Name });        
     this.ReleaseForm.controls['Bank'].patchValue({BankSno:Rel.Bank.BankSno, Bank_Name: Rel.Bank.Bank_Name});        
     this.ReleaseForm.controls['BankBranch'].patchValue({BranchSno:Rel.BankBranch.BranchSno, Branch_Name: Rel.BankBranch.Branch_Name});        

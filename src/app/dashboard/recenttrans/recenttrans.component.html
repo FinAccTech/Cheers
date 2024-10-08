@@ -1,19 +1,53 @@
-<div class="row">
-                
+<div class="row" style="background-color: #F0F0F9;" >                
     <div class="col-md-12">
-      
-        <ng-container *ngIf="loadingData" >                    
+      <div class="bodyCenter">
+        <div class="chart">
+
+        </div>
+
+        <div class="transactionList"> 
+          <ng-container *ngIf="loadingData" >                    
             <div style="text-align:center; width: 100%;" >
                 <img src="assets/images/loading.gif" height="100px" width="100px" />
             </div>                
-        </ng-container>
+          </ng-container>
 
-        <ng-container *ngIf="dataError" >
-            <h3 style="color: red;">Error!!! Unale to get Payments from the Server</h3> 
-            <p>{{errDetails}}</p>
-        </ng-container>
+          <ng-container *ngIf="dataError" >
+              <h3 style="color: red;">Error!!! Unale to get Payments from the Server</h3> 
+              <p>{{errDetails}}</p>
+          </ng-container>
 
-        <ng-container *ngIf="!dataError && !loadingData" >
+          <ng-container *ngIf="!dataError && !loadingData">        
+                <div class="heading">
+                    <p>Recent Transactions</p>
+                </div>
+                <div *ngFor="let Trans of TransList; let i = index" >
+                    <div class="transaction">
+                        <div class="transLeft">
+                            <div class="logoBox">
+                                <p [style.color]="Trans.SeriesSno == 2 ? 'green' : Trans.SeriesSno == 4 ? 'grey' : Trans.SeriesSno == 5 ? 'red' : Trans.SeriesSno == 6 ? 'blue' : 'pink'" >
+                                    {{Trans.SeriesSno == 1 ? 'P' : Trans.SeriesSno == 2 ? 'R' : Trans.SeriesSno == 3 ? 'RP' : Trans.SeriesSno == 5 ? 'V' : Trans.SeriesSno == 6 ? 'RL' : Trans.SeriesSno == 7 ? 'IP' : 'RPP'   }}
+                                </p>
+                            </div>
+
+                            <div class="content">
+                                <p> <strong> {{ Trans.Series_Name   }} </strong> </p>
+                                <p> No: {{ Trans.Trans_No }} /  {{ Trans.Trans_Date | intToDate | date:'dd/MM/yyyy' }}   </p>
+                            </div>
+                            
+                        </div>
+
+                        <div class="transRight">
+                            <p style="font-weight: 500;font-size: 1.2rem;">{{ Trans.Amount | number}} </p>
+                            <p> {{ Trans.Bank_Name }}   </p>
+                        </div>
+                        
+                    </div>
+                </div>        
+          </ng-container> 
+        </div>
+      </div>
+        <!-- <ng-container *ngIf="!dataError && !loadingData" >
             <div class="row">   
             
                 <div class="col-md-6">
@@ -42,7 +76,7 @@
                     <td mat-cell *matCellDef="let row">  
                         <img *ngIf='row.ImgCount > 0 ' src='assets/images/images.png' height='20' width='20'  (click)="OpenSlideshow(row); $event.stopPropagation();"/>
                     </td>
-                  </ng-container>
+                  </ng-container> 
 
                   <ng-container matColumnDef="Trans_Date">
                     <th mat-header-cell class="bnkhead" *matHeaderCellDef mat-sort-header> Date </th>
@@ -91,6 +125,6 @@
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 25 aria-label="Select page of users"></mat-paginator>
             </div>
         </ng-container>                
-      
+       -->
     </div>
-  </div>
+</div>

@@ -55,7 +55,7 @@
                 </div>
                 
                 <div class="row" style="margin-top: 10px;" >
-                    <div class="col-md-12">  
+                    <div class="col-md-6">  
                         <mat-form-field class="example-full-width" appearance="fill">
                         <mat-label>Select Bank Account</mat-label>
                         <input matInput #bank
@@ -68,7 +68,12 @@
                         </mat-option>
                         </mat-autocomplete>                        
                     </mat-form-field>                    
-                    </div>              
+                    </div>      
+                    <div class="col-md-6">
+                        <mat-form-field class="full-width">                        
+                            <input style=" text-align: center;font-size: 1.2rem;font-weight: 600;" placeholder="Account No" formControlName="Account" [(ngModel)]="Account_No"  matInput type="text" readonly=""  >
+                        </mat-form-field>
+                    </div>        
                 </div>
                 
                 <div class="row" style="margin-top: 10px;" >               

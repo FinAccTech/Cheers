@@ -1,4 +1,4 @@
-    <mat-toolbar>
+    <!-- <mat-toolbar>
         
         <img   src="assets/images/logo.jpg"  width="70" height="60" /> 
          <p style="color: goldenrod; font-size: larger; margin-top: 15px; "  >Cheers Money</p>
@@ -10,8 +10,7 @@
         
         
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-            <mat-icon style="color: rgb(23,57,73);" >account_circle</mat-icon>        
-            <!-- <img class="avatar mat-elevation-z8" src="https://source.unsplash.com/c_GmwfHBDzk/200x200" /> -->        
+            <mat-icon style="color: rgb(23,57,73);" >account_circle</mat-icon>                    
         </button>
           
           <mat-menu #menu="matMenu">
@@ -29,37 +28,76 @@
             </button>
           </mat-menu> 
           
-    </mat-toolbar> 
-    
-    <div class="container-fluid">
-      <div class="row" style="padding: 10px;" >
-        <div class="col-md-8">
-          <a class="alink" [routerLink]="['/dashboard']" routerLinkActive="active"> <img   src="assets/images/home.png"  width="35" height="30"/> Home </a>          
-        </div>
-        
-        <div class="col-md-4" style="text-align: right;" >    
-          <div class="gldRate">
-            <img src="assets/images/gold-price.jpg" height="30" width="30" (click)="OpenGoldRate()" /> 
-            <span>{{GoldRate}} INR </span>
-          </div>      
+    </mat-toolbar>  -->
+    <div class="dashContainer">
 
-          <button mat-button [matMenuTriggerFor]="menuReports"><img   src="assets/images/reports.png"  width="40" height="30" /> &nbsp; <h4 style="display: inline;">Reports</h4></button>
-          <mat-menu #menuReports="matMenu">
-              <a mat-menu-item class="alink" [routerLink]="['summary']" routerLinkActive="active">  Summary </a> 
-              <a mat-menu-item class="alink" [routerLink]="['repledgehistory']" routerLinkActive="active">  Repledge History </a> 
-              <a mat-menu-item class="alink" [routerLink]="['repledgehistorybanks']" routerLinkActive="active">  Repledge History Banks</a> 
-              <a mat-menu-item class="alink" [routerLink]="['gallery']" routerLinkActive="active">  Images Gallery </a> 
-              <a mat-menu-item class="alink" [routerLink]="['customeranalysis']" routerLinkActive="active">  Customer Analysis </a>               
-              <a mat-menu-item class="alink" [routerLink]="['riskanalysis']" routerLinkActive="active">  Risk Analysis </a>               
-              <a mat-menu-item class="alink" [routerLink]="['bwranalysis']" routerLinkActive="active">  Borrower Analysis </a>               
-              <a mat-menu-item class="alink" [routerLink]="['stockreport']" routerLinkActive="active">  Stock Report </a>               
-          </mat-menu>
-          
+      <ng-container *ngIf="!ShowSideNav" >
+        <div class="animArrow" (click)="ShowSideNav=true" (mouseover)="ShowSideNav=true" >
+          <i class='bx bxs-chevrons-right bx-fade-right' style='color:orange' ></i>
         </div>
+      </ng-container>
 
-      </div>
-    </div>
+      <ng-container *ngIf="ShowSideNav" >
+        <div class="sideNav" (mouseleave)="ShowSideNav=false" >
+          <div class="navItem" (click)="OpenCustomers()" >
+            <img src="assets/images/customers.png" height="50" width="50" />
+            <p>Customers</p>
+          </div>
+          <div class="navItem" (click)="OpenBorrowers()">
+            <img src="assets/images/borrower.png" height="50" width="50" />
+            <p>Borrowers</p>
+          </div>
+          <div class="navItem" (click)="OpenBanks()">
+            <img src="assets/images/banks.png" height="50" width="50" />
+            <p>Banks</p>
+          </div>
+          <div class="navItem" (click)="OpenAccounts()">
+            <img src="assets/images/accounts.png"  height="50" width="50"/>
+            <p>Accounts</p>
+          </div>
+        </div>
+      </ng-container>
       
-      <hr class="menuhr" >
+      
+      <div class="container-fluid" >
+        <div class="row" style="background-color: #fff;">
+          <div class="col-md-8">
+            <a class="alink"  [routerLink]="['/dashboard']" routerLinkActive="active"> 
+              <img   src="assets/images/logo.jpg" width="100%" height="100%" /> 
+              <p> Cheers Money </p> 
+            </a>          
+          </div>
+          
+          <div class="col-md-4" style="text-align: right; margin-top: 1rem; " >    
+            <div class="gldRate">
+              <img src="assets/images/gold-price.jpg" height="30" width="30" (click)="OpenGoldRate()" /> 
+              <span>{{GoldRate}} INR </span>
+            </div>      
+
+            <button mat-button [matMenuTriggerFor]="menuReports"><img   src="assets/images/reports.png"  width="40" height="30" /> &nbsp; <h4 style="display: inline;">Reports</h4></button>
+            <mat-menu #menuReports="matMenu">
+                <a mat-menu-item class="alink" [routerLink]="['summary']" routerLinkActive="active">  Summary </a> 
+                <a mat-menu-item class="alink" [routerLink]="['repledgehistory']" routerLinkActive="active">  Repledge History </a> 
+                <a mat-menu-item class="alink" [routerLink]="['repledgehistorybanks']" routerLinkActive="active">  Repledge History Banks</a> 
+                <a mat-menu-item class="alink" [routerLink]="['gallery']" routerLinkActive="active">  Images Gallery </a> 
+                <a mat-menu-item class="alink" [routerLink]="['customeranalysis']" routerLinkActive="active">  Customer Analysis </a>               
+                <a mat-menu-item class="alink" [routerLink]="['riskanalysis']" routerLinkActive="active">  Risk Analysis </a>               
+                <a mat-menu-item class="alink" [routerLink]="['bwranalysis']" routerLinkActive="active">  Borrower Analysis </a>               
+                <a mat-menu-item class="alink" [routerLink]="['stockreport']" routerLinkActive="active">  Stock Report </a>               
+            </mat-menu>
+            
+          </div>
+
+        </div>
+
+        <div class="row" style="margin-top: .5rem;">
+          <div class="col-md-12">
+              <router-outlet></router-outlet> 
+          </div>
+        </div>
+      </div>
+      
+      <!-- <hr class="menuhr" > -->
     
-      <router-outlet></router-outlet> 
+        
+    </div> 

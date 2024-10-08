@@ -1,0 +1,84 @@
+table {
+    width: 100%;
+  }
+  
+  tr{
+    cursor: pointer;     
+  }
+  
+  tr:hover{
+    background-color: rgb(220, 224, 235);
+    font-weight: bold;
+  }
+  
+  
+  th{
+    background-color: #48ad3d;
+    color: #fff;
+    font-size: 13px;    
+    height: 10px;
+  }
+
+  .mat-row:hover{
+    background-color: rgb(220, 224, 235);
+    font-weight: bold;
+  }
+  
+  tr.mat-footer-row {
+    font-weight: bold;    
+    height: 36px;
+  }
+  
+  .mat-footer-row {
+    border-top: 1px solid #e0e0e0;
+    background-color: rgb(59, 58, 58);    
+    opacity: .8;
+    
+  }
+
+  .mat-footer-cell {
+    color: #fff;
+    font-size: 16px;
+  }
+
+  .hrsans{
+    height: 1px;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .sanshr
+  {
+    padding: 0px;
+   margin-bottom: 0px;
+  }
+
+  span {
+    font-size: 1em;
+    line-height: .5;    
+  }
+
+  .editicon{
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+  }
+
+  .editicon:hover{
+    background-color: #fff;
+    height: 30px;
+    width: 30px;
+  }
+
+  .tableContainer{
+    margin-top: 1rem;
+    padding: .6rem;
+    th, td{
+      padding: .2rem 0 .2rem 2rem;
+      
+      border: 1px solid #ddd;
+    }
+    th{
+      background-color: gray;
+    }
+  }

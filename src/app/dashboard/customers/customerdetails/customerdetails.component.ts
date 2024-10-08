@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator,} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TypeTransactions } from '../../types/TypeTransactions';
@@ -20,7 +20,6 @@ import { ToWords } from 'to-words';
 import { VoucherComponent } from '../voucher/voucher.component';
 import * as XLSX from 'xlsx';
 import { ImageCarouselComponent } from '../../image-carousel/image-carousel.component';
-import { FormControl, FormGroup } from '@angular/forms';
 import { DateSelectionComponent } from '../../date-selection/date-selection.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { CustomermasterComponent } from '../customermaster/customermaster.component';
@@ -35,7 +34,7 @@ export class CustomerdetailsComponent implements OnInit {
 
   //@Input() Party: TypeParties = {} as TypeParties;  
   
-  @ViewChild('TABLE')  table!: ElementRef;
+  @ViewChild('TABLE')  table!: ElementRef; 
   @ViewChild('datesel') dateselbtn!: ElementRef;
   @ViewChild('sharesel') shareselbtn!: ElementRef;
   
@@ -73,10 +72,8 @@ export class CustomerdetailsComponent implements OnInit {
       if (message.changed == true)
       {
         this.LoadTransactions();
-      }
-      
-    });
-
+      }      
+    }); 
    } 
    
   displayedColumns: string[] = [ 'RowNo','ImgCount', 'Trans_Date', 'Particulars', 'Bank_Name','CrAmount', 'DrAmount','IntAccured','IntPaid','PrinBalance','Balance', 'CrWeight','DrWeight','BalanceWt' ];
@@ -124,7 +121,7 @@ export class CustomerdetailsComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypPayment, Series_Name: "Payment"},
-      Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
+      Account:  {AccountSno:0},
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -144,7 +141,8 @@ export class CustomerdetailsComponent implements OnInit {
       N916GrossWt: 0, 
       N916NettWt: 0,
       N916Purity: 75,
-      fileSource: []
+      fileSource: [],
+      CloseAccount:0,
     }
 
     const dialogRef = this.dialog.open(PaymentComponent, 
@@ -153,7 +151,6 @@ export class CustomerdetailsComponent implements OnInit {
       }); 
       
       dialogRef.disableClose = true;
-
       dialogRef.afterClosed().subscribe(result => {     
         
       }); 
@@ -167,7 +164,7 @@ export class CustomerdetailsComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VTypReceipt, Series_Name: "Receipt"},
-      Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
+      Account:  {AccountSno: 0},
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -187,7 +184,8 @@ export class CustomerdetailsComponent implements OnInit {
       N916GrossWt: 0,
       N916NettWt: 0,
       N916Purity: 75,
-      fileSource:[]
+      fileSource:[],
+      CloseAccount:0,
     }
 
       const dialogRef = this.dialog.open(ReceiptComponent, 
@@ -210,7 +208,8 @@ export class CustomerdetailsComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypVoucher, Series_Name: "Voucher"},
-      Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
+      Account: {AccountSno:0},
+      //Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -230,7 +229,8 @@ export class CustomerdetailsComponent implements OnInit {
       N916GrossWt: 0,
       N916NettWt: 0,
       N916Purity: 75,
-      fileSource:[]
+      fileSource:[],
+      CloseAccount:0,
     }
 
       const dialogRef = this.dialog.open(VoucherComponent, 

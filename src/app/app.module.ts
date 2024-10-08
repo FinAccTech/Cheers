@@ -89,6 +89,14 @@ import { DateSelectionComponent } from './dashboard/date-selection/date-selectio
 import { RecenttransComponent } from './dashboard/recenttrans/recenttrans.component';
 import { ValidateinputsDirective } from './validateinputs.directive';
 import { SharelinkComponent } from './dashboard/sharelink/sharelink.component';
+import { CustomeraccountslistComponent } from './dashboard/customers/customeraccountslist/customeraccountslist.component';
+import { AccountsmastersComponent } from './dashboard/customers/accountsmasters/accountsmasters.component';
+import { AccountmasterComponent } from './dashboard/customers/accountsmasters/accountmaster/accountmaster.component';
+import { RatingsComponent } from './dashboard/GlobalWidgets/ratings/ratings.component';
+import { ProfilecardComponent } from './dashboard/GlobalWidgets/profilecard/profilecard.component';
+import { SearchPipe } from './dashboard/pipes/search.pipe';
+import { BorrowercardComponent } from './dashboard/GlobalWidgets/borrowercard/borrowercard.component';
+
 
 @NgModule({
   declarations: [
@@ -100,6 +108,8 @@ import { SharelinkComponent } from './dashboard/sharelink/sharelink.component';
     ReceiptComponent, IndexpageComponent, ImagesComponent, BorrowersComponent, BorrowermasterComponent, BorrowerdetailsComponent, MsgboxComponent, RepledgeComponent, 
     RepledgehistoryComponent, GalleryComponent, ReleaseComponent, RppaymentComponent, MultirowComponent, TransferComponent, VoucherComponent, BankdetailsComponent, 
     ImagePreviewComponent, RiskManageComponent, GoldratesComponent, NumberDifferentiation, NumberDifferentiationFull,  BorrowerAnalysisComponent, CustomerAnalysisComponent, StockreportComponent, RepledgehistorybanksComponent, SummaryComponent, ImageCarouselComponent, DateSelectionComponent, RecenttransComponent, ValidateinputsDirective, SharelinkComponent, 
+    CustomeraccountslistComponent, AccountsmastersComponent, AccountmasterComponent, RatingsComponent, 
+    ProfilecardComponent, SearchPipe, BorrowercardComponent
   ],
 
   imports: [    

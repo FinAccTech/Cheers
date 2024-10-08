@@ -53,7 +53,6 @@
         </div>    
       </div>
       
-
       <div class="col-md-6">
         <div class="row" >
           <div class="col-md-6">
@@ -327,7 +326,7 @@
                       </div> -->
                     </div>
                   </td>
-                </ng-container>
+          </ng-container>
               
                 <tr mat-header-row *matHeaderRowDef ="columnsToDisplayWithExpand;sticky: true" ></tr>
                 <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" [hidden]="SelectedRpStatus == 0 ? element.RpStatus < 1 : element.RpStatus !== SelectedRpStatus" class="example-element-row" [class.example-expanded-row]="expandedElement === element"
@@ -345,7 +344,7 @@
   
         </div>
     </div>
-  </ng-container>
+    </ng-container>
 
   <ng-container *ngIf="ImageGalleryActive == true">
     <app-gallery [PartySno]="PartySno" [PartyType]="2" ></app-gallery>

@@ -7,7 +7,7 @@ CREATE PROCEDURE [dbo].SSp_Transactions
          @Trans_Date          INT,
          @Ref_No              VARCHAR(20),
          @SeriesSno           INT,
-         @PartySno            INT,
+         @AccountSno            INT,
          @BorrowerSno         INT,
          @BankSno             INT,
          @BankBranchSno       INT,
@@ -23,6 +23,8 @@ CREATE PROCEDURE [dbo].SSp_Transactions
          @Remarks             VARCHAR(100),         
          @ItemDetailS         XML,
          @ImageDetailS        XML,
+         @CloseAccount        BIT,
+         @CompSno             INT,
          @RetTransSno         INT OUTPUT,
          @RetTrans_No         VARCHAR(20) OUTPUT
 
@@ -40,50 +42,57 @@ CREATE PROCEDURE [dbo].SSp_Transactions
 
          IF EXISTS(SELECT TransSno FROM [dbo].Transactions WHERE TransSno=@TransSno)
              BEGIN                 
-                  UPDATE [dbo].Transactions SET Trans_No=@Trans_No,Trans_Date=@Trans_Date,Ref_No=@Ref_No,SeriesSno=@SeriesSno,PartySno=@PartySno,BorrowerSno=@BorrowerSno,BankSno=@BankSno,
-                  BankBranchSno=@BankBranchSno,Loan_Type=@Loan_Type,Roi=@Roi,Tenure=@Tenure,DrAmount=@DrAmount,CrAmount=@CrAmount,PrincipalAmount=@PrincipalAmount,IntAmount=@IntAmount,Other_Charges=@Other_Charges,RefSno=@RefSno,Remarks=@Remarks
+                  UPDATE [dbo].Transactions SET Trans_No=@Trans_No,Trans_Date=@Trans_Date,Ref_No=@Ref_No,SeriesSno=@SeriesSno,AccountSno=@AccountSno,BorrowerSno=@BorrowerSno,BankSno=@BankSno,
+                  BankBranchSno=@BankBranchSno,Loan_Type=@Loan_Type,Roi=@Roi,Tenure=@Tenure,DrAmount=@DrAmount,CrAmount=@CrAmount,PrincipalAmount=@PrincipalAmount,IntAmount=@IntAmount,Other_Charges=@Other_Charges,RefSno=@RefSno,Remarks=@Remarks, CompSno=@CompSno
                   WHERE   TransSno=@TransSno
                   IF @@ERROR <> 0 GOTO CloseNow
         
-                            
                   --For Deleting Sub Tble values
                   DELETE FROM [dbo].Transaction_Details WHERE TransSno=@TransSno
                   IF @@ERROR <> 0 GOTO CloseNow
                   DELETE FROM [dbo].Image_Details WHERE TransSno=@TransSno
-                  IF @@ERROR <> 0 GOTO CloseNow                 
+                  IF @@ERROR <> 0 GOTO CloseNow
+                  DELETE FROM Transactions WHERE SeriesSno=9 AND RefSno=@TransSno
+                  IF @@ERROR <> 0 GOTO CloseNow                  
              END
          ELSE        
              BEGIN                 
-                    --FOR AUTO GENERATION OF SERIES NO
-                    DECLARE @Num_Method TINYINT                    
-                    SELECT @Num_Method=Numbering_Method FROM [dbo].Voucher_Series WHERE SeriesSno=@SeriesSno
-                    IF (@Num_Method=1)
-                        BEGIN
-                            SET @Trans_No= Dbo.[GenerateVoucherNo](@SeriesSno)               
-                        END
+              --FOR AUTO GENERATION OF SERIES NO
+              DECLARE @Num_Method TINYINT                    
+              SELECT @Num_Method=Numbering_Method FROM [dbo].Voucher_Series WHERE SeriesSno=@SeriesSno
+              IF (@Num_Method=1)
+                  BEGIN
+                      SET @Trans_No= Dbo.[GenerateVoucherNo](@SeriesSno)               
+                  END
                      
-                     INSERT INTO [dbo].Transactions(Trans_No,Trans_Date,Ref_No,SeriesSno,PartySno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,Tenure,DrAmount,CrAmount,PrincipalAmount,IntAmount,Other_Charges,RefSno,Remarks) 
-                     VALUES (@Trans_No,@Trans_Date,@Ref_No,@SeriesSno,@PartySno,@BorrowerSno,@BankSno,@BankBranchSno,@Loan_Type,@Roi,@Tenure,@DrAmount,@CrAmount,@PrincipalAmount,@IntAmount,@Other_Charges,@RefSno,@Remarks)
-                     IF @@ERROR <> 0 GOTO CloseNow
-                     SET @TransSno=@@IDENTITY        
+                INSERT INTO [dbo].Transactions(Trans_No,Trans_Date,Ref_No,SeriesSno,AccountSno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,Tenure,DrAmount,CrAmount,PrincipalAmount,IntAmount,Other_Charges,RefSno,Remarks,CompSno) 
+                VALUES (@Trans_No,@Trans_Date,@Ref_No,@SeriesSno,@AccountSno,@BorrowerSno,@BankSno,@BankBranchSno,@Loan_Type,@Roi,@Tenure,@DrAmount,@CrAmount,@PrincipalAmount,@IntAmount,@Other_Charges,@RefSno,@Remarks,@CompSno)
+                IF @@ERROR <> 0 GOTO CloseNow
+                SET @TransSno=@@IDENTITY        
         
-                     --For Updating Voucher Series
-                     UPDATE Voucher_Series SET Current_No=Current_No+1 WHERE SeriesSno=@SeriesSno
-                    IF @@ERROR <> 0 GOTO CloseNow
+                --For Updating Voucher Series
+                UPDATE Voucher_Series SET Current_No=Current_No+1 WHERE SeriesSno=@SeriesSno
+              IF @@ERROR <> 0 GOTO CloseNow
 
-                    DECLARE @IntLastUpdate DATE
-                    SELECT @IntLastUpdate = IntLastUpdate FROM Party WHERE PartySno=@PartySno
-                    IF [dbo].IntToDate(@Trans_Date) < @IntLastUpdate
-                      BEGIN
-                        UPDATE Party SET IntLastUpdate=[dbo].IntToDate(@Trans_Date) WHERE PartySno=@PartySno
-                        IF @@ERROR <> 0 GOTO CloseNow
-                      END
+              DECLARE @IntLastUpdate DATE
+              SELECT @IntLastUpdate = IntLastUpdate FROM Accounts WHERE AccountSno=@AccountSno
+              IF [dbo].IntToDate(@Trans_Date) < @IntLastUpdate
+                BEGIN
+                  UPDATE Accounts SET IntLastUpdate=[dbo].IntToDate(@Trans_Date) WHERE AccountSno=@AccountSno
+                  IF @@ERROR <> 0 GOTO CloseNow
+                END
              END
 
+
+             IF @CloseAccount = 1
+                BEGIN
+                    INSERT INTO [dbo].Transactions(Trans_No,Trans_Date,Ref_No,SeriesSno,AccountSno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,Tenure,DrAmount,CrAmount,PrincipalAmount,IntAmount,Other_Charges,RefSno,Remarks) 
+                    VALUES      ('',[dbo].DateToInt(GETDATE()) ,@Trans_No, 9, @AccountSno,@BorrowerSno,@BankSno,@BankBranchSno,@Loan_Type,@Roi,@Tenure,0,0,0,0,0,@TransSno,'Acc Closed')
+                    IF @@ERROR <> 0 GOTO CloseNow
+                END
              --For Inserting Transaction Details Table
              IF @ItemDetailXML IS NOT NULL
-                BEGIN
-                  
+                BEGIN                  
                    DECLARE @idoc       INT
                    DECLARE @doc        XML
                    DECLARE @Sno        INT                      
@@ -195,10 +204,10 @@ IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_TRANSACTIONS') BEGIN DROP VIE
 GO
 CREATE VIEW VW_TRANSACTIONS
 AS
-
 	SELECT		Trans.TransSno,Trans.Trans_No,Trans.Trans_Date,Trans.Ref_No,
 				    Trans.SeriesSno,Ser.Series_Name,
-				    Trans.PartySno,Pty.Party_Name,Pty.Address, Pty.City, Pty.Mobile, Pty.IntLastUpdate,Pty.Roi,Pty.Party_Type,
+            Acc.AccountSno, Acc.Account_No, Acc.Account_Date,
+				    Acc.PartySno,Pty.Party_Name,Pty.Address, Pty.City, Pty.Mobile, Pty.IntLastUpdate,Pty.Roi,Pty.Party_Type,
 				    Trans.BorrowerSno,Bwr.Party_Name as Borrower_Name, Bwr.Address as Borrower_Address, Bwr.City as Borrower_City, Bwr.Mobile as Borrower_Mobile,
             Trans.BankSno,Bnk.Bank_Name,
             Trans.BankBranchSno,Br.Branch_Name,				
@@ -219,7 +228,8 @@ AS
             PureDrWeight = (SELECT ISNULL(SUM(PureWt),0) FROM Transaction_Details WHERE TransSno = Trans.TransSno AND Trans.SeriesSno = 1),
             PureCrWeight = (SELECT ISNULL(SUM(PureWt),0) FROM Transaction_Details WHERE TransSno = Trans.TransSno AND Trans.SeriesSno = 2),
 
-            ImgCount  = (SELECT ISNULL(COUNT(DetSno),0) FROM Image_Details WHERE TransSno = Trans.TransSno)
+            ImgCount  = (SELECT ISNULL(COUNT(DetSno),0) FROM Image_Details WHERE TransSno = Trans.TransSno),
+            Account_Status = CASE WHEN EXISTS (SELECT TransSno FROM Transactions WHERE SeriesSno=9 AND AccountSno=Trans.AccountSno) THEN 1 ELSE 0 END
             /*DrWeight = CASE Trans.SeriesSno WHEN 1 THEN ISNULL(SUM(Td.NettWt),0) ELSE 0 END,
 				    CrWeight = CASE Trans.SeriesSno WHEN 2 THEN ISNULL(SUM(Td.NettWt),0) ELSE 0 END,
 
@@ -234,26 +244,29 @@ AS
 
 	FROM		  Transactions Trans
 				    INNER JOIN Voucher_Series Ser ON Ser.SeriesSno = Trans.SeriesSno
-				    INNER JOIN Party Pty ON Pty.PartySno = Trans.PartySno
+            INNER JOIN Accounts Acc ON Acc.AccountSno = Trans.AccountSno
+				    INNER JOIN Party Pty ON Pty.PartySno = Acc.PartySno
 				    LEFT OUTER JOIN Party Bwr ON Bwr.PartySno = Trans.BorrowerSno
             LEFT OUTER JOIN Banks Bnk ON Bnk.BankSno=Trans.BankSno
 				    LEFT OUTER JOIN Bank_Branches Br ON Br.BranchSno = Trans.BankBranchSno												    
 
 	GROUP BY	Trans.TransSno,Trans.Trans_No,Trans.Trans_Date,Trans.Ref_No,
 				    Trans.SeriesSno,Ser.Series_Name,
-				    Trans.PartySno,Pty.Party_Name,Pty.Address, Pty.City, Pty.Mobile,Pty.IntLastUpdate,Pty.Roi,Pty.Party_Type,
+            Acc.AccountSno, Acc.Account_No, Acc.Account_Date,Trans.AccountSno,
+				    Acc.PartySno,Pty.Party_Name,Pty.Address, Pty.City, Pty.Mobile,Pty.IntLastUpdate,Pty.Roi,Pty.Party_Type,
 				    Trans.BorrowerSno,Bwr.Party_Name, Bwr.Address, Bwr.City, Bwr.Mobile,
 				    Trans.BankSno,Bnk.Bank_Name,Trans.BankBranchSno,Br.Branch_Name,
 				    Trans.Loan_Type,Trans.DrAmount,Trans.CrAmount,Trans.PrincipalAmount, Trans.IntAmount,Trans.Other_Charges,Trans.Remarks
         
   GO
-GO
+
+  
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_STATEMENT') BEGIN DROP VIEW VW_STATEMENT END
 GO
 CREATE VIEW VW_STATEMENT AS
-					SELECT    ROW_NUMBER() OVER (ORDER BY Trans.Trans_Date) as RowNo, Trans.PartySno,Trans.TransSno,Trans.Trans_Date,Trans.SeriesSno, Ser.Series_Name + ' (' + Trans.Trans_No + ')' as Particulars,Bnk.Bank_Name,
-                  Brh.Branch_Name, 
+					SELECT    ROW_NUMBER() OVER (ORDER BY Trans.Trans_Date) as RowNo, Trans.AccountSno, Acc.PartySno, Trans.TransSno,Trans.Trans_Date,Trans.SeriesSno, Ser.Series_Name + ' (' + Trans.Trans_No + ')' as Particulars,Bnk.Bank_Name,
+                    Brh.Branch_Name, 
 								    CAST(ISNULL(Trans.CrAmount,0) AS DECIMAL) as CrAmount, CONVERT(INT, ISNULL(Trans.DrAmount,0)) DrAmount, Trans.PrincipalAmount, Trans.IntAmount,Trans.Remarks,Trans.IntAccured, 
 								    /*CrWeight = CASE Trans.SeriesSno WHEN 1 THEN ISNULL(SUM(Td.NettWt),0) ELSE 0 END,
 								    DrWeight = CASE Trans.SeriesSno WHEN 2 THEN ISNULL(SUM(Td.NettWt),0) ELSE 0 END,
@@ -274,20 +287,22 @@ CREATE VIEW VW_STATEMENT AS
                     PureDrWeight = (SELECT ISNULL(SUM(PureWt),0) FROM Transaction_Details WHERE TransSno = Trans.TransSno AND Trans.SeriesSno = 1),
                     PureCrWeight = (SELECT ISNULL(SUM(PureWt),0) FROM Transaction_Details WHERE TransSno = Trans.TransSno AND Trans.SeriesSno = 2),
 
-                    ImgCount  = (SELECT ISNULL(COUNT(DetSno),0) FROM Image_Details WHERE TransSno = Trans.TransSno)								    
+                    ImgCount  = (SELECT ISNULL(COUNT(DetSno),0) FROM Image_Details WHERE TransSno = Trans.TransSno),
+                    Account_Status = CASE WHEN EXISTS (SELECT TransSno FROM Transactions WHERE SeriesSno=9 AND AccountSno=Trans.AccountSno) THEN 1 ELSE 0 END
 
           FROM      Transactions Trans
                     INNER JOIN Voucher_Series Ser ON Ser.SeriesSno = Trans.SeriesSno
+                    INNER JOIN Accounts Acc ON Acc.AccountSno = Trans.AccountSno
                     LEFT OUTER JOIN Party Bwr ON Bwr.PartySno = Trans.BorrowerSno                              
                     LEFT OUTER JOIN Banks Bnk ON Bnk.BankSno = Trans.BankSno
                     LEFT OUTER JOIN Bank_Branches Brh ON Brh.BranchSno = Trans.BankBranchSno
                     
-           WHERE    Trans.SeriesSno IN (1,2,5,7)
+           WHERE    Trans.SeriesSno IN (1,2,5,7) 
 
-          GROUP BY  Trans.PartySno,Trans.TransSno,Trans.Trans_Date,Trans.SeriesSno,Ser.Series_Name,Trans.Trans_No,Bnk.Bank_Name, Brh.Branch_Name, Trans.CrAmount, Trans.DrAmount, Trans.PrincipalAmount, Trans.IntAmount,Trans.Remarks, Trans.IntAccured
+          GROUP BY  Trans.AccountSno, Acc.PartySno, Trans.TransSno,Trans.Trans_Date,Trans.SeriesSno,Ser.Series_Name,Trans.Trans_No,Bnk.Bank_Name, Brh.Branch_Name, Trans.CrAmount, Trans.DrAmount, Trans.PrincipalAmount, Trans.IntAmount,Trans.Remarks, Trans.IntAccured
 
     GO
-GO
+
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='IntToDate') BEGIN DROP FUNCTION IntToDate END
 GO
@@ -317,7 +332,7 @@ GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='GetNewDebitInterest') BEGIN DROP FUNCTION GetNewDebitInterest END
 GO
-CREATE FUNCTION [dbo].GetNewDebitInterest(@PartySno INT, @FromDate DATE, @ToDate DATE,@Roi FLOAT)
+CREATE FUNCTION [dbo].GetNewDebitInterest(@AccountSno INT, @FromDate DATE, @ToDate DATE,@Roi FLOAT)
 RETURNS MONEY
 AS
 BEGIN
@@ -335,9 +350,8 @@ SELECT				@IntAccured = ISNULL(SUM(IntAccured),0)
 																((@Roi/100)*DrAmount/12) 
 															END
 												FROM		VW_TRANSACTIONS 
-												WHERE		(PartySno = @PartySno) AND (SeriesSno = 1) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))
-											) as DebitInterest
-						
+												WHERE		(AccountSno = @AccountSno) AND (SeriesSno = 1) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))
+											) as DebitInterest						
 
 						RETURN @IntAccured
 END
@@ -346,7 +360,7 @@ GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='GetNewCreditInterest') BEGIN DROP FUNCTION GetNewCreditInterest END
 GO
-CREATE FUNCTION [dbo].GetNewCreditInterest(@PartySno INT, @FromDate DATE, @ToDate DATE,@Roi FLOAT)
+CREATE FUNCTION [dbo].GetNewCreditInterest(@AccountSno INT, @FromDate DATE, @ToDate DATE,@Roi FLOAT)
 RETURNS MONEY
 AS
 BEGIN
@@ -367,7 +381,7 @@ SELECT				@IntAccured = ISNULL(SUM(IntAccured),0)
 																	((@Roi/100)*(CrAmount-IntAmount) /12)
 																END
 												FROM		VW_TRANSACTIONS
-												WHERE		(PartySno = @PartySno) AND (SeriesSno = 2) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))
+												WHERE		(AccountSno = @AccountSno) AND (SeriesSno = 2) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))
 											) AS CreditInterest
 
 						RETURN @IntAccured
@@ -378,7 +392,7 @@ GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='GetInterestPaid') BEGIN DROP FUNCTION GetInterestPaid END
 GO
-CREATE FUNCTION [dbo].GetInterestPaid(@PartySno INT, @FromDate DATE, @ToDate DATE)
+CREATE FUNCTION [dbo].GetInterestPaid(@AccountSno INT, @FromDate DATE, @ToDate DATE)
 RETURNS MONEY
 AS
 BEGIN
@@ -386,7 +400,7 @@ DECLARE @IntPaid MONEY
 
 	SELECT	@IntPaid = ISNULL(SUM(IntAmount),0)
 	FROM	VW_TRANSACTIONS
-	WHERE	(PartySno=@PartySno) AND (SeriesSno = 2) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))
+	WHERE	(AccountSno=@AccountSno) AND (SeriesSno = 2) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))
 	RETURN @IntPaid					
 
 END
@@ -403,16 +417,16 @@ BEGIN
 	RETURN CAST ( CASE WHEN DATEDIFF(MONTH,@FromDate,DATEADD(MONTH, DATEDIFF(MONTH, 0, @ToDate), 0) ) = 0 THEN 0 ELSE DATEDIFF(MONTH,@FromDate,DATEADD(MONTH, DATEDIFF(MONTH, 0, @ToDate), 0) ) -1 END as VARCHAR)+ ' Months ' + CAST( CASE WHEN (DATEDIFF(MONTH,@FromDate,DATEADD(MONTH, DATEDIFF(MONTH, 0, @ToDate), 0) )) = 0 THEN (DATEDIFF(DAY,@FromDate,@ToDate))  ELSE (DATEDIFF(DAY, DATEADD(MONTH, DATEDIFF(MONTH, 0, @ToDate), 0), @ToDate)) END as VARCHAR) + ' Days'
 
 END
-
 GO
-		
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_REPLEDGE') BEGIN DROP VIEW VW_REPLEDGE END
 GO
 CREATE VIEW VW_REPLEDGE 
 AS
 SELECT		Trans.TransSno,Trans.Trans_No, Trans.Trans_Date,Trans.Ref_No,
           Trans.SeriesSno,Ser.Series_Name,
-			    Pty.PartySno, Pty.Party_Name,
+          Acc.AccountSno, Acc.Account_No,
+			    Acc.PartySno, Pty.Party_Name,
           Bwr.PartySno  as BorrowerSno,
 			    Bwr.Party_Name as Borrower_Name,
 			    Trans.BankSno, Bnk.Bank_Name,
@@ -466,7 +480,8 @@ SELECT		Trans.TransSno,Trans.Trans_No, Trans.Trans_Date,Trans.Ref_No,
 
 FROM	    Transactions Trans
 			    INNER JOIN Voucher_Series Ser ON Ser.SeriesSno = Trans.SeriesSno
-			    INNER JOIN Party Pty ON Pty.PartySno = Trans.PartySno
+          INNER JOIN Accounts Acc ON Acc.AccountSno = Trans.AccountSno
+			    INNER JOIN Party Pty ON Pty.PartySno = Acc.PartySno
 			    INNER JOIN Party Bwr ON Bwr.PartySno = Trans.BorrowerSno
 			    INNER JOIN Banks Bnk ON Bnk.BankSno = Trans.BankSno
 			    LEFT OUTER JOIN Bank_Branches Brch ON Brch.BranchSno = Trans.BankBranchSno
@@ -474,7 +489,7 @@ FROM	    Transactions Trans
 
 WHERE		  Trans.SeriesSno IN (3,4,6,8)
 
-GROUP BY  Trans.TransSno,Trans.Trans_No, Trans.Trans_Date,Trans.Ref_No,Trans.SeriesSno,Trans.BorrowerSno,Ser.Series_Name,Pty.PartySno, Pty.Party_Name,Bwr.PartySno,Bwr.Party_Name,Trans.BankSno, Bnk.Bank_Name,Trans.BankBranchSno, Brch.Branch_Name,
+GROUP BY  Trans.TransSno,Trans.Trans_No, Trans.Trans_Date,Trans.Ref_No,Trans.SeriesSno,Trans.BorrowerSno,Ser.Series_Name,Acc.AccountSno, Acc.Account_No,Acc.PartySno, Pty.Party_Name,Bwr.PartySno,Bwr.Party_Name,Trans.BankSno, Bnk.Bank_Name,Trans.BankBranchSno, Brch.Branch_Name,
 			    Trans.Roi,Trans.Tenure, Trans.DrAmount, Trans.CrAmount, Trans.IntAmount, Trans.Other_Charges,Trans.RefSno,Ref.Trans_No,Trans.Remarks,Trans.Loan_Type
 GO
 
@@ -516,52 +531,99 @@ FROM      Banks Bnk
 
 GO
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_CUSTOMER_ANALYSIS') BEGIN DROP VIEW VW_CUSTOMER_ANALYSIS END
 GO
 CREATE VIEW VW_CUSTOMER_ANALYSIS
 AS
-SELECT    Pty.PartySno, Pty.Party_Name, 
-                            Wt916     = (SELECT ISNULL(SUM(DrWeight),0) - ISNULL(SUM(CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))),
-                            Non916Wt    = (SELECT ISNULL(SUM(Non916DrWeight),0) - ISNULL(SUM(Non916CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))),
-                            PureWt      = (SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))),
-                            Sale_Value    = CAST( (SELECT Pure_Rate FROM Gold_Rates WHERE RateSno= (SELECT MAX(RateSno) FROM Gold_Rates)) 
-                                                                  *
-                                                                  (SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))) AS INT),
+SELECT		Pty.PartySno, Pty.Party_Name, 
+			Wt916         = (SELECT ISNULL(SUM(DrWeight),0) - ISNULL(SUM(CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.Account_Status=0) AND (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))),
+			Non916Wt      = (SELECT ISNULL(SUM(Non916DrWeight),0) - ISNULL(SUM(Non916CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.Account_Status=0) AND (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))),
+			PureWt        = (SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.Account_Status=0) AND (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))),
+			Sale_Value    = CAST( (SELECT Pure_Rate FROM Gold_Rates WHERE RateSno= (SELECT MAX(RateSno) FROM Gold_Rates)) 
+													*
+													(SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.Account_Status=0) AND (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))) AS INT),
 
-                            Release_Value = CAST((SELECT ISNULL(SUM(DrAmount),0) - ISNULL(SUM(CrAmount),0)  FROM  VW_TRANSACTIONS WHERE SeriesSno IN (1,2,5,7) AND PartySno =Pty.PartySno) AS INT),
-                            Difference    = CAST(((SELECT Pure_Rate FROM Gold_Rates WHERE RateSno= (SELECT MAX(RateSno) FROM Gold_Rates)) 
-                                                                  *
-                                                                  (SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))))
-                                                                  -
-                                                                  (SELECT ISNULL(SUM(DrAmount),0) - ISNULL(SUM(CrAmount),0)  FROM  VW_TRANSACTIONS WHERE SeriesSno IN (1,2,5,7) AND PartySno =Pty.PartySno) AS INT),
+			Release_Value = CAST((SELECT ISNULL(SUM(DrAmount),0) - ISNULL(SUM(CrAmount),0)  FROM  VW_TRANSACTIONS WHERE (Account_Status=0) AND SeriesSno IN (1,2,5,7) AND PartySno =Pty.PartySno) AS INT),
+			Difference    = CAST(((SELECT Pure_Rate FROM Gold_Rates WHERE RateSno= (SELECT MAX(RateSno) FROM Gold_Rates)) 
+													*
+													(SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.Account_Status=0) AND (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))))
+													-
+													(SELECT ISNULL(SUM(DrAmount),0) - ISNULL(SUM(CrAmount),0)  FROM  VW_TRANSACTIONS WHERE (Account_Status=0) AND SeriesSno IN (1,2,5,7) AND PartySno =Pty.PartySno) AS INT),
                           
-                            IntPostDate   = (SELECT ISNULL(MAX(Trans_Date),0) FROM Transactions WHERE PartySno=Pty.PartySno),
-                            RpGrams     = (SELECT ISNULL(SUM(DrWeight),0) FROM VW_REPLEDGE WHERE (PartySno = Pty.PartySno) AND (SeriesSno = 3) AND (RpStatus <> 2)),
-                            RpValue     = CAST((SELECT ISNULL(SUM(CrAmount),0) FROM VW_REPLEDGE WHERE (PartySno=Pty.PartySno) AND (SeriesSno=3) AND RpStatus <> 2) AS INT),
-                            NonRpGrams    = ((SELECT ISNULL(SUM(DrWeight),0) - ISNULL(SUM(CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2)))
-                                      + 
-                                      (SELECT ISNULL(SUM(Non916DrWeight),0) - ISNULL(SUM(Non916CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))))
-                                      -
-                                      (
-                                      (SELECT ISNULL(SUM(DrWeight),0) FROM VW_REPLEDGE WHERE (PartySno = Pty.PartySno) AND (SeriesSno = 3) AND (RpStatus <> 2))
-                                      )
-                      FROM    Party Pty
-                            LEFT OUTER JOIN Transactions CustTrans ON CustTrans.PartySno = Pty.PartySno AND CustTrans.SeriesSno IN (1,2)
-                            LEFT OUTER JOIN Transaction_Details Td ON Td.TransSno = CustTrans.TransSno
-                            LEFT OUTER JOIN Transactions RpTrans ON CustTrans.PartySno = Pty.PartySno AND RpTrans.SeriesSno = 3
-                            LEFT OUTER JOIN Transaction_Details RTd ON RTd.TransSno = RPTrans.TransSno
+			IntPostDate   = (SELECT ISNULL(MAX(Trans_Date),0) FROM VW_TRANSACTIONS WHERE (Account_Status=0) AND PartySno=Pty.PartySno),
+			RpGrams     = (SELECT ISNULL(SUM(DrWeight),0) FROM VW_REPLEDGE WHERE (PartySno = Pty.PartySno) AND (SeriesSno = 3) AND (RpStatus <> 2)),
+			RpValue     = CAST((SELECT ISNULL(SUM(CrAmount),0) FROM VW_REPLEDGE WHERE (PartySno=Pty.PartySno) AND (SeriesSno=3) AND RpStatus <> 2) AS INT),
+			NonRpGrams    = ((SELECT ISNULL(SUM(DrWeight),0) - ISNULL(SUM(CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE  (Tr.Account_Status=0) AND (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2)))
+						+ 
+						(SELECT ISNULL(SUM(Non916DrWeight),0) - ISNULL(SUM(Non916CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.Account_Status=0) AND (Tr.PartySno = Pty.PartySno) AND (Tr.SeriesSno IN (1,2))))
+						-
+						(
+						(SELECT ISNULL(SUM(DrWeight),0) FROM VW_REPLEDGE WHERE (PartySno = Pty.PartySno) AND (SeriesSno = 3) AND (RpStatus <> 2))
+						)
 
-                      WHERE   Pty.Party_Type = 1
+FROM		Party Pty
+        INNER JOIN Accounts Acc ON Acc.PartySno=Pty.PartySno 
+			  LEFT OUTER JOIN VW_TRANSACTIONS CustTrans ON CustTrans.PartySno = Pty.PartySno AND  (CustTrans.Account_Status=0) AND CustTrans.SeriesSno IN (1,2) 
+			  LEFT OUTER JOIN Transaction_Details Td ON Td.TransSno = CustTrans.TransSno
+			  LEFT OUTER JOIN VW_TRANSACTIONS RpTrans ON CustTrans.PartySno = Pty.PartySno AND RpTrans.SeriesSno = 3
+			  LEFT OUTER JOIN Transaction_Details RTd ON RTd.TransSno = RPTrans.TransSno
 
-                      GROUP BY  Pty.PartySno, Pty.Party_Name
+WHERE		Pty.Party_Type = 1
 
-GO                      
+GROUP BY	Pty.PartySno, Pty.Party_Name
+
+
+GO
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_ACCOUNT_ANALYSIS') BEGIN DROP VIEW VW_ACCOUNT_ANALYSIS END
+GO
+CREATE VIEW VW_ACCOUNT_ANALYSIS
+AS
+SELECT		    Acc.AccountSno, Acc.Account_No, 
+			        Wt916     = (SELECT ISNULL(SUM(DrWeight),0) - ISNULL(SUM(CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.AccountSno = Acc.AccountSno) AND (Tr.SeriesSno IN (1,2))),
+			        Non916Wt    = (SELECT ISNULL(SUM(Non916DrWeight),0) - ISNULL(SUM(Non916CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.AccountSno = Acc.AccountSno) AND (Tr.SeriesSno IN (1,2))),
+			        PureWt      = (SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.AccountSno = Acc.AccountSno) AND (Tr.SeriesSno IN (1,2))),
+			        Sale_Value    = CAST( (SELECT Pure_Rate FROM Gold_Rates WHERE RateSno= (SELECT MAX(RateSno) FROM Gold_Rates)) 
+													        *
+													        (SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.AccountSno = Acc.AccountSno) AND (Tr.SeriesSno IN (1,2))) AS INT),
+
+			        Release_Value = CAST((SELECT ISNULL(SUM(DrAmount),0) - ISNULL(SUM(CrAmount),0)  FROM  VW_TRANSACTIONS WHERE SeriesSno IN (1,2,5,7) AND AccountSno =Acc.AccountSno) AS INT),
+			        Difference    = CAST(((SELECT Pure_Rate FROM Gold_Rates WHERE RateSno= (SELECT MAX(RateSno) FROM Gold_Rates)) 
+													        *
+													        (SELECT ISNULL(SUM(PureDrWeight),0) - ISNULL(SUM(PureCrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.AccountSno = Acc.AccountSno) AND (Tr.SeriesSno IN (1,2))))
+													        -
+													        (SELECT ISNULL(SUM(DrAmount),0) - ISNULL(SUM(CrAmount),0)  FROM  VW_TRANSACTIONS WHERE SeriesSno IN (1,2,5,7) AND AccountSno =Acc.AccountSno) AS INT),
+                          
+			        IntPostDate   = (SELECT ISNULL(MAX(Trans_Date),0) FROM VW_TRANSACTIONS WHERE AccountSno=Acc.AccountSno),
+			        RpGrams     = (SELECT ISNULL(SUM(DrWeight),0) FROM VW_REPLEDGE WHERE (AccountSno = Acc.AccountSno) AND (SeriesSno = 3) AND (RpStatus <> 2)),
+			        RpValue     = CAST((SELECT ISNULL(SUM(CrAmount),0) FROM VW_REPLEDGE WHERE (AccountSno=Acc.AccountSno) AND (SeriesSno=3) AND RpStatus <> 2) AS INT),
+			        NonRpGrams    = ((SELECT ISNULL(SUM(DrWeight),0) - ISNULL(SUM(CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.AccountSno = Acc.AccountSno) AND (Tr.SeriesSno IN (1,2)))
+						        + 
+						        (SELECT ISNULL(SUM(Non916DrWeight),0) - ISNULL(SUM(Non916CrWeight),0) FROM VW_TRANSACTIONS Tr WHERE (Tr.AccountSno = Acc.AccountSno) AND (Tr.SeriesSno IN (1,2))))
+						        -
+						        (
+						        (SELECT ISNULL(SUM(DrWeight),0) FROM VW_REPLEDGE WHERE (AccountSno = Acc.AccountSno) AND (SeriesSno = 3) AND (RpStatus <> 2))
+						        ),
+              Account_Status = CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE AccountSno=Acc.AccountSno AND SeriesSno=9) THEN 1 ELSE 0 END
+
+FROM		    Accounts Acc
+			      LEFT OUTER JOIN VW_TRANSACTIONS AccTrans ON AccTrans.AccountSno = Acc.AccountSno AND AccTrans.SeriesSno IN (1,2)
+			      LEFT OUTER JOIN Transaction_Details Td ON Td.TransSno = AccTrans.TransSno
+			      LEFT OUTER JOIN VW_TRANSACTIONS RpTrans ON AccTrans.AccountSno = Acc.AccountSno AND RpTrans.SeriesSno = 3
+			      LEFT OUTER JOIN Transaction_Details RTd ON RTd.TransSno = RPTrans.TransSno
+                       
+GROUP BY	Acc.AccountSno, Acc.Account_No
+
+GO
+
+
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_BORROWER_ANALYSIS') BEGIN DROP VIEW VW_BORROWER_ANALYSIS END
 GO
 CREATE VIEW VW_BORROWER_ANALYSIS
 AS
-
 SELECT		Pty.PartySno, Pty.Party_Name,  
 			      RpGrams				    = (SELECT ISNULL(SUM(DrWeight),0) FROM VW_REPLEDGE WHERE (BorrowerSno = Pty.PartySno) AND (SeriesSno = 3) AND (RpStatus <> 2)),
             RpValue				    = CAST((SELECT ISNULL(SUM(CrAmount),0) FROM VW_REPLEDGE WHERE (BorrowerSno=Pty.PartySno) AND (SeriesSno=3) AND RpStatus <> 2) AS INT),
@@ -570,14 +632,12 @@ SELECT		Pty.PartySno, Pty.Party_Name,
             Other_Charges     = CAST((SELECT ISNULL(SUM(Other_Charges),0) FROM VW_REPLEDGE WHERE (BorrowerSno=Pty.PartySno) AND (SeriesSno=8) AND RpStatus <> 2) AS INT)
 
 FROM		Party Pty
-
 WHERE		Pty.Party_Type = 2
-
 GROUP BY  Pty.PartySno, Pty.Party_Name
 
 GO
 
-IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_BORROWER_ANALYSIS') BEGIN DROP FUNCTION VW_BORROWER_ANALYSIS END
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_BORROWER_ANALYSIS') BEGIN DROP VIEW VW_BORROWER_ANALYSIS END
 GO
 CREATE PROCEDURE VW_BORROWER_ANALYSIS
 AS
