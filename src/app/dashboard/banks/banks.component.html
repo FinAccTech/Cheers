@@ -49,8 +49,8 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="partyList">
-                      <div class="child" *ngFor="let bnk of BanksList | search: searchText" [routerLink]="['customeraccountslist/', bnk.BankSno, bnk.Bank_Name]" routerLinkActive="active">
-                        <app-profilecard [Party]="bnk" (retAlter)="AlterBank(bnk);" ></app-profilecard>
+                      <div class="child" *ngFor="let bnk of BanksList | search: searchText" [routerLink]="['bankdetailed/', bnk.BankSno, bnk.Bank_Name]" routerLinkActive="active">
+                        <app-bankcard [Bank]="bnk" (retAlter)="AlterBank(bnk);" ></app-bankcard>
                       </div>
                     </div>
                   </div>

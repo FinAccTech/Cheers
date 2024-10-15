@@ -1,5 +1,6 @@
-table {
+/* table {
     width: 100%;
+    border-radius: rem;
   }
   
   tr{
@@ -10,9 +11,11 @@ table {
     background-color: rgb(220, 224, 235);
     font-weight: bold;
   }
-  
-  
-  th{
+   */
+  table{
+    width: 100%;
+  }
+  th.mat{
     background-color: #48ad3d;
     color: #fff;
     font-size: 13px;    
@@ -70,15 +73,4 @@ table {
     width: 30px;
   }
 
-  .tableContainer{
-    margin-top: 1rem;
-    padding: .6rem;
-    th, td{
-      padding: .2rem 0 .2rem 2rem;
-      
-      border: 1px solid #ddd;
-    }
-    th{
-      background-color: gray;
-    }
-  }
+  

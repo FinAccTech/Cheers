@@ -1,0 +1,23 @@
+<div class="profileContainer" *ngIf="Bank" >
+    <div class="editButton">
+        <i class='bx bxs-edit' style='color:#5ba329' (click)="AlterAlert()" ></i>
+    </div>
+    
+
+    <div class="imgArea">
+        <!-- <ng-container *ngIf="Bank.Bank_Image" >
+            <img [src]="Bank.Bank_Image" />
+        </ng-container> -->
+        
+        <!-- <ng-container *ngIf="!Bank.Bank_Image">
+            <img src="assets/images/Bankimagepreview.png" />
+        </ng-container> -->
+
+    </div>
+  
+
+    <div class="genInfo">
+        <p> <strong> {{Bank.Bank_Name}} </strong> </p>
+        <!-- <p> {{Bank.Mobile}} </p> -->
+    </div>
+</div>

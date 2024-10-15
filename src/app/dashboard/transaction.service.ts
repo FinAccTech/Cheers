@@ -10,6 +10,8 @@ import { TypeTransactions } from './types/TypeTransactions';
 import { TypePartyStatement } from './types/TypePartyStatement';
 import { FileHandle } from './types/file-handle';
 import { TypeRepledges } from './types/TypeRepledges';
+import { TypeCompanies } from './types/TypeCompanies';
+import { TypeHttpResponse } from './types/TypeHttpResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +28,49 @@ export class TransactionService {
   
  constructor(private auth: AuthService, private globals: AppGlobalsService, private http: HttpClient,private dataService: DataService) {     }
  
+
+ getCompanies(CompSno: number):Observable<any>
+ {    
+   let edata: string =JSON.stringify({"CompSno" :  CompSno}); 
+   
+    let params = new HttpParams()
+    .set('data', edata)
+        
+    let apiURL: string = this.globals.baseApiURL + "/getCompanies";
+   
+   return this.http.get<any>(apiURL, { params })
+     .pipe(map(datarecd => {                    
+       if (datarecd.queryStatus == 0)
+         {              
+           return (0);                
+         }         
+         else
+         {            
+           return ( JSON.parse (datarecd.apiData));            
+         }                      
+     }));
+ } 
+ 
+ saveCompany(Comp: TypeCompanies):Observable<TypeCompanies>
+  {    
+    
+    let edata: string =JSON.stringify
+    ({      
+      "CompSno"            :   Comp.CompSno,
+      "Comp_Code"          :   Comp.Comp_Code,
+      "Comp_Name"          :   Comp.Comp_Name,
+      "Remarks"            :   Comp.Remarks,
+   }); 
+
+     let params = new HttpParams()
+     .set('data', edata,)
+
+     let apiURL: string = this.globals.baseApiURL + "/saveCompany";
+     let header = new HttpHeaders();
+     header.set('Access-Control-Allow-Origin', '*');
+    
+     return this.http.post<TypeCompanies>(apiURL, params )          
+  }
 
  getTransactions(TransSno: number, SeriesSno: number):Observable<TypeTransactions>
  {    
@@ -117,13 +162,6 @@ export class TransactionService {
     if (Trans.IntAmount === null) {
       Trans.IntAmount = 0;
     }
-    
-    // if (Trans.Series.SeriesSno = this.globals.VTypReceipt) 
-    // {
-    //   Trans.CrAmount = Trans.CrAmount + Trans.IntAmount;
-    // }
-    console.log(Trans);
-       
     
     let edata: string =JSON.stringify
     ({      

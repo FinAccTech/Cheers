@@ -18,7 +18,7 @@ import { MsgboxComponent } from '../../msgbox/msgbox.component';
 })
 export class AccountsmastersComponent implements OnInit {
 
-  displayedColumns: string[] = ['Sno', 'Account_No', 'Party_Name', 'City','Mobile','Roi','Edit_Delete']; 
+  displayedColumns: string[] = ['Sno', 'Comp_Code', 'Account_No', 'Party_Name', 'City','Mobile','Roi','Edit_Delete']; 
   dataSource!: MatTableDataSource<TypeAccounts>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;  
@@ -64,6 +64,7 @@ export class AccountsmastersComponent implements OnInit {
         Account_No: "",
         Account_Date: "",
         Party: {"PartySno":0, "Party_Name":"", "Party_Type":1,"Roi":0},
+        Company: {CompSno:0, Comp_Code:"", Comp_Name:""},
         Remarks: "",
         NewPrincipal: 0,
         IntLastUpdate: new Date(),

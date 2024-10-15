@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { GoldratesComponent } from './goldrates/goldrates.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TransactionService } from './transaction.service';
+import { CompaniesComponent } from './companies/companies.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -80,11 +81,28 @@ export class DashboardComponent  implements OnInit, OnDestroy
         
   //     });  
   // }
+  OpenCompanies(){
+    const dialogRef = this.dialog.open(CompaniesComponent, 
+      {
+         panelClass: 'comp-dialog-container' 
+      //  data: Img,
+      //  width: this.getScreenWidth+'px',   // Set width to 600px
+      //  height: this.getScreenHeight+'px',  // Set height to 530px
 
+      });
+      
+      dialogRef.disableClose = true;
+
+      dialogRef.afterClosed().subscribe(result => {     
+        // this.GetGoldRate();      
+      }); 
+  }
+  
   OpenGoldRate()
   {
     const dialogRef = this.dialog.open(GoldratesComponent, 
       {
+         panelClass: 'custom-dialog-container' 
       //  data: Img,
       //  width: this.getScreenWidth+'px',   // Set width to 600px
       //  height: this.getScreenHeight+'px',  // Set height to 530px

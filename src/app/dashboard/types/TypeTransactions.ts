@@ -27,7 +27,8 @@ export interface TypeTransactions {
     N916GrossWt: number;
     N916NettWt: number;
     N916Purity: number;
-    fileSource: [],
-    CloseAccount: number,
+    fileSource: [];
+    CloseAccount: number;
+    CompSno?: number;    
 }
 

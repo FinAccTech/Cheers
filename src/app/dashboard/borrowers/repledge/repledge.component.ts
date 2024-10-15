@@ -13,7 +13,7 @@ import { AppGlobalsService } from '../../app-globals.service';
 import { MsgboxComponent } from '../../msgbox/msgbox.component';
 import { TypeBanks } from '../../types/TypeBanks';
 import { FileHandle } from '../../types/file-handle';
-import { TypeParties } from '../../types/TypeParties';
+import { TypeParties } from '../../types/TypeParties'; 
 import { PartyService } from '../../party.service';
 import { TypeBankBranches } from '../../types/TypeBankBranches';
 import { ReleaseComponent } from './release/release.component';
@@ -178,6 +178,8 @@ export class RepledgeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.data.Rp);
+    
     this.AddNewRepledge();        
     this.LoadRepledge(this.data.Rp);    
   }
@@ -222,12 +224,13 @@ export class RepledgeComponent implements OnInit {
       Trans_Date      : [new Date, [Validators.required]],
       Ref_No          : [""],
       Series          : [{SeriesSno:this.globals.VtypRepledge, Series_Name:"Repledge"}],
+      Party           : [{PartySno:0, Party_Name:""}],
       Account         : [this.formBuilder.group( this.parties), [Validators.required]],
-      Borrower        : [{BorrowerSno:this.data.Rp.Party.PartySno, Borrower_Name:this.data.Rp.Party.Party_Name}],
+      Borrower        : [{BorrowerSno:this.data.Rp.Borrower.PartySno, Borrower_Name:this.data.Rp.Borrower.Party_Name}],
       Bank            : [this.formBuilder.group( this.banks), [Validators.required]],      
       BankBranch      : [{BranchSno:0, Branch_Name:""} ],
       Loan_Type       : [1, ],    
-      Roi             : [this.data.Rp.Party.Roi,[Validators.required]],    
+      Roi             : [this.data.Rp.Borrower.Roi,[Validators.required]],    
       Tenure          : [0, [Validators.required]],    
       DrAmount        : [0, ],    
       CrAmount        : [0, ],    

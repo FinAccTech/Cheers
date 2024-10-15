@@ -15,12 +15,24 @@ import { PaymentComponent } from '../customers/payment/payment.component';
 import { ReceiptComponent } from '../customers/receipt/receipt.component';
 import { VoucherComponent } from '../customers/voucher/voucher.component';
 
+import { EChartsOption } from 'echarts';
+
+interface TypeChartDataList{
+  Month: number;
+  Amount: number;
+}
+
 @Component({
   selector: 'app-recenttrans',
   templateUrl: './recenttrans.component.html',
   styleUrls: ['./recenttrans.component.css']
 })
 export class RecenttransComponent implements OnInit {
+
+  LineDataXvalue: Array<string> = [];
+  LineDataSource: Array<number> = [];
+  DataChartList: TypeChartDataList[] = [];
+  chartOption!: EChartsOption;
 
   displayedTransColumns: string[] = ['Sno','ImgCount', 'Trans_Date', 'Series_Name','Party_Name','Borrower_Name','Bank_Name','Amount','Weight'];
 
@@ -34,11 +46,15 @@ export class RecenttransComponent implements OnInit {
 
   TransList: any[] = [];
 
+  ChartType: number = 0;
+  ChartPeriod: number = 1;
+
   constructor(private transService: TransactionService, private globals: AppGlobalsService,  public dialog: MatDialog, private _snackBar: MatSnackBar) { 
     this.LoadTransactions();     
   }
 
   ngOnInit(): void {
+    this.LoadChart();
   }
 
 
@@ -201,5 +217,47 @@ LoadTransaction(Trans: any)
     if (this.dataSourceTrans.paginator) {
       this.dataSourceTrans.paginator.firstPage();
     }
+  }
+
+  SetChartType($event:any){
+    this.ChartType = $event.target.value;
+    this.LoadChart();
+  }
+
+  SetChartPeriod($event:any){
+    this.ChartPeriod = $event.target.value;
+    this.LoadChart();
+  }
+
+  LoadChart(){    
+    // let trans = new ClsTransactions(this.dataService);
+    // trans.getSummedMonthlyLoanAmount( this.ChartPeriod == 0 ? 3 : this.ChartPeriod == 1 ? 6 : 12 ).subscribe(data=>{
+    //   this.DataChartList = JSON.parse(data.apiData);
+    //   this.LineDataXvalue = [];
+    //   this.LineDataSource = [];
+
+    //   this.DataChartList.forEach(dt => {        
+    //     this.LineDataXvalue.push(this.globals.GetMonthName(dt.Month,true));          
+    //     this.LineDataSource.push(dt.Amount);  
+    //     this.chartOption = {
+   
+    //       xAxis: {        
+    //         type: 'category',
+    //         data: this.LineDataXvalue,
+    //       },
+    //       yAxis: {
+    //         type: 'value',
+    //       },
+    //       series: [
+    //         {
+    //           data: this.LineDataSource,
+    //           type: this.ChartType == 0 ? 'line' : 'bar',          
+    //           color: 'orange',          
+    //         },
+    //       ],
+    //     };
+    //   });      
+      
+    // })
   }
 }

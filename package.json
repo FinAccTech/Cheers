@@ -33,6 +33,7 @@
     "datatables.net-dt": "^1.12.1",
     "datatables.net-select": "^1.4.0",
     "datatables.net-select-dt": "^1.4.0",
+    "echarts": "^5.5.1",
     "jquery": "^3.6.1",
     "jszip": "^3.10.1",
     "ng-image-slider": "^7.0.0",

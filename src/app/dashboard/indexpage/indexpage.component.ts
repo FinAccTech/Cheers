@@ -23,7 +23,7 @@ export class IndexpageComponent implements OnInit {
   Principal_Paid: number = 0;
   Interest_Paid: number = 0;
   Other_Charges: number = 0;
-
+ 
 
   SelectedIndex: number = 0;
   @ViewChild(MatTabGroup)  tabGroup!: MatTabGroup;

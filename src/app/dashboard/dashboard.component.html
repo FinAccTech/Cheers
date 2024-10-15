@@ -74,7 +74,8 @@
               <span>{{GoldRate}} INR </span>
             </div>      
 
-            <button mat-button [matMenuTriggerFor]="menuReports"><img   src="assets/images/reports.png"  width="40" height="30" /> &nbsp; <h4 style="display: inline;">Reports</h4></button>
+            <button mat-button [matMenuTriggerFor]="menuReports"><img   src="assets/images/reports.png"  width="40" height="30" /> </button>
+            <button mat-button [matMenuTriggerFor]="menuSettings"><img   src="assets/images/settings.png"  width="30" height="30" /> </button>
             <mat-menu #menuReports="matMenu">
                 <a mat-menu-item class="alink" [routerLink]="['summary']" routerLinkActive="active">  Summary </a> 
                 <a mat-menu-item class="alink" [routerLink]="['repledgehistory']" routerLinkActive="active">  Repledge History </a> 
@@ -86,6 +87,11 @@
                 <a mat-menu-item class="alink" [routerLink]="['stockreport']" routerLinkActive="active">  Stock Report </a>               
             </mat-menu>
             
+            <mat-menu #menuSettings="matMenu">
+              <a mat-menu-item (click)="OpenCompanies()" > Companies </a> 
+              
+          </mat-menu>
+
           </div>
 
         </div>

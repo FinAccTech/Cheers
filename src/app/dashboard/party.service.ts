@@ -123,6 +123,30 @@ getAccounts(AccountSno: number, PartySno: number):Observable<any>
      }));
  } 
 
+ getPartySummary(PartySno: number):Observable<any>
+ {    
+   let edata: string =JSON.stringify({"PartySno" :  PartySno, }); 
+   
+    let params = new HttpParams()
+    .set('data', edata)
+        
+    let apiURL: string = this.globals.baseApiURL + "/getPartySummary";
+   
+   return this.http.get<any>(apiURL, { params })
+     .pipe(map(datarecd => {            
+       
+       if (datarecd.queryStatus == 0)
+         {              
+           return (0);                
+         }         
+         else
+         {            
+           return ( JSON.parse (datarecd.apiData));            
+         }                      
+     }));
+ } 
+
+
 saveAccount(Acc: TypeAccounts):Observable<TypeAccounts>
   { 
     let edata: string =JSON.stringify
@@ -132,6 +156,7 @@ saveAccount(Acc: TypeAccounts):Observable<TypeAccounts>
       "Account_Date"       :   Acc.Account_Date,
       "PartySno"           :   Acc.Party!.PartySno,
       "Roi"                :   Acc.Roi,            
+      "CompSno"            :    Acc.Company!.CompSno,
       "Scheme"             :   Acc.Scheme,          
       "Remarks"            :   Acc.Remarks,
    });    

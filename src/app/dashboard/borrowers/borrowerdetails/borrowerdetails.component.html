@@ -1,6 +1,6 @@
 
-<div class="container-fluid">
-    <div class="row" style="padding: 5px;" >
+<div class="container-fluid" >
+    <div class="row" style="padding: 5px; background-color: #fff; " >
       <div class="col-md-12">
         <div style="float: left; cursor: pointer;" (click)="OpenMainReport()"  >      
           <img (click)="AlterCustomer()" src="assets/images/person.jpeg" height="40" width="40" /> &nbsp;
@@ -21,11 +21,9 @@
       </div>
     </div>
     
-    <hr class="hrsans" >
-  
-    <br>
+    
     <ng-container *ngIf="MainReportActive == true" >
-    <div class="row">
+    <div class="row" style="background-color: #fff; margin-top: .5rem; padding: 1rem; " >
       <div class="col-md-6">  
         <div class="row"  >
           <div class="col-md-6">
@@ -100,7 +98,7 @@
           </ng-container>
   
           <ng-container *ngIf="!dataError && !loadingData" >
-              <div class="row">           
+              <div class="row" style="background-color: #fff; margin: 1rem; " >           
                 
                 <div class="col-md-3">
                   <button class="btn" (click)="OpenDateSelection()" #datesel> <img src="assets/images/calendar.png" height="50" width="50" /> </button>

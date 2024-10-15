@@ -1,0 +1,71 @@
+<div class="companyContainer">
+
+
+<div class="container-fluid" >
+    <div class="row">
+        <div class="col-md-12 header">
+            <p>Companies</p>
+            <p class="close" mat-dialog-close="" > &times; </p>
+        </div>        
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <table class="tableContainer">
+                <thead> <th>#</th> <th>Code</th> <th>Company</th> <th></th>  </thead>
+                <tbody>
+                    <tr *ngFor="let comp of CompaniesList; let i = index" (click)="LoadCompany(comp)" >
+                        <td> {{i+1}} </td>
+                        <td> {{comp.Comp_Code}} </td>
+                        <td> {{comp.Comp_Name}} </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6" *ngIf="Company" >
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="formGroup">                    
+                        <input type="text" class="formControlreadonly" required [(ngModel)] = Company.Comp_Code   />
+                        <label for="" class="formLabelreadonly"> Comp Code </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 1.2rem;" >
+                <div class="col-md-12">
+                    <div class="formGroup">                    
+                        <input type="text" class="formControl" required [(ngModel)] = Company.Comp_Name   />
+                        <label for="" class="formLabel"> Company Name </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 1.2rem;">
+                <div class="col-md-12">
+                    <div class="formGroup">                    
+                        <input type="text" class="formControl" required [(ngModel)] = Company.Remarks   />
+                        <label for="" class="formLabel"> Remarks </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 1.2rem;">                
+                <div class="col-md-12" style="float: right; text-align: right;display: flex; column-gap: .5rem; justify-content: flex-end; " >
+                    <button class="btn" (click)="SaveCompany()" >Save</button>
+                    <button class="btn" (click)="AddCompany()" >New</button>                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+</div>
+
+
+
+
+</div>

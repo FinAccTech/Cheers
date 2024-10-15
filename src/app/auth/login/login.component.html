@@ -1,9 +1,9 @@
 <div class="mobLogo">
     <img class="image" src="assets/images/logo.jpg"  height="210px" width="210px"/>
 </div>
-
  
-<div class="loginContainer">
+ 
+<div class="loginContainer"> 
     <div class="loginModal">
 
         <div class="modalLeft">
@@ -16,12 +16,12 @@
             <p>Sign in to Continue <strong> Cheers App </strong></p>
 
             <label>UserName</label>
-            <input class="inputBox" type="text" placeholder="Enter Username"  [(ngModel)]="username">
+            <input class="inputBox" type="text" placeholder="Enter Username" (keyup.enter)="login()"  [(ngModel)]="username">
             
             <br>
 
             <label>Password</label>
-            <input class="inputBox" type="password" placeholder="Enter Password" [(ngModel)]="password">
+            <input class="inputBox" type="password" placeholder="Enter Password" (keyup.enter)="login()" [(ngModel)]="password">
 
             <br>
 

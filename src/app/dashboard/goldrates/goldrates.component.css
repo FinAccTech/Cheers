@@ -1,0 +1,24 @@
+.header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: -2rem;
+    user-select: none;
+
+    p{
+        font-size: 1.5rem;
+        font-weight: bold;        
+        user-select: none;
+    }
+    .close{
+        font-size: 2.5rem;
+        font-weight: bold;
+        user-select: none;        
+    }
+    .close:hover{
+        transition: transform 0.25s 0s; 
+        transform: scale(1.1); 
+        cursor: pointer;
+    }
+}

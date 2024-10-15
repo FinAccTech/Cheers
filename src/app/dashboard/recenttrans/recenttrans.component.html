@@ -2,7 +2,26 @@
     <div class="col-md-12">
       <div class="bodyCenter">
         <div class="chart">
+            
+              <div class="chartOptions">
+                  <select style="padding: .5rem; border: none;" (change)="SetChartType($event)" >
+                      <option value="0">Line Chart</option>
+                      <option value="1">Bar Chart</option>
+                  </select>
 
+                  <select style="padding: .5rem; border: none;" (change)="SetChartPeriod($event)">
+                      <option value="0" >Last 3 Months</option>
+                      <option value="1">Last 6 Months</option>
+                      <option value="2">Last 1 Year</option>
+                  </select>
+              </div>
+
+              <div class="chartData">
+                  <!-- <div echarts [options]="chartOption" class="demo-chart"></div> -->
+              </div>
+          
+                <!-- <div echarts [options]="options" [merge]="mergeOptions" class="demo-chart"></div> -->
+          
         </div>
 
         <div class="transactionList"> 

@@ -24,6 +24,36 @@ import { DateSelectionComponent } from '../../date-selection/date-selection.comp
 import { Overlay } from '@angular/cdk/overlay';
 import { SharelinkComponent } from '../../sharelink/sharelink.component';
 import { TypeAccounts } from '../../types/TypeAccounts';
+import { AccountmasterComponent } from '../accountsmasters/accountmaster/accountmaster.component';
+
+interface TypeAccountSummary{
+  AccountSno: number;
+  Account_No: string;
+  Account_Date: number;
+  Scheme: number;
+  Age_In_Months: number;
+  Age_In_Days: number;
+  Ltd_In_Months: number;
+  Ltd_In_Days: number;
+  Release_Value: number;
+  Sale_Value: number;
+  DiffPer: number;
+  Principal: number;
+  Pledge_Wt: number;
+  GrossWt_916: number;
+  NettWt_916: number;
+  GrossWt_Non916: number;
+  NettWt_Non916: number;
+  Int_Earned: number;
+  Pure_Wt: number;
+  Roi: number;
+  Account_Status: number;
+  PartySno: number;
+  Party_Name: string;
+  CompSno: number;
+  Comp_Code: string;
+  Comp_Name: string;
+}
 
 @Component({ 
   selector: 'app-customeraccountslist',
@@ -35,8 +65,9 @@ export class CustomeraccountslistComponent implements OnInit {
   @ViewChild('datesel') dateselbtn!: ElementRef;
   @ViewChild('sharesel') shareselbtn!: ElementRef;
   
-  AccountsList: TypeAccounts[] = [];
+  AccountsList: TypeAccountSummary[] = [];
 
+  
   PartySno: number = 0; 
   
   SelectedAccount!: TypeAccounts;
@@ -103,8 +134,68 @@ export class CustomeraccountslistComponent implements OnInit {
       else{              
          this.ReportFromDate = this.globals.IntToDate (data[0].TransFirstDate);
          this.Party = data[0];     
-         this.PtyService.getAccounts(0,this.PartySno).subscribe(data=>{           
-          this.AccountsList = data;            
+         this.PtyService.getPartySummary(this.PartySno).subscribe(data=>{           
+          this.AccountsList = data;          
+          let SaleValueTotal = 0;
+          let ReleaseValueTotal = 0;
+          let PrincipalTotal = 0;
+          let PledgeWtTotal = 0;
+          let GrossTotal916 = 0
+          let NettTotal916=0;
+          let GrossTotalNon916 = .0;
+          let NetTotalNon916 = 0;
+          let PureWtTotal = 0;
+          let IntEarnedTotal = 0;
+
+          this.AccountsList.map(acc=>{
+            acc.Pure_Wt = ((acc.NettWt_916*91.6) /100 ) + (acc.NettWt_Non916*75) /100 
+          })
+
+          if (this.AccountsList.length > 1){
+            this.AccountsList.forEach(acc=>{
+              if (acc.Account_Status == 0){
+                SaleValueTotal += acc.Sale_Value;
+                ReleaseValueTotal += acc.Release_Value;
+                PrincipalTotal += acc.Principal;
+                PledgeWtTotal += acc.Pledge_Wt;
+                GrossTotal916 +=  acc.GrossWt_916;
+                NettTotal916 +=  acc.NettWt_916;
+                GrossTotalNon916 += acc.GrossWt_Non916;
+                NetTotalNon916 += acc.NettWt_Non916;
+                PureWtTotal += acc.Pure_Wt;
+                IntEarnedTotal += +acc.Int_Earned;
+              }            
+            })
+
+            this.AccountsList.push({
+              AccountSno:0,            
+              Account_No: "Total",
+              Account_Date: 0,
+              Scheme: 0,
+              Age_In_Months: 0,
+              Age_In_Days: 0,
+              Ltd_In_Months: 0,
+              Ltd_In_Days: 0,
+              Release_Value: ReleaseValueTotal,
+              Sale_Value: SaleValueTotal,
+              DiffPer: +(SaleValueTotal >= ReleaseValueTotal ? (ReleaseValueTotal/SaleValueTotal* 100).toFixed(2) : ((SaleValueTotal/ReleaseValueTotal* 100) - ((SaleValueTotal/ReleaseValueTotal* 100) *2)).toFixed(2) ) ,
+              Principal: PrincipalTotal,
+              Pledge_Wt: PledgeWtTotal,
+              GrossWt_916: GrossTotal916,
+              NettWt_916: NettTotal916,
+              GrossWt_Non916: GrossTotalNon916,
+              NettWt_Non916: NettTotal916,
+              Pure_Wt: PureWtTotal,
+              Int_Earned: +IntEarnedTotal,
+              Roi: 0,
+              Account_Status: 0,
+              PartySno: 0,
+              Party_Name: "",
+              CompSno: 0,
+              Comp_Code: "",
+              Comp_Name: ""
+            })  
+          }
           this.LoadTransactions();    
         });                                             
       }              
@@ -112,11 +203,15 @@ export class CustomeraccountslistComponent implements OnInit {
     
   }
 
+  SetSelectedAccount(acc: TypeAccountSummary){
+    this.SelectedAccount = {"AccountSno": acc.AccountSno, "Account_No": acc.Account_No, "Party": {"PartySno": acc.PartySno, "Party_Name": acc.Party_Name, "Party_Type": this.globals.PartyTypeCustomers, "Roi": acc.Roi }}
+  }
+
   ngAfterViewInit() {    
     
   }
 
-  OpenPaymentCreation(Acc: TypeAccounts)
+  OpenPaymentCreation()
   {
     var Pmt: TypeTransactions = {
       TransSno: 0,      
@@ -125,12 +220,12 @@ export class CustomeraccountslistComponent implements OnInit {
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypPayment, Series_Name: "Payment"},
       //Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
-      Account: Acc,
+      Account: this.SelectedAccount,
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
       Loan_Type: 0,
-      Roi: Acc.Roi!,
+      Roi: this.SelectedAccount.Roi!,
       Tenure: 0,    
       DrAmount: 0,
       CrAmount: 0,
@@ -160,7 +255,7 @@ export class CustomeraccountslistComponent implements OnInit {
       }); 
   }
   
-  OpenReceiptCreation(Acc: TypeAccounts)
+  OpenReceiptCreation()
   { 
     var Rcpt: TypeTransactions = {
       TransSno: 0,      
@@ -169,7 +264,7 @@ export class CustomeraccountslistComponent implements OnInit {
       Ref_No: "",
       Series: {SeriesSno: this.globals.VTypReceipt, Series_Name: "Receipt"},
       //Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
-      Account: Acc,
+      Account: this.SelectedAccount,
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -205,7 +300,7 @@ export class CustomeraccountslistComponent implements OnInit {
       }); 
   }
 
-  OpenVoucherCreation(Acc: TypeAccounts)
+  OpenVoucherCreation()
   {
     var Vou: TypeTransactions = {
       TransSno: 0,      
@@ -214,7 +309,7 @@ export class CustomeraccountslistComponent implements OnInit {
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypVoucher, Series_Name: "Voucher"},
       //Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
-      Account: Acc,
+      Account: this.SelectedAccount,
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
       Bank:  {BankSno: 0, Bank_Name: ""},
       BankBranch:  {BranchSno: 0, Branch_Name: ""},
@@ -591,7 +686,37 @@ exportAsExcel()
   XLSX.writeFile(wb, 'Statement.xlsx');
 }
 
+OpenAccountCreation(){
+  var Acc: TypeAccounts = {
+      AccountSno: 0,
+      Account_No: "",
+      Account_Date: "",
+      Party: {"PartySno": this.Party.PartySno ,  "Party_Name": this.Party.Party_Name , "Party_Type":1,"Roi":0},
+      Remarks: "",
+      NewPrincipal: 0,
+      IntLastUpdate: new Date(),
+      Roi: 0,
+      Scheme: 1,
+    } 
 
+  const dialogRef = this.dialog.open(AccountmasterComponent, 
+    {
+    data: Acc,
+    });
+    
+    dialogRef.disableClose = true; 
+
+    dialogRef.afterClosed().subscribe(result => {        
+      
+      if (result) 
+      { 
+        //this.AccountsList.unshift(result);            
+        //this.LoadAccountsListintoMatGrid();        
+        // this.LoadAccountsList();
+      }
+      
+    });  
+}
 
 OpenDateSelection(){
   const {x, y} = this.dateselbtn.nativeElement.getBoundingClientRect();

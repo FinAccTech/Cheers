@@ -1,13 +1,13 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator,} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TypeTransactions } from '../../types/TypeTransactions';
 import { TransactionService } from '../../transaction.service';
 import { TypeParties } from '../../types/TypeParties';
 import { BroadcastserviceService } from '../../broadcast.service';
-import { Subscription, filter } from 'rxjs';
+import { Subscription, } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PartyService } from '../../party.service';
 import { AppGlobalsService } from '../../app-globals.service';
@@ -31,11 +31,11 @@ interface RpStatus {
   text: string;
 } 
 
-
 @Component({
   selector: 'app-borrowerdetails',
   templateUrl: './borrowerdetails.component.html',
   styleUrls: ['./borrowerdetails.component.css'],
+  
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -90,8 +90,7 @@ export class BorrowerdetailsComponent implements OnInit {
       if (message.changed == true)
       {
         this.LoadTransactions();
-      }
-      
+      }      
     });
 
    }  
@@ -144,11 +143,11 @@ export class BorrowerdetailsComponent implements OnInit {
       Trans_No: "AUTO",
       Trans_Date: new Date(),
       Ref_No: "",
-      Series: {SeriesSno: this.globals.VtypRepledge, Series_Name: "Repledge"},
-      Account:  {AccountSno: 0},
-      Borrower: {BorrowerSno: this.Party.PartySno, Borrower_Name: this.Party.Party_Name},
-      Bank:  {BankSno: 0, Bank_Name: ""},
-      BankBranch:  {BranchSno: 0, Branch_Name: ""},
+      Series:   { SeriesSno: this.globals.VtypRepledge, Series_Name: "Repledge" },
+      Account:  { AccountSno: 0},
+      Borrower: { BorrowerSno: this.Party.PartySno, Borrower_Name: this.Party.Party_Name },
+      Bank:  { BankSno: 0, Bank_Name: ""},
+      BankBranch:  {  BranchSno: 0, Branch_Name: "" },
       Loan_Type: 1,
       Roi: this.Party.Roi,
       Tenure: 0,

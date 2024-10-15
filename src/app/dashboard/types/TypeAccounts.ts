@@ -1,3 +1,4 @@
+import { TypeCompanies } from "./TypeCompanies";
 import { TypeParties } from "./TypeParties";
 
 export interface TypeAccounts{
@@ -12,4 +13,5 @@ export interface TypeAccounts{
     Roi?                : number;
     Scheme?             :  number;
     Account_Status?     : number;
+    Company?               : TypeCompanies;
 }

@@ -4,8 +4,6 @@ import { LoginComponent } from './auth/login/login.component';
 
 
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { CustomerdetailsComponent } from './dashboard/customers/customerdetails/customerdetails.component';
-import { IndexpageComponent } from './dashboard/indexpage/indexpage.component';
 import { BorrowerdetailsComponent } from './dashboard/borrowers/borrowerdetails/borrowerdetails.component';
 import { RepledgehistoryComponent } from './dashboard/Reports/repledgehistory/repledgehistory.component';
 import { GalleryComponent } from './dashboard/Reports/gallery/gallery.component';
@@ -42,9 +40,6 @@ const routes: Routes = [
     // { path:'customerdetailed/:cust/:cust_name', component: CustomerdetailsComponent},
 
     { path:'accounts', component: AccountsmastersComponent}, 
-    
-    
-
     
     
     { path:'repledgehistory', component: RepledgehistoryComponent},

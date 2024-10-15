@@ -75,11 +75,18 @@ mat-option
 //     overflow: hidden;
     
 // }
+.btn{
+  border: 1px solid #ddd;
+  padding: .8rem;
+  background-color: #fff;
+  min-width: 5rem;
+}
 
 .btn:hover
 {
     border: 1px solid #ddd;
-    // background-color: lightgray;
+    background-color: lightgray;
+    font-weight: bold;
     transition: transform 0.25s 0s; 
     transform: scale(1.1); 
     font-size: 500;
@@ -122,3 +129,379 @@ mat-option
     font-size: 1.2rem;
     font-weight: 600;
   }
+
+  .disabledDiv{
+    pointer-events: none;
+  }
+
+  .custom-dialog-container .mat-dialog-container {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    margin: 0;    
+    /* add your styles */
+}
+
+.comp-dialog-container {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  margin: 0;    
+  width: 50vw;
+  /* add your styles */
+}
+
+.tableContainer{
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: .6rem;
+  table {
+    width: 100%;
+    border-radius: rem;
+  }
+  
+  tr{
+    cursor: pointer;     
+  }
+  
+  tr:hover{
+    background-color: rgb(220, 224, 235);
+    font-weight: bold;
+  }
+  
+  
+  th{
+    background-color: rgb(57, 54, 54);
+    color: #fff;
+    font-size: 13px;    
+    height: 10px;
+    text-align: center;
+    padding: .4rem;
+  }
+  // th, td{
+  //   text-align: center;
+    
+  //   border: 1px solid #ddd;
+  // }
+  // th{
+  //   background-color: gray;
+  // }
+}
+
+
+.formGroup{
+  position: relative;
+  height: 40px;  
+  width: 100%;
+  
+  .rightIcon{
+    right: .7rem;
+    top: 12px;
+    position: absolute;
+    font-size: 22px;
+    cursor: pointer;
+    color: orange;
+    z-index: 12;
+  }
+
+  .rightTopCornerIcon{
+    right: 0;
+    top: 0;
+    position: absolute;
+    font-size: 14px;
+    cursor: pointer;
+    color: green;
+    z-index: 12;
+  }
+  
+
+  .formControl{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #d8d2d2;    
+    outline: none;
+    padding: 16px;
+    border-radius: 3px;
+    z-index: 1;
+    overflow: hidden;
+    color: black;
+  }
+
+  .formControlreadonly{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #d8d2d2;
+    outline: none;
+    padding: 16px;
+    border-radius: 3px;
+    z-index: 1;
+    overflow: hidden;
+    text-align: center;  
+  }
+
+
+  .formLabel{  
+    position: absolute;
+    left: 10px;
+    top: 13px;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+  }
+
+  .formLabelreadonly{
+    position: absolute;
+    left: 10px;
+    top: -10px;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+    z-index: 10;
+    font-weight: 500;
+    
+  }
+
+  .formLabel.date{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;    
+    font-weight: 500;
+  }
+
+  .formControl:focus + .formLabel{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;
+    color: var(--ColorPrimary);
+    font-weight: 500;
+  }
+
+  .formControl:focus{
+    border: 1.5px solid var(orange);
+  }
+
+  .formControl:not(:focus) + label {  
+    top: -10px !important ;
+    z-index: 10;
+  }
+
+
+  .formControlType2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #f1eaea;
+    outline: none;
+    padding: 15px 0 0 10%;    
+    z-index: 1;
+    overflow: hidden;
+    
+  }
+
+  .formLabelType2{
+    position: absolute;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;    
+    left: 0;
+    top: 6%;
+    color: #a1a1a1;
+    background-color: #fff;
+    
+    font-size: 13px;  
+    white-space: nowrap;
+    
+  }
+
+  .errorHint{
+    position: absolute;
+    display: none;
+    font-size: 10px;
+    color: red;
+    bottom: 3px;
+    right: 3px;
+  }
+}
+
+
+.formGroup.invalid{  
+  .formControl{
+    border: 1px solid red;
+  }  
+  
+  .errorHint{
+    display: block;
+  }
+}
+
+.formGroupsansBorder{
+  position: relative;
+  height: 48px;  
+  width: 100%;
+  
+  .rightIcon{
+    right: .7rem;
+    top: 12px;
+    position: absolute;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--ColorPrimary);
+    z-index: 12;
+  }
+
+  .rightTopCornerIcon{
+    right: 0;
+    top: 0;
+    position: absolute;
+    font-size: 14px;
+    cursor: pointer;
+    color: green;
+    z-index: 12;
+  }
+  
+
+  .formControl{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #d8d2d2;    
+    
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .formControlreadonly{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #d8d2d2;
+    outline: none;
+    padding: 16px;
+    border-radius: 3px;
+    z-index: 1;
+    overflow: hidden;
+    text-align: center;  
+  }
+
+
+  .formLabel{  
+    position: absolute;
+    left: 0;
+    top: 13px;
+    color: #a1a1a1;
+    background-color: #fff;
+    
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+  }
+
+  .formLabelreadonly{
+    position: absolute;
+    left: 10px;
+    top: -10px;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+    z-index: 10;
+    font-weight: 500;
+    
+  }
+
+  .formLabel.date{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;
+    color: var(--ColorPrimary);
+    font-weight: 500;
+  }
+
+  .formControl:focus + .formLabel{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;
+    color: var(--ColorPrimary);
+    font-weight: 500;
+  }
+
+  .formControl:focus{
+    border-bottom: 1.5px solid var(--ColorPrimary);
+  }
+
+  .formControl:not(:focus):valid + label {  
+
+    top: -10px;
+    z-index: 10;
+  }
+
+
+  .formControlType2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #f1eaea;
+    outline: none;
+    padding: 15px 0 0 5px;
+    z-index: 1;
+    overflow: hidden;
+    
+  }
+
+  .formLabelType2{
+    position: absolute;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    left: 1px;
+    top: 6%;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 13px;  
+    white-space: nowrap;
+    
+  }
+
+  .errorHint{
+    position: absolute;
+    display: none;
+    font-size: 10px;
+    color: red;
+    bottom: 3px;
+    right: 3px;
+  }
+}
+
+
+.formGroupsansBorder.invalid{  
+  .formControl{
+    border-bottom: 1px solid red;
+  }  
+  
+  .errorHint{
+    display: block;
+  }
+}

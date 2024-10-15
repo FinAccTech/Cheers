@@ -9,6 +9,8 @@ import { TypeAccounts } from 'src/app/dashboard/types/TypeAccounts';
 import { MsgboxComponent } from 'src/app/dashboard/msgbox/msgbox.component';
 import { TypeParties } from 'src/app/dashboard/types/TypeParties';
 import { map, Observable, startWith } from 'rxjs';
+import { TypeCompanies } from 'src/app/dashboard/types/TypeCompanies';
+import { TransactionService } from 'src/app/dashboard/transaction.service';
 
 
 interface Scheme {
@@ -22,8 +24,6 @@ interface Scheme {
   styleUrls: ['./accountmaster.component.css']
 })
 
-
-
 export class AccountmasterComponent implements OnInit {
 
   AccountForm!: FormGroup;    
@@ -31,6 +31,9 @@ export class AccountmasterComponent implements OnInit {
 
   PartiesList: TypeParties[] = [];
   filteredParties!: Observable<TypeParties[]>;   
+
+  CompaniesList: TypeCompanies[] = [];
+  filteredCompanies!: Observable<TypeCompanies[]>;   
 
   Schemes: Scheme[] = [
     {value: 1, text: "Simple"},
@@ -45,15 +48,21 @@ export class AccountmasterComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: TypeAccounts,
     private formBuilder:FormBuilder, 
     private PtyService:PartyService,
+    private TransService:TransactionService,
     private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {    
     this.AddNewAccount();
     if (this.data.AccountSno !== 0){
-      this.LoadAccount(this.data);    
+      this.LoadAccount(this.data);                
     }
     
+    
+    if (this.data.Party){
+      this.AccountForm.controls['Party'].setValue({PartySno: this.data.Party!.PartySno, Party_Name: this.data.Party!.Party_Name } );        
+      this.AccountForm.controls['Company'].setValue({CompSno: this.data.Company!.CompSno, Comp_Name: this.data.Company!.Comp_Name } );        
+    }
     
   }
 
@@ -71,6 +80,7 @@ export class AccountmasterComponent implements OnInit {
       Account_DateStr   : [new Date().toLocaleDateString(), [Validators.required]],
       Party             : [this.formBuilder.group( this.PartiesList), [Validators.required]],
       Roi               : [0, [Validators.required]],
+      Company            : [this.formBuilder.group( this.CompaniesList), [Validators.required]],
       Scheme            : [0,],       
       Remarks            : ["",],       
     });   
@@ -83,6 +93,7 @@ export class AccountmasterComponent implements OnInit {
     this.AccountForm.controls['Account_Date'].setValue(Acc.Account_Date);  
     this.AccountForm.controls['Account_DateStr'].setValue(Acc.Account_DateStr);            
     this.AccountForm.controls['Party'].setValue({PartySno: Acc.Party!.PartySno, Party_Name: Acc.Party!.Party_Name } );        
+    this.AccountForm.controls['Company'].setValue({CompSno: Acc.Company!.CompSno, Comp_Name: Acc.Company!.Comp_Name } );        
     this.AccountForm.controls['Roi'].setValue(Acc.Roi);   
     this.AccountForm.controls['Scheme'].setValue(Acc.Scheme);       
     this.AccountForm.controls['Remarks'].setValue(Acc.Remarks);        
@@ -107,6 +118,27 @@ export class AccountmasterComponent implements OnInit {
   }
   displayParty(pty: TypeParties): string {
     return pty && pty.Party_Name ? pty.Party_Name : '';
+  }
+
+  LoadCompanies()
+  {    
+    this.TransService.getCompanies(0).subscribe((data:any )  =>   {             
+      this.filteredCompanies = this.AccountForm.controls['Company'].valueChanges.pipe(
+        startWith(null),
+        map(comp => comp && typeof comp === 'object' ? comp['Comp_Name'] : comp ),
+        map(comp => (comp ? this._filterCompany(comp) : this.CompaniesList.slice())), 
+      );   
+      this.CompaniesList     = (data);  
+    });        
+  }
+
+  private _filterCompany(value: string): TypeCompanies[] {
+    const filterValue = value.toLowerCase();    
+    return this.CompaniesList.filter(comp => comp.Comp_Name.toLowerCase().includes(filterValue));                
+  }
+
+  displayCompany(comp: TypeCompanies): string {
+    return comp && comp.Comp_Name ? comp.Comp_Name: '';
   }
 
   SaveAccount(){   

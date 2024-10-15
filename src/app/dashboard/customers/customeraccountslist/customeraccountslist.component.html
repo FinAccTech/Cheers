@@ -10,31 +10,55 @@
       </div>
       
       <div style="float: right" >
-        <button mat-button><img src="assets/images/addborrower.png" width="25" height="30" />  <h4 style="display: inline;"> &nbsp; Create New Account</h4></button>
+        <button (click)="OpenAccountCreation()" mat-button><img src="assets/images/addborrower.png" width="25" height="30" />  <h4 style="display: inline;"> &nbsp; Create New Account</h4></button>
       </div>
       <br>
 
       <div class="tableContainer">
         <table>
-          <thead> <th>A/c No</th> <th>A/c Date</th> <th>Roi</th> <th>Scheme</th> <th>Acc Status</th><th style="text-align: center; width: 20%; " ></th> </thead>
+          <thead> <th>Comp</th> <th>A/c No</th> <th>A/c Date</th> <th>Age</th> <th>LTD</th> 
+            <th>Sale Value</th>
+            <th>Release Value</th>
+            <th>Ratio</th>
+            <th>Principal</th>
+            <th>Pledge Wt</th>
+            <th>916 G/N</th>
+            <th>Non 916 G/N </th>
+            <th>Pure Wt</th>
+            <th>Int Earned</th>
+            <th></th> </thead>
           <tbody>
-            <tr *ngFor="let acc of AccountsList; let i=index" (click)="SelectedAccount = acc; LoadTransactions()" >
-              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'"> {{acc.Account_No}} </td>
-              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'"> {{acc.Account_DateStr!}} </td>
-              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'"> {{acc.Roi}} </td>
-              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'"> {{acc.Scheme ==1 ? 'Simple' : 'Compound'   }} </td>
-              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" > {{acc.Account_Status == 0 ? 'Open' : 'Closed'}}  </td>
-              <td style="text-align: center; width: 20%; ">
-                <button (click)="$event.stopPropagation()" mat-button [matMenuTriggerFor]="menuTrans"><img src="assets/images/transactions.png" width="40" height="40" /> &nbsp; <h3 style="display: inline;">Transactions</h3></button>
-                <mat-menu #menuTrans="matMenu">
-                  <button mat-menu-item (click)="OpenPaymentCreation(acc)"> <img src="assets/images/payment.png" height="30" width="30" /> &nbsp; <span> Payment </span> </button>
-                  <button mat-menu-item (click)="OpenReceiptCreation(acc)" > <img src="assets/images/receipt.png" height="30" width="30" /> &nbsp; <span> Receipt </span> </button>          
-                  <button mat-menu-item (click)="OpenVoucherCreation(acc)"> <img src="assets/images/newvoucher.png" height="30" width="30" /> &nbsp; <span> Voucher </span> </button>               
-                  <mat-divider></mat-divider>
-                  <button mat-menu-item (click)="ClearPosting()">  <span> Clear Posting </span> </button>                  
-                  <button mat-menu-item (click)="InterestPosting(2,0)"> <span> Post Ason Date</span> </button>                    
-                  <button mat-menu-item (click)="InterestPosting(2,1)"> <span> Post Ason Weekly Int</span> </button>    
-                </mat-menu>
+            <!-- <tr *ngFor="let acc of AccountsList; let i=index"> -->
+            <tr *ngFor="let acc of AccountsList; let i=index" (click)=" SetSelectedAccount(acc); LoadTransactions()" >
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Account_No == "Total" ? '' : acc.Comp_Code }} </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Account_No == "Total" ? '' : acc.Account_No }} </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Account_No == "Total" ? '' : (acc.Account_Date | intToDate | date:"dd/MM/yyyy") }} </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Account_No == "Total" ? '' : (acc.Age_In_Months + 'M / ' + acc.Age_In_Days + 'D')}}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Account_No == "Total" ? 'Total' : (acc.Ltd_In_Months + 'M / '+ acc.Ltd_In_Days + 'D ')}}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Sale_Value | numberDifferentiationFull }}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Release_Value | numberDifferentiationFull }}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.DiffPer}}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Principal | numberDifferentiationFull}}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Pledge_Wt.toFixed(0) }}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.GrossWt_916.toFixed(0)}} /  {{acc.NettWt_916.toFixed(0) }}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.GrossWt_Non916.toFixed(0)}} /  {{acc.NettWt_Non916.toFixed(0) }}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Pure_Wt.toFixed(0) }}   </td>
+              <td [style.color]="acc.Account_Status == 0 ? 'green' : 'red'" [style.font-weight]=" acc.Scheme == 1 ? 400 : 800"> {{acc.Int_Earned | numberDifferentiationFull }}   </td>
+
+
+              <td>                            
+                <ng-container *ngIf="acc.Account_No !=='Total'" >
+                  <button (click)="$event.stopPropagation()" mat-button [matMenuTriggerFor]="menuTrans"><img src="assets/images/transactions.png" width="40" height="40" /> &nbsp; <h3 style="display: inline;"></h3></button>
+                  <mat-menu #menuTrans="matMenu">
+                    <button mat-menu-item (click)="SetSelectedAccount(acc); OpenPaymentCreation()"> <img src="assets/images/payment.png" height="30" width="30" /> &nbsp; <span> Payment </span> </button>
+                    <button mat-menu-item (click)="SetSelectedAccount(acc); OpenReceiptCreation()" > <img src="assets/images/receipt.png" height="30" width="30" /> &nbsp; <span> Receipt </span> </button>          
+                    <button mat-menu-item (click)="SetSelectedAccount(acc); OpenVoucherCreation()"> <img src="assets/images/newvoucher.png" height="30" width="30" /> &nbsp; <span> Voucher </span> </button>               
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item (click)="ClearPosting()">  <span> Clear Posting </span> </button>                  
+                    <button mat-menu-item (click)="InterestPosting(2,0)"> <span> Post Ason Date</span> </button>                    
+                    <button mat-menu-item (click)="InterestPosting(2,1)"> <span> Post Ason Weekly Int</span> </button>    
+                  </mat-menu>
+                </ng-container>
               </td>
             </tr>
           </tbody>
@@ -122,7 +146,7 @@
               <h3>Total Cr Weight</h3>
             </div>
             <div class="col-md-8" style="color: green;">
-              {{TotalCreditWeight.toFixed(3)}}
+              {{TotalCreditWeight.toFixed(0)}}
             </div>
           </div>
           <div class="row" >
@@ -130,7 +154,7 @@
               <h3>Total Dr Weight</h3>
             </div>
             <div class="col-md-8" style="color: red;">
-              {{TotalDebitWeight.toFixed(3)}}
+              {{TotalDebitWeight.toFixed(0)}}
             </div>
           </div>
           <div class="row" >
@@ -138,7 +162,7 @@
               <h3><b>Balance</b></h3>
             </div>
             <div class="col-md-8" style="font-weight: bolder;" >
-              <span [style.color]="TotalDebitWeight - TotalCreditWeight > 0 ? 'green' : 'red'"> {{(TotalDebitWeight - TotalCreditWeight).toFixed(3)}} </span>
+              <span [style.color]="TotalDebitWeight - TotalCreditWeight > 0 ? 'green' : 'red'"> {{(TotalDebitWeight - TotalCreditWeight).toFixed(0)}} </span>
             </div>
           </div>
         </div>  
@@ -219,91 +243,91 @@
                       
   
                       <ng-container matColumnDef="RowNo">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sno </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Sno </th>
                         <td mat-cell *matCellDef="let row"> {{ row.RowNo}} </td>
                         <td mat-footer-cell *matFooterCellDef> </td>
                       </ng-container>
   
                       <ng-container matColumnDef="ImgCount">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
                         <td mat-cell *matCellDef="let row">   <img *ngIf="row.ImgCount > 0" src="assets/images/images.png" height="20" width="20" (click)="OpenSlideshow(row); $event.stopPropagation();" /> </td>
                         <td mat-footer-cell *matFooterCellDef> </td>
                       </ng-container>
   
                       <ng-container matColumnDef="Trans_Date">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
                         <td mat-cell *matCellDef="let row"> {{row.Trans_Date | intToDate | date:'dd/MM/yyyy' }} </td>
                         <td mat-footer-cell *matFooterCellDef> </td>
                       </ng-container>
   
                       <ng-container matColumnDef="Particulars">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Particulars </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Particulars </th>
                         <td mat-cell *matCellDef="let row" [style.color]="row.SeriesSno == 7 ? '#BA8915' : '#31302C' " > {{row.Particulars}} <br> <span style="font-size: 12px; color: darkgray;" ><i> ({{row.Remarks}})</i></span>  </td>
                         <td mat-footer-cell *matFooterCellDef> </td>                    
                       </ng-container>
                       
                       <ng-container matColumnDef="Bank_Name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Bank Account </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Bank Account </th>
                         <td mat-cell *matCellDef="let row" style="color: green;"> {{ row.Bank_Name}} </td>
                         <td style="color: #fff;" mat-footer-cell *matFooterCellDef> Total</td>
                       </ng-container>
     
                       <ng-container matColumnDef="CrAmount">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cr Amount </th>
+                        <th  class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Cr Amount </th>
                         <!-- <td mat-cell *matCellDef="let row" style="color: green;"> {{ row.CrAmount < 1 ? "" : row.CrAmount.toLocaleString('en-IN') }} </td> -->
                         <td mat-cell *matCellDef="let row" style="color: green;"> {{row.CrAmount.toLocaleString('en-IN') }} </td>
                         <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ (CrAmountTotal() | numberDifferentiation) + (CrAmountTotal() > 99000 ? ' L' : '') }} </td>
                       </ng-container>
                 
                       <ng-container matColumnDef="DrAmount">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Dr Amount </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Dr Amount </th>
                         <!-- <td mat-cell *matCellDef="let row" style="color: red;"> {{row.DrAmount < 1 ? "" : row.DrAmount.toLocaleString('en-IN') }} </td> -->
                         <td mat-cell *matCellDef="let row" style="color: red;"> {{row.DrAmount.toLocaleString('en-IN') }} </td>
                         <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ (DrAmountTotal() | numberDifferentiation) +  (DrAmountTotal() > 99000 ? ' L' : '') }}</td>
                       </ng-container>
   
                       <ng-container matColumnDef="IntAccured">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Int Accured </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Int Accured </th>
                         <td mat-cell *matCellDef="let row" style="color: green;"> {{row.IntAccured < 1 ? "" : row.IntAccured.toLocaleString('en-IN') }} </td>
                         <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ (IntAccuredTotal() | numberDifferentiation) +  (IntAccuredTotal() > 99000 ? ' L' : '') }}</td>
                       </ng-container>
   
                       <ng-container matColumnDef="IntPaid">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Int Paid </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Int Paid </th>
                         <td mat-cell *matCellDef="let row" style="color: green;"> {{row.IntPaid < 1 ? "" : row.IntPaid.toLocaleString('en-IN') }} </td>
                         <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ (IntPaidTotal() | numberDifferentiation) +  (IntPaidTotal() > 99000 ? ' L' : '') }}</td>
                       </ng-container>
   
   
                       <ng-container matColumnDef="PrinBalance">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Principal Bal </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Principal Bal </th>
                         <td mat-cell *matCellDef="let row" style="color: red;"> {{row.PrinBalance < 1 ? "" : row.PrinBalance.toLocaleString('en-IN') }} </td>
                         <td style="color: #fff;" mat-footer-cell *matFooterCellDef></td>
                       </ng-container>
   
                       <ng-container matColumnDef="Balance">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Balance </th>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Balance </th>
                         <td mat-cell *matCellDef="let row" [style.color]="row.Balance < 1  ? 'green' : 'red'" > {{ row.Balance == 0 ? "" : row.Balance.toLocaleString('en-IN')  }} </td>
                         <td mat-footer-cell *matFooterCellDef> </td>                    
                       </ng-container>
   
                    
                       <ng-container matColumnDef="CrWeight">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cr Weight <br> in Gms </th>
-                        <td mat-cell *matCellDef="let row" style="color: green;" > {{row.CrWeight < 1 ? "" : row.CrWeight.toFixed(3)}} </td>
-                        <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ CrWeightTotal().toFixed(3) }}</td>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Cr Weight <br> in Gms </th>
+                        <td mat-cell *matCellDef="let row" style="color: green;" > {{row.CrWeight < 1 ? "" : row.CrWeight.toFixed(0)}} </td>
+                        <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ CrWeightTotal().toFixed(0) }}</td>
                       </ng-container>
                       
                       <ng-container matColumnDef="DrWeight">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Dr Weight <br> in Gms </th>
-                        <td mat-cell *matCellDef="let row" style="color: red;"> {{row.DrWeight < 1 ? "" : row.DrWeight.toFixed(3) }} </td>
-                        <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ DrWeightTotal().toFixed(3) }}</td>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Dr Weight <br> in Gms </th>
+                        <td mat-cell *matCellDef="let row" style="color: red;"> {{row.DrWeight < 1 ? "" : row.DrWeight.toFixed(0) }} </td>
+                        <td style="color: #fff;" mat-footer-cell *matFooterCellDef>{{ DrWeightTotal().toFixed(0) }}</td>
                       </ng-container>
   
                       
                       <ng-container matColumnDef="BalanceWt">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Balance Wt</th>
-                        <td mat-cell *matCellDef="let row" [style.color]="row.Balance < 1  ? 'green' : 'red'"> {{ row.BalanceWt == 0 ? "" : row.BalanceWt.toFixed(3) }} </td>
+                        <th class="mat" mat-header-cell *matHeaderCellDef mat-sort-header> Balance Wt</th>
+                        <td mat-cell *matCellDef="let row" [style.color]="row.Balance < 1  ? 'green' : 'red'"> {{ row.BalanceWt == 0 ? "" : row.BalanceWt.toFixed(0) }} </td>
                         <td mat-footer-cell *matFooterCellDef> </td>                    
                       </ng-container>
   
