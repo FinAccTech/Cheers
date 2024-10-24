@@ -80,7 +80,7 @@ export class StockreportComponent implements OnInit {
   rowdetails(data: any)
   {
     // [routerLink]="['customerdetailed/', element.PartySno, element.Party_Name]" routerLinkActive="active"
-    this.router.navigate(['dashboard/customerdetailed',data.PartySno,data.Party_Name]);
+    this.router.navigate(['dashboard/customers/customeraccountslist',data.PartySno,data.Party_Name]);
     //console.log (data.PartySno);
     //console.log (data.Party_Name);
   }

@@ -55,9 +55,10 @@
                     <button mat-menu-item (click)="SetSelectedAccount(acc); OpenVoucherCreation()"> <img src="assets/images/newvoucher.png" height="30" width="30" /> &nbsp; <span> Voucher </span> </button>               
                     <mat-divider></mat-divider>
                     <button mat-menu-item (click)="ClearPosting()">  <span> Clear Posting </span> </button>                  
-                    <button mat-menu-item (click)="InterestPosting(2,0)"> <span> Post Ason Date</span> </button>                    
-                    <button mat-menu-item (click)="InterestPosting(2,1)"> <span> Post Ason Weekly Int</span> </button>    
+                    <button mat-menu-item (click)="InterestPosting(acc.AccountSno,2,0)"> <span> Post Ason Date</span> </button>                    
+                    <button mat-menu-item (click)="InterestPosting(acc.AccountSno,2,1)"> <span> Post Ason Weekly Int</span> </button>    
                   </mat-menu>
+                  <button (click)="SetSelectedAccount(acc); OpenAccountMaster()" mat-button><img src="assets/images/editicon.png" width="35" height="35" /> &nbsp; <h3 style="display: inline;"></h3></button>
                 </ng-container>
               </td>
             </tr>
@@ -239,7 +240,7 @@
   
                 <div class="mat-elevation-z8" #TABLE  style="margin-top: .5rem; background-color: #fff; width: 100%;" >
   
-                    <table mat-table [dataSource]="dataSource" matSort >
+                    <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource" >
                       
   
                       <ng-container matColumnDef="RowNo">

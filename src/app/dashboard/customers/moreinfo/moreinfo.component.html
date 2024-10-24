@@ -1,0 +1,73 @@
+<div class="moreinfoContainer">
+    <div class="header">    
+        <div class="contentLeft">
+            <p> App Settings </p>
+        </div>
+        <div class="contentRight">
+            <p matDialogClose="" > &times; </p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <mat-label>Enable App</mat-label>
+                    <mat-select [(ngModel)]="data.Enable_App">
+                      <mat-option [value]=0 > No </mat-option>
+                      <mat-option [value]=1> Yes </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+                <mat-form-field class="full-width" >                
+                  <input  type="number" matInput placeholder="App Code" [(ngModel)]="data.App_Code" [maxlength]="4" (keyup)="CheckLength($event)" >
+                </mat-form-field>    
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <mat-label>Enable Accounts</mat-label>
+                    <mat-select [(ngModel)]="data.Enable_Accounts">
+                      <mat-option [value]=0 > No </mat-option>
+                      <mat-option [value]=1 > Yes </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+                <mat-form-field>
+                    <mat-label>Enable TopUp</mat-label>
+                    <mat-select [(ngModel)]="data.Enable_TopUp">
+                      <mat-option [value]=0> No </mat-option>
+                      <mat-option [value]=1> Yes </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <mat-label>Enable Shop</mat-label>
+                    <mat-select [(ngModel)]="data.Enable_Shop">
+                      <mat-option [value]=0 > No </mat-option>
+                      <mat-option [value]=1> Yes </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+                <button type="submit" (click)="UpdateSettings()" style="color: green;" mat-stroked-button color="primary" >
+                    <mat-icon>save</mat-icon>
+                    Update 
+                </button>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>

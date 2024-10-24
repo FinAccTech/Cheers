@@ -98,7 +98,8 @@ export class VoucherComponent implements OnInit {
       Ref_No          : [""],
       Series          : [{SeriesSno:this.globals.VtypVoucher, Series_Name:"Voucher"}],
       // Party           : [{PartySno:this.data.Vou.Party.PartySno, Party_Name:this.data.Vou.Party.Party_Name}],
-      Account         : [{AccountSno:0}],
+      Account         : [{AccountSno:this.data.Vou.Account.AccountSno}],
+      Account_No      : [""],
       Borrower        : [{BorrowerSno:0, Borrower_Name:""}],
       Bank            : [this.formBuilder.group( this.banks), [Validators.required]],      
       BankBranch      : [{BranchSno:0, Branch_Name:""} ],
@@ -113,6 +114,7 @@ export class VoucherComponent implements OnInit {
       Ref             : [{RefSno:0, Ref_No:""} ],    
       Remarks         : ["" ],   
       fileSource      : [],   
+      CloseAccount    : [false],   
     });        
   }
  
@@ -133,7 +135,8 @@ export class VoucherComponent implements OnInit {
     this.VoucherForm.controls['CrAmount'].setValue(Vou.CrAmount);        
     this.VoucherForm.controls['Other_Charges'].setValue(Vou.Other_Charges);        
     this.VoucherForm.controls['Ref'].patchValue({RefSno:Vou.Ref.RefSno, Ref_No: Vou.Ref.Ref_No});        
-    this.VoucherForm.controls['Remarks'].setValue(Vou.Remarks);        
+    this.VoucherForm.controls['Remarks'].setValue(Vou.Remarks);      
+    this.VoucherForm.controls['CloseAccount'].setValue(Vou.CloseAccount);    
   }
   
   SaveVoucher(){          

@@ -20,4 +20,9 @@ export interface TypeParties {
     fileSource?: FileHandle;
     Party_Image?: string;
     Image_Name?: string;
+    Enable_App?: number;
+    App_Code?: string;
+    Enable_Accounts?: number;
+    Enable_TopUp?: number;
+    Enable_Shop?: number;
 }

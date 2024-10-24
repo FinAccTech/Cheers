@@ -98,6 +98,7 @@ import { SearchPipe } from './dashboard/pipes/search.pipe';
 import { BorrowercardComponent } from './dashboard/GlobalWidgets/borrowercard/borrowercard.component';
 import { BankcardComponent } from './dashboard/GlobalWidgets/bankcard/bankcard.component';
 import { CompaniesComponent } from './dashboard/companies/companies.component';
+import { MoreinfoComponent } from './dashboard/customers/moreinfo/moreinfo.component';
 
 
 @NgModule({
@@ -111,7 +112,7 @@ import { CompaniesComponent } from './dashboard/companies/companies.component';
     RepledgehistoryComponent, GalleryComponent, ReleaseComponent, RppaymentComponent, MultirowComponent, TransferComponent, VoucherComponent, BankdetailsComponent, 
     ImagePreviewComponent, RiskManageComponent, GoldratesComponent, NumberDifferentiation, NumberDifferentiationFull,  BorrowerAnalysisComponent, CustomerAnalysisComponent, StockreportComponent, RepledgehistorybanksComponent, SummaryComponent, ImageCarouselComponent, DateSelectionComponent, RecenttransComponent, ValidateinputsDirective, SharelinkComponent, 
     CustomeraccountslistComponent, AccountsmastersComponent, AccountmasterComponent, RatingsComponent, 
-    ProfilecardComponent, SearchPipe, BorrowercardComponent, BankcardComponent, CompaniesComponent
+    ProfilecardComponent, SearchPipe, BorrowercardComponent, BankcardComponent, CompaniesComponent, MoreinfoComponent
   ],
 
   imports: [    

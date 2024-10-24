@@ -68,7 +68,12 @@ export class PartyService {
       "Ratings"             :   Pty.Ratings,
       "Customer_Type"       :   Pty.Customer_Type,
       "fileSource"          :   Pty.fileSource,
-      "Party_Image"          :   Pty.Party_Image,
+      "Party_Image"         :   Pty.Party_Image,
+      "Enable_App"          :   Pty.Enable_App,
+      "App_Code"            :   Pty.App_Code,
+      "Enable_Accounts"     :   Pty.Enable_Accounts,
+      "Enable_TopUp"        :   Pty.Enable_TopUp,
+      "Enable_Shop"         :   Pty.Enable_Shop,
 
    });    
    

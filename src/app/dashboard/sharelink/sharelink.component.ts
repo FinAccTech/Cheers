@@ -29,7 +29,7 @@ export class SharelinkComponent implements OnInit {
       ); 
       dialogRef1.disableClose = true;
 
-    this.TransService.sharePartyStatement(this.data.PartySno, this.data.PartyName,this.data.ReportFromDate, this.data.ReportToDate, this.ImageType ).subscribe(data => {
+    this.TransService.sharePartyStatement(this.data.AccountSno, this.data.PartyName,this.data.ReportFromDate, this.data.ReportToDate, this.ImageType ).subscribe(data => {
       dialogRef1.close();
       this.LinkData = data.apiData;
     });

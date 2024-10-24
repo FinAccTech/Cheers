@@ -52,7 +52,7 @@ export class BorrowerAnalysisComponent implements OnInit {
      );
      dialogRef.disableClose = true;
 
-    this.TransService.LoadBwrAnalysis().subscribe((data:any ) =>  {          
+    this.TransService.LoadBwrAnalysis().subscribe((data:any ) =>  {       
       this.loadingData = false;       
       if (data === 0)
       {
@@ -78,7 +78,7 @@ export class BorrowerAnalysisComponent implements OnInit {
 
   rowdetails(data: any)
   {    
-    this.router.navigate(['dashboard/borrowerdetailed',data.PartySno,data.Party_Name]);   
+    this.router.navigate(['dashboard/borrowers/borrowerdetailed',data.PartySno,data.Party_Name]);   
   }
 
   applyFilter(event: Event) {

@@ -13,7 +13,6 @@ import { AppGlobalsService } from '../../app-globals.service';
 import { MsgboxComponent } from '../../msgbox/msgbox.component';
 import { TypeBanks } from '../../types/TypeBanks';
 import { FileHandle } from '../../types/file-handle';
-
 import { ToWords } from 'to-words';
 
 @Component({
@@ -21,6 +20,7 @@ import { ToWords } from 'to-words';
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })
+
 export class PaymentComponent implements OnInit {
 
   PaymentForm!: FormGroup;  
@@ -108,7 +108,6 @@ export class PaymentComponent implements OnInit {
 
   OpenImagesCreation(){
     var img = this.TransImages;
-
     const dialogRef = this.dialog.open(ImagesComponent, 
       { 
         width: '1024px',
@@ -117,13 +116,8 @@ export class PaymentComponent implements OnInit {
       });
       
       dialogRef.disableClose = true;
-
-      dialogRef.afterClosed().subscribe(result => {
-        console.log (result);
-        this.TransImages = result;
-        // this.urls = [];
-        // this.urls.push  (result);     
-        // console.log (this.urls);
+      dialogRef.afterClosed().subscribe(result => {        
+        this.TransImages = result;        
         this.imagesCount = result.length;   
       }); 
   }
@@ -133,26 +127,28 @@ export class PaymentComponent implements OnInit {
   {     
     this.PaymentForm = this.formBuilder.group
     ({
-      TransSno        : [0, [Validators.required]],    
-      Trans_No        : ["AUTO", [Validators.required]],    
-      Trans_Date      : [new Date, [Validators.required]],
-      Ref_No          : [""],
-      Series          : [{SeriesSno:this.globals.VtypPayment, Series_Name:"Payment"}],
-      Account         : [{AccountSno:this.data.Pmt.Account.AccountSno}],
-      Borrower        : [{BorrowerSno:0, Borrower_Name:""}],
-      Bank            : [this.formBuilder.group( this.banks), [Validators.required]],      
-      BankBranch      : [{BranchSno:0, Branch_Name:""}],
-      Loan_Type       : [0,],    
-      Roi             : [this.data.Pmt.Account.Roi,[Validators.required]],   
-      Tenure          : [0,],    
-      DrAmount        : [0,],    
-      CrAmount        : [0,],    
-      PrincipalAmount : [0,],    
-      IntAmount       : [0,],    
-      Other_Charges   : [0,],    
-      Ref             : [{RefSno:0, Ref_No:""}],    
-      Remarks         : [""],   
-      fileSource      : [this.TransImages],   
+      TransSno        : [ 0, [Validators.required]  ],    
+      Trans_No        : [ "AUTO", [Validators.required] ],    
+      Trans_Date      : [ new Date, [Validators.required] ],
+      Ref_No          : [ "" ],
+      Series          : [ {SeriesSno:this.globals.VtypPayment, Series_Name:"Payment"}],
+      Account         : [ "{AccountSno:this.data.Pmt.Account.AccountSno}"],
+      Account_No      : [ "" ],
+      Borrower        : [ {BorrowerSno:0, Borrower_Name:""}],
+      Bank            : [ this.formBuilder.group( this.banks), [Validators.required]],      
+      BankBranch      : [ {BranchSno:0, Branch_Name:""}],
+      Loan_Type       : [ 0,],    
+      Roi             : [ this.data.Pmt.Account.Roi,[Validators.required]],   
+      Tenure          : [ 0,],    
+      DrAmount        : [ 0,],    
+      CrAmount        : [ 0,],    
+      PrincipalAmount : [ 0,],    
+      IntAmount       : [ 0,],    
+      Other_Charges   : [ 0,],    
+      Ref             : [ {RefSno:0, Ref_No:""}],    
+      Remarks         : [ ""],   
+      fileSource      : [ this.TransImages],   
+      CloseAccount    : [ false],   
     });        
   }
  
@@ -174,6 +170,7 @@ export class PaymentComponent implements OnInit {
     this.PaymentForm.controls['Other_Charges'].setValue(Pmt.Other_Charges);        
     this.PaymentForm.controls['Ref'].patchValue({RefSno:Pmt.Ref.RefSno, Ref_No: Pmt.Ref.Ref_No});        
     this.PaymentForm.controls['Remarks'].setValue(Pmt.Remarks);    
+    this.PaymentForm.controls['CloseAccount'].setValue(Pmt.CloseAccount);      
     this.GrossWt = Pmt.GrossWt;
     this.NettWt = Pmt.NettWt;
     this.Purity = Pmt.Purity;
@@ -188,7 +185,7 @@ export class PaymentComponent implements OnInit {
     });
   }
   
-  SavePayment(){              
+  SavePayment(){                  
     if (this.PaymentForm.controls['DrAmount'].value > 0 )
       {
         if (!this.PaymentForm.controls['Bank'].value.BankSno)
@@ -403,26 +400,24 @@ export class PaymentComponent implements OnInit {
       } 
       // this.CalcAmount();
     })    
-}
+  }
 
-
-
-NullCheck(event: any, type: number)
-{
-  if (type == 1)
+  NullCheck(event: any, type: number)
   {
-    if (event.target.value == 0 )
+    if (type == 1)
     {
-      event.target.value = '';
+      if (event.target.value == 0 )
+      {
+        event.target.value = '';
+      }
+    }
+    else
+    {
+      if (event.target.value == '' )
+      {
+        event.target.value = 0;
+      }
     }
   }
-  else
-  {
-    if (event.target.value == '' )
-    {
-      event.target.value = 0;
-    }
-  }
-}
 
 }

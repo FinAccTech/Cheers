@@ -8,6 +8,7 @@ import { MsgboxComponent } from '../../msgbox/msgbox.component';
 import { FileHandle } from '../../types/file-handle';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AppGlobalsService } from '../../app-globals.service';
+import { MoreinfoComponent } from '../moreinfo/moreinfo.component';
 
 interface Scheme {
   value : number;
@@ -124,7 +125,13 @@ export class CustomermasterComponent implements OnInit {
       Customer_Type   :   [1],
       fileSource      :   [{"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""}],      
       Party_Image     :   [""],
-      Image_Name      :   [""]
+      Image_Name      :   [""],
+      Enable_App      :   [0],
+      App_Code        :   [""],
+      Enable_Accounts :   [0],
+      Enable_TopUp    :   [0],
+      Enable_Shop     :   [0],
+
     });    
 
     this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""} ;    
@@ -153,7 +160,13 @@ export class CustomermasterComponent implements OnInit {
     this.PartyForm.controls['fileSource'].setValue({"DelStatus":0, "Image_File":null!, "Image_Url":Pty.Party_Image, "SrcType":1,"Image_Name":Pty.Image_Name});  
     this.rating = Pty.Ratings!;
     this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":Pty.Party_Image!, "SrcType":1,"Image_Name":Pty.Image_Name!} ;
-        
+    
+    this.PartyForm.controls['Enable_App'].setValue(Pty.Enable_App);  
+    this.PartyForm.controls['App_Code'].setValue(Pty.App_Code);  
+    this.PartyForm.controls['Enable_Accounts'].setValue(Pty.Enable_Accounts);  
+    this.PartyForm.controls['Enable_TopUp'].setValue(Pty.Enable_TopUp);  
+    this.PartyForm.controls['Enable_Shop'].setValue(Pty.Enable_Shop);  
+
   }
   
   SaveParty(){   
@@ -260,5 +273,27 @@ export class CustomermasterComponent implements OnInit {
   getNewRating($event: number){
     this.rating = $event;
     this.PartyForm.controls['Ratings'].setValue(this.rating);  
+  }
+  
+  OpenAppControl(){
+    const dialogRef = this.dialog.open(MoreinfoComponent, 
+      {
+        data: Object(this.PartyForm).value,
+      });
+      
+      dialogRef.disableClose = true; 
+
+      dialogRef.afterClosed().subscribe(result => {        
+        
+        if (result) 
+        { 
+          this.PartyForm.controls['Enable_App'].setValue(result.Enable_App);  
+          this.PartyForm.controls['App_Code'].setValue(result.App_Code);  
+          this.PartyForm.controls['Enable_Accounts'].setValue(result.Enable_Accounts);  
+          this.PartyForm.controls['Enable_TopUp'].setValue(result.Enable_TopUp);  
+          this.PartyForm.controls['Enable_Shop'].setValue(result.Enable_Shop);          
+        }
+        
+      });  
   }
 }

@@ -1,0 +1,31 @@
+.moreinfoContainer{
+    .header{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        .contentLeft{
+            p{
+                font-size: 1.5rem;
+            }
+        }
+
+        .contentRight{
+            p{
+                font-size: 2rem;
+                font-weight: 600;
+                color: black;
+            }
+            p:hover{
+                transition: transform 0.25s 0s; 
+                transform: scale(1.5); 
+                cursor: pointer;
+            }
+        }
+    }
+
+    .body{
+
+    }
+}

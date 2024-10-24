@@ -158,7 +158,8 @@ export class TransactionService {
 
  saveTransaction(Trans: TypeTransactions, ItemDetails: string, ImageDetails: string):Observable<TypeTransactions>
   {    
-
+    console.log(Trans);
+    
     if (Trans.IntAmount === null) {
       Trans.IntAmount = 0;
     }
@@ -307,15 +308,15 @@ getAccountStatement(AccountSno: number, FromDate: Date, ToDate: Date):Observable
 }
 
 
-sharePartyStatement(PartySno: number, Party_Name: string, FromDate: Date, ToDate: Date, ShowImages: string):Observable<any>
+sharePartyStatement(AccountSno: number, Party_Name: string, FromDate: Date, ToDate: Date, ShowImages: string):Observable<any>
 { 
-  let edata: string =JSON.stringify({"PartySno" :  PartySno, "Party_Name" :  Party_Name, "FromDate" :  this.globals.DateToInt(FromDate) , "ToDate" :  this.globals.DateToInt(ToDate), "ShowImages": ShowImages }); 
+  let edata: string =JSON.stringify({"AccountSno" :  AccountSno, "Party_Name" :  Party_Name, "FromDate" :  this.globals.DateToInt(FromDate) , "ToDate" :  this.globals.DateToInt(ToDate), "ShowImages": ShowImages }); 
   
     let params = new HttpParams()
     .set('data', edata)
         
     //let apiURL: string = "http://cheers.finacc.in/getStatement.php";
-  let apiURL: string = "https://www.finaccsaas.com/CheersApp/data/getStatement.php";
+  let apiURL: string = "https://www.finaccsaas.com/Cheers2/data/getStatement.php";
   
   return this.http.get<any>(apiURL, { params })
     .pipe(map(datarecd => {                    
@@ -617,9 +618,9 @@ sharePartyStatement(PartySno: number, Party_Name: string, FromDate: Date, ToDate
       }));
   }
 
-  InterestPosting(PartySno: number, PostMethod: number, AsonType: number)
+  InterestPosting(AccountSno: number, PostMethod: number, AsonType: number)
   {    
-    let edata: string =JSON.stringify  ({ "PartySno"    :  PartySno, "PostMethod"    :  PostMethod, "AsonType"    :  AsonType   }); 
+    let edata: string =JSON.stringify  ({ "AccountSno"    :  AccountSno, "PostMethod"    :  PostMethod, "AsonType"    :  AsonType   }); 
     
     let params = new HttpParams()
     .set('data', edata)
@@ -645,9 +646,9 @@ sharePartyStatement(PartySno: number, Party_Name: string, FromDate: Date, ToDate
     return this.http.delete<TypeParties>(apiURL, {params} )   
   }
 
-  ClearPosting(PartySno: number)
+  ClearPosting(AccountSno: number)
   {    
-    let edata: string =JSON.stringify  ({ "PartySno"    :  PartySno}); 
+    let edata: string =JSON.stringify  ({ "AccountSno"    :  AccountSno}); 
     
     let params = new HttpParams()
     .set('data', edata)

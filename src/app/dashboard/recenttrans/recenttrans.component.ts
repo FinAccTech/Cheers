@@ -68,10 +68,7 @@ export class RecenttransComponent implements OnInit {
          this.errDetails = data; 
        }
        else{                      
-          this.TransList = data;                  
-          console.log(this.TransList);
-                  
-          // this.LoadTransactionsntoMatGrid();          
+          this.TransList = data;                            
        }              
      });    
      this.loadingData = false;

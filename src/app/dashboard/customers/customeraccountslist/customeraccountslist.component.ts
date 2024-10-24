@@ -53,6 +53,7 @@ interface TypeAccountSummary{
   CompSno: number;
   Comp_Code: string;
   Comp_Name: string;
+  Remarks: string;
 }
 
 @Component({ 
@@ -193,7 +194,8 @@ export class CustomeraccountslistComponent implements OnInit {
               Party_Name: "",
               CompSno: 0,
               Comp_Code: "",
-              Comp_Name: ""
+              Comp_Name: "",
+              Remarks :"",
             })  
           }
           this.LoadTransactions();    
@@ -204,7 +206,14 @@ export class CustomeraccountslistComponent implements OnInit {
   }
 
   SetSelectedAccount(acc: TypeAccountSummary){
-    this.SelectedAccount = {"AccountSno": acc.AccountSno, "Account_No": acc.Account_No, "Party": {"PartySno": acc.PartySno, "Party_Name": acc.Party_Name, "Party_Type": this.globals.PartyTypeCustomers, "Roi": acc.Roi }}
+    this.SelectedAccount = {"AccountSno": acc.AccountSno, "Account_No": acc.Account_No, "Roi" : acc.Roi, 
+                            "Party": {"PartySno": acc.PartySno, "Party_Name": acc.Party_Name,"Party_Type": this.globals.PartyTypeCustomers, "Roi": acc.Roi,},
+                            "Scheme" : acc.Scheme,
+                            "Account_Date": acc.Account_Date.toString(),
+                            "Account_DateStr" : this.globals.IntToDate(acc.Account_Date).toLocaleDateString() ,
+                            "Company" : {CompSno: acc.CompSno, Comp_Code: acc.Comp_Code, Comp_Name : acc.Comp_Name },
+                            "Remarks" : acc.Remarks                    
+                          }
   }
 
   ngAfterViewInit() {    
@@ -251,7 +260,7 @@ export class CustomeraccountslistComponent implements OnInit {
       
       dialogRef.disableClose = true;
       dialogRef.afterClosed().subscribe(result => {     
-        
+        this.ngOnInit();
       }); 
   }
   
@@ -296,7 +305,7 @@ export class CustomeraccountslistComponent implements OnInit {
       dialogRef.disableClose = true;
 
       dialogRef.afterClosed().subscribe(result => {     
-        
+        this.ngOnInit();
       }); 
   }
 
@@ -341,7 +350,7 @@ export class CustomeraccountslistComponent implements OnInit {
       dialogRef.disableClose = true;
 
       dialogRef.afterClosed().subscribe(result => {     
-        
+        this.ngOnInit();
       }); 
   }
 
@@ -543,7 +552,21 @@ LoadTransactions(){
     }
   }
 
-  CrAmountTotal()
+  OpenAccountMaster()
+  {
+      const dialogRef = this.dialog.open(AccountmasterComponent, 
+        {
+          data: this.SelectedAccount,
+        });        
+        dialogRef.disableClose = true;   
+        dialogRef.afterClosed().subscribe(result => {                  
+          if (result) 
+          {             
+          }          
+        });      
+  }
+
+  CrAmountTotal() 
   {
     return this.dataSource.filteredData.map(t =>  t.CrAmount).reduce((acc, value) => acc + value, 0);
   }
@@ -569,7 +592,7 @@ LoadTransactions(){
     return this.dataSource.filteredData.map(t => t.IntPaid).reduce((acc, value) => acc + value, 0);
   }
 
-  InterestPosting(PostMethod: number, AsonType: number){       
+  InterestPosting(accsno: number , PostMethod: number, AsonType: number){       
       const dialogRef1 = this.dialog.open(MsgboxComponent, 
         {
         data: {DialogType:3, Message: "Are you sure you want to Post Interest for this Customer?"},
@@ -580,8 +603,10 @@ LoadTransactions(){
         dialogRef1.afterClosed().subscribe(actionBack => {        
           if (actionBack == 1) 
           { 
-            this.TransService.InterestPosting(this.SelectedAccount.AccountSno,PostMethod, AsonType).subscribe((data:any ) => {
+            this.TransService.InterestPosting(accsno,PostMethod, AsonType).subscribe((data:any ) => {
         
+              console.log(data);
+              
               if (data.queryStatus == 0)
               {                      
                   const dialogRef2 = this.dialog.open(MsgboxComponent, 
@@ -747,7 +772,7 @@ OpenShareLink(){
       const {x, y} = this.shareselbtn.nativeElement.getBoundingClientRect();
       const dialogRef = this.dialog.open(SharelinkComponent, 
         {
-          data: {"PartySno": this.SelectedAccount.AccountSno, "PartyName" : this.SelectedAccount.Party!.Party_Name, "ReportFromDate": this.ReportFromDate, "ReportToDate": this.ReportToDate }, 
+          data: {"AccountSno": this.SelectedAccount.AccountSno, "PartyName" : this.Party.Party_Name, "ReportFromDate": this.ReportFromDate, "ReportToDate": this.ReportToDate }, 
           height: '280px', 
           width: '400px',       
           position: {left:(x-300) +'px' , top: (y + 60) +'px'} ,

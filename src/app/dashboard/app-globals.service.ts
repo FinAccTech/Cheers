@@ -9,9 +9,9 @@ export class AppGlobalsService
 {
   constructor(private dialog: MatDialog){ }
 
-  baseApiURL:string = "https://www.finaccsaas.com/Cheers2/data/ClsRest.php";
-  baseImageURL: string = "https://www.finaccsaas.com/Cheers2/data/Images/";
-  PartyImageUrl: string = "https://www.finaccsaas.com/Cheers2/data/Images/CustomerImages";
+  baseApiURL:string = "https://finaccsaas.com/Cheers2/data/ClsRest.php";
+  baseImageURL: string = "https://finaccsaas.com/Cheers2/data/Images/";
+  PartyImageUrl: string = "https://finaccsaas.com/Cheers2/data/Images/CustomerImages";
   
   PartyTypeCustomers:   number = 1;
   PartyTypeBorrower:    number = 2;

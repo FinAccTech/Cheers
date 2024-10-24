@@ -58,7 +58,6 @@ export class AccountmasterComponent implements OnInit {
       this.LoadAccount(this.data);                
     }
     
-    
     if (this.data.Party){
       this.AccountForm.controls['Party'].setValue({PartySno: this.data.Party!.PartySno, Party_Name: this.data.Party!.Party_Name } );        
       this.AccountForm.controls['Company'].setValue({CompSno: this.data.Company!.CompSno, Comp_Name: this.data.Company!.Comp_Name } );        
@@ -141,7 +140,7 @@ export class AccountmasterComponent implements OnInit {
     return comp && comp.Comp_Name ? comp.Comp_Name: '';
   }
 
-  SaveAccount(){   
+  SaveAccount(){       
     if (this.AccountForm.controls['Roi'].value == 0)
     {
       this._snackBar.open('Rate of Interest cannot be zero.', 'Success',{horizontalPosition: 'center', verticalPosition: 'top', duration: 2000, panelClass: ['mat-toolbar', 'mat-primary'] });                        

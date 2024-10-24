@@ -1,5 +1,5 @@
-USE cheers2
-go
+
+--Ssp_Post_Interest 111, 2, 0
 
 ALTER PROCEDURE Ssp_Post_Interest
 @AccountSno INT,
@@ -39,7 +39,7 @@ BEGIN
 	ELSE
 		BEGIN
 			--SELECT @IntLastUpdate = IntLastUpdate FROM Party WHERE PartySno=@PartySno
-      SELECT @IntLastUpdate = [dbo].IntToDate(MIN( Trans_Date)) FROM Transactions WHERE AccountSno=@AccountSno
+      SELECT @IntLastUpdate = [dbo].IntToDate(MIN(Trans_Date)) FROM Transactions WHERE AccountSno=@AccountSno 
       IF @IntLastUpdate IS NULL
         BEGIN
           GOTO CloseNow
@@ -86,14 +86,18 @@ BEGIN
         		
 				SET @RegularInt = ((@Roi /100)*@NewPrincipal/12) -- * (DATEDIFF(DAY,@FromDate,@ToDate)) --Interest for Opening Balance (New Principal)
 
-        SET @DebitInt = [dbo].GetNewDebitInterest(@AccountSno,@FromDate,@ToDate,@Roi)
+        SET @DebitInt   = [dbo].GetNewDebitInterest(@AccountSno,@FromDate,@ToDate,@Roi)
         SET @CreditInt  = [dbo].GetNewCreditInterest(@AccountSno,@FromDate,@ToDate,@Roi)
-        SET @IntPaid = [dbo].GetInterestPaid(@AccountSno,@FromDate, @ToDate)
+
+        --select @DebitInt, @CreditInt
+
+        SET @IntPaid    = [dbo].GetInterestPaid(@AccountSno,@FromDate, @ToDate)
 
 				SET @IntAccuredb4IntPaid = (@RegularInt	+	@DebitInt) -  (@CreditInt)
         SET @IntAccured = (@RegularInt	+	@DebitInt) -  (@CreditInt )
         SET @IntAccured = ABS(@IntAccured)
 
+        --select @IntAccured
           
           --select @IntPaid, @IntAccuredb4IntPaid, @RegularInt, @DebitInt, @CreditInt, @ExcessInt, @IntAccured
         --SELECT @FromDate, @todate, [dbo].GetNewDebitInterest(@PartySno,@FromDate,@ToDate,@Roi), [dbo].GetNewCreditInterest(@PartySno,@FromDate,@ToDate,@Roi), [dbo].GetInterestPaid(@PartySno,@FromDate, @ToDate)
@@ -101,6 +105,7 @@ BEGIN
   			SET @NewPrincipal = (@NewPrincipal	+ (SELECT ISNULL(SUM(DrAmount),0) FROM Transactions WHERE (SeriesSno = 1) AND (AccountSno=@AccountSno) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))))  
 															- (SELECT ISNULL(SUM(CrAmount-IntAmount),0) FROM Transactions WHERE (SeriesSno = 2) AND (AccountSno=@AccountSno) AND ([dbo].IntToDate(Trans_Date) BETWEEN @FromDate AND DATEADD(DAY,-1,@ToDate))) 
 
+                              --select @Scheme
             
             IF @Scheme=1 --SIMPLE INTEREST
               BEGIN
@@ -115,6 +120,9 @@ BEGIN
             ELSE IF @Scheme=2 --COMPOUND INTEREST
               BEGIN
                 SET @NewPrincipal = @NewPrincipal + @IntAccured
+
+                --select @NewPrincipal
+
                 UPDATE Accounts SET NewPrincipal = @NewPrincipal + @IntAccured WHERE AccountSno=@AccountSno
                 SET @Remarks  = 'Interest for'+ CAST(@FromDate as VARCHAR) + ' to '+ CAST(@ToDate AS VARCHAR) + ' - ' + CAST(@IntAccured AS VARCHAR) + ' compounded to Principal'
 
@@ -142,14 +150,16 @@ BEGIN
                                          ((((@Roi /100)*@NewPrincipal/12)/30) * 7) * ((DATEDIFF(DAY,@FromDate,@ToDate) / 7) + 1)
                             END
 
-          SET @DebitInt = [dbo].GetNewDebitInterest(@AccountSno,@FromDate,@ToDate,@Roi)
+          SET @DebitInt   = [dbo].GetNewDebitInterest(@AccountSno,@FromDate,@ToDate,@Roi)
           SET @CreditInt  = [dbo].GetNewCreditInterest(@AccountSno,@FromDate,@ToDate,@Roi)
-          SET @IntPaid = [dbo].GetInterestPaid(@AccountSno,@FromDate, @ToDate)
+          SET @IntPaid    = [dbo].GetInterestPaid(@AccountSno,@FromDate, @ToDate)
 
         
           SET @IntAccuredb4IntPaid = (@RegularInt	+	@DebitInt) -  (@CreditInt)
           SET @IntAccured = (@RegularInt	+	@DebitInt) -  (@CreditInt)
           SET @IntAccured = ABS(@IntAccured)  
+
+          select @IntAccured
 
           SET @Remarks = 'Interest for ' + CAST(@FromDate AS varchar) + ' to ' + CAST(@ToDate AS varchar)
 
@@ -158,7 +168,7 @@ BEGIN
 
           UPDATE Voucher_Series SET Current_No=Current_No+1 WHERE SeriesSno=7
 
-        END
+        END 
 
       CloseNow:
 END

@@ -680,31 +680,31 @@ GROUP BY  Pty.PartySno, Pty.Party_Name
 
 GO
 
-IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_BORROWER_ANALYSIS') BEGIN DROP VIEW VW_BORROWER_ANALYSIS END
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='Ssp_UpdateInterestForAll') BEGIN DROP PROCEDURE Ssp_UpdateInterestForAll END
 GO
-CREATE PROCEDURE VW_BORROWER_ANALYSIS
+CREATE PROCEDURE Ssp_UpdateInterestForAll
 AS
 BEGIN
   DECLARE       
-      @PartySno   INT
+      @AccountSno   INT
 
-  DECLARE Cursor_Party CURSOR
+  DECLARE Cursor_Account CURSOR
   FOR SELECT 
-          PartySno
+          AccountSno
       FROM 
-          Party
+          Accounts
 
-  OPEN Cursor_Party
+  OPEN Cursor_Account
 
-  FETCH NEXT FROM Cursor_Party INTO 
-      @PartySno
+  FETCH NEXT FROM Cursor_Account INTO 
+      @AccountSno
 
   WHILE @@FETCH_STATUS = 0
       BEGIN
           
-          FETCH NEXT FROM Cursor_Party INTO 
-              @PartySno
-              EXEC Ssp_Post_Interest @PartySno,2,1
+          FETCH NEXT FROM Cursor_Account INTO 
+              @AccountSno
+              EXEC Ssp_Post_Interest @AccountSno,2,1
       END
 
   CLOSE Cursor_Party
@@ -757,7 +757,7 @@ CREATE FUNCTION Udf_getPartySummary(@PartySno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
 RETURN
-  SELECT	VAcc.AccountSno, VAcc.Account_No, Acc.Account_Date, Acc.CompSno, VAcc.Comp_Code, VAcc.Comp_Name, Acc.Scheme, Acc.PartySno, Pty.Party_Name,
+  SELECT	VAcc.AccountSno, VAcc.Account_No, Acc.Account_Date, Acc.CompSno, VAcc.Comp_Code, VAcc.Comp_Name, Acc.Scheme, Acc.Remarks, Acc.PartySno, Pty.Party_Name,      
 		  Age_In_Months = (SELECT Months FROM [dbo].SDateDiff((SELECT  [dbo].IntToDate(ISNULL(MIN(Trans_Date),[dbo].DateToInt (GETDATE()))) FROM VW_TRANSACTIONS WHERE AccountSno = VAcc.AccountSno),GETDATE())),		
 		  Age_In_Days = (SELECT Days FROM [dbo].SDateDiff((SELECT  [dbo].IntToDate(ISNULL(MIN(Trans_Date),[dbo].DateToInt (GETDATE()))) FROM VW_TRANSACTIONS WHERE AccountSno = VAcc.AccountSno),GETDATE())),		
 		
@@ -795,8 +795,6 @@ RETURN
   FROM	VW_ACCOUNT_ANALYSIS VAcc
 		    INNER JOIN Accounts Acc ON Acc.AccountSno = VAcc.AccountSno
         INNER JOIN Party Pty ON Pty.PartySno = Acc.PartySno
-		  --LEFT OUTER JOIN	VW_TRANSACTIONS Trans ON Trans.AccountSno = VAcc.AccountSno
-
   WHERE	VAcc.PartySno = @PartySno
   
 
