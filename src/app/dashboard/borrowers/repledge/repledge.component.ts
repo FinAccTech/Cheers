@@ -240,6 +240,7 @@ export class RepledgeComponent implements OnInit {
       Ref             : [{RefSno:0, Ref_No:""} ],    
       Remarks         : ["" ],   
       fileSource      : [this.TransImages],   
+      CloseAccount    : [ false],   
     });         
   } 
  

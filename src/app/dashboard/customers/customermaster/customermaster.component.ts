@@ -170,11 +170,11 @@ export class CustomermasterComponent implements OnInit {
   }
   
   SaveParty(){   
-    if (this.PartyForm.controls['Roi'].value == 0)
-    {
-      this._snackBar.open('Rate of Interest cannot be zero.', 'Success',{horizontalPosition: 'center', verticalPosition: 'top', duration: 2000, panelClass: ['mat-toolbar', 'mat-primary'] });                        
-      return;
-    }
+    // if (this.PartyForm.controls['Roi'].value == 0)
+    // {
+    //   this._snackBar.open('Rate of Interest cannot be zero.', 'Success',{horizontalPosition: 'center', verticalPosition: 'top', duration: 2000, panelClass: ['mat-toolbar', 'mat-primary'] });                        
+    //   return;
+    // }
     
     if (!this.TransImages || this.TransImages.Image_Name ==''){
       this.PartyForm.controls['Party_Image'].setValue('');
