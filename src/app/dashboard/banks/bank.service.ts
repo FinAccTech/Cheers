@@ -24,7 +24,7 @@ export class BankService {
  
  getBanks(BankSno: number, Acc_Cat: number):Observable<TypeBanks>
  {    
-   let edata: string =JSON.stringify({"BankSno" :  BankSno, "Acc_Cat" :  Acc_Cat}); 
+   let edata: string =JSON.stringify({"BankSno" :  BankSno, "Acc_Cat" :  0}); 
    
     let params = new HttpParams()
     .set('data', edata)

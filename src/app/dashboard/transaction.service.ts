@@ -83,6 +83,8 @@ export class TransactionService {
    
    return this.http.get<any>(apiURL, { params })
      .pipe(map(datarecd => {                    
+      console.log(datarecd);
+      
        if (datarecd.queryStatus == 0)
          {              
            return (0);                
@@ -170,8 +172,9 @@ export class TransactionService {
       "Trans_No"            :   Trans.Trans_No,
       "Trans_Date"          :   this.globals.DateToInt (Trans.Trans_Date),
       "Ref_No"              :   Trans.Ref_No,
-      "SeriesSno"           :   Trans.Series.SeriesSno,
+      "SeriesSno"           :   Trans.Series.SeriesSno, 
       "AccountSno"          :   Trans.Account.AccountSno,  
+      "PartySno"            :   Trans.RParty.PartySno,  
       "BorrowerSno"         :   Trans.Borrower.BorrowerSno, 
       "BankSno"             :   Trans.Bank.BankSno, 
       "BankBranchSno"       :   Trans.BankBranch.BranchSno,

@@ -135,6 +135,7 @@ export class ReceiptComponent implements OnInit {
       Trans_Date      : [new Date, [Validators.required]],
       Ref_No          : [""],
       Series          : [{SeriesSno:this.globals.VTypReceipt, Series_Name:"Receipt"}],
+      RParty          : [{PartySno:0, Party_Name:""}],
       Account         : [{AccountSno:this.data.Rcpt.Account.AccountSno}],
       Account_No      : [""],
       Borrower        : [{BorrowerSno:0, Borrower_Name:""}],

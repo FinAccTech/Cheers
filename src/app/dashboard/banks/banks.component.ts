@@ -51,7 +51,7 @@ export class BanksComponent implements OnInit {
        else{              
           this.BanksList = data;                          
           this.LoadBanksListintoMatGrid();          
-       }              
+       }               
      });    
      this.loadingData = false;
    }

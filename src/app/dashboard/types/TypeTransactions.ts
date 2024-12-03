@@ -1,4 +1,5 @@
 import { TypeAccounts } from "./TypeAccounts";
+import { TypeParties } from "./TypeParties";
 
 export interface TypeTransactions {
     TransSno: number;
@@ -8,6 +9,7 @@ export interface TypeTransactions {
     Series: {SeriesSno: number, Series_Name: string};
     // Party?:  {PartySno: number, Party_Name: string};
     Account: TypeAccounts;
+    RParty: TypeParties;
     Borrower: {BorrowerSno: number, Borrower_Name: string};
     Bank:  {BankSno: number, Bank_Name: string};
     BankBranch:  {BranchSno: number, Branch_Name: string};

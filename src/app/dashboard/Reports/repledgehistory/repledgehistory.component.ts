@@ -136,7 +136,8 @@ export class RepledgehistoryComponent implements OnInit {
      dialogRef.disableClose = true;
 
     this.TransService.getRepledgeHistory(PartySno).subscribe((data:any ) =>  {          
-                
+      console.log(data);
+                    
       this.loadingData = false;       
       if (data === 0)
       {

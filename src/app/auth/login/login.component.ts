@@ -19,10 +19,6 @@ export class LoginComponent implements OnInit {
 
   login()
   {
-    // this.auth.getLogin(this.username,this.password).subscribe((data:any ) =>  { 
-      
-    // });
-
     if (this.username == "admin" && this.password == "sysdba")
     {
       this.router.navigate (['dashboard']);

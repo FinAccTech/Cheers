@@ -161,7 +161,7 @@ saveAccount(Acc: TypeAccounts):Observable<TypeAccounts>
       "Account_Date"       :   Acc.Account_Date,
       "PartySno"           :   Acc.Party!.PartySno,
       "Roi"                :   Acc.Roi,            
-      "CompSno"            :    Acc.Company!.CompSno,
+      "CompSno"            :   Acc.Company!.CompSno,
       "Scheme"             :   Acc.Scheme,          
       "Remarks"            :   Acc.Remarks,
    });    

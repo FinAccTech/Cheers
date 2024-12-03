@@ -86,16 +86,18 @@ export class AccountmasterComponent implements OnInit {
   }
 
   LoadAccount(Acc: TypeAccounts)
-  {         
+  {             
     this.AccountForm.controls['AccountSno'].setValue(Acc.AccountSno);    
     this.AccountForm.controls['Account_No'].setValue(Acc.Account_No);    
     this.AccountForm.controls['Account_Date'].setValue(Acc.Account_Date);  
     this.AccountForm.controls['Account_DateStr'].setValue(Acc.Account_DateStr);            
-    this.AccountForm.controls['Party'].setValue({PartySno: Acc.Party!.PartySno, Party_Name: Acc.Party!.Party_Name } );        
+    this.AccountForm.controls['Party'].setValue({PartySno: Acc.Party!.PartySno, Party_Name: Acc.Party!.Party_Name } );  
+
     this.AccountForm.controls['Company'].setValue({CompSno: Acc.Company!.CompSno, Comp_Name: Acc.Company!.Comp_Name } );        
+
     this.AccountForm.controls['Roi'].setValue(Acc.Roi);   
     this.AccountForm.controls['Scheme'].setValue(Acc.Scheme);       
-    this.AccountForm.controls['Remarks'].setValue(Acc.Remarks);        
+    this.AccountForm.controls['Remarks'].setValue(Acc.Remarks);   
   }
   
   LoadParties()
@@ -140,7 +142,7 @@ export class AccountmasterComponent implements OnInit {
     return comp && comp.Comp_Name ? comp.Comp_Name: '';
   }
 
-  SaveAccount(){       
+  SaveAccount(){           
     if (this.AccountForm.controls['Roi'].value == 0)
     {
       this._snackBar.open('Rate of Interest cannot be zero.', 'Success',{horizontalPosition: 'center', verticalPosition: 'top', duration: 2000, panelClass: ['mat-toolbar', 'mat-primary'] });                        

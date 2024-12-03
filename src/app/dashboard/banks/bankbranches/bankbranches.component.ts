@@ -42,7 +42,7 @@ export class BankbranchesComponent implements OnInit {
 
   LoadBanks()
   {
-    this.BnkService.getBanks(0,2).subscribe((data:any )  =>   {        
+    this.BnkService.getBanks(0,0).subscribe((data:any )  =>   {        
 
       this.filteredBanks = this.BranchForm.controls['Bank'].valueChanges.pipe(
         startWith(null),

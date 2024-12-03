@@ -125,7 +125,7 @@
                                             <input matInput #party
                                                 aria-label="Select Customer"
                                                 [matAutocomplete]="autoPty"
-                                                formControlName ="Party"  (focus)="LoadParties()"  />
+                                                formControlName ="RParty"  (focus)="LoadParties()"  />
                                             <mat-autocomplete #autoPty="matAutocomplete" [displayWith]="displayParty" >
                                                 <mat-option *ngFor="let pty of filteredParties | async" [value]="pty" (onSelectionChange)="GetWeightBalance(pty)">                        
                                                     <span>{{pty.Party_Name}}</span>                         

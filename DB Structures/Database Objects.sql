@@ -44,6 +44,7 @@ CREATE PROCEDURE [dbo].SSp_Transactions
          @Ref_No              VARCHAR(20),
          @SeriesSno           INT,
          @AccountSno            INT,
+         @PartySno            INT,
          @BorrowerSno         INT,
          @BankSno             INT,
          @BankBranchSno       INT,
@@ -77,7 +78,7 @@ CREATE PROCEDURE [dbo].SSp_Transactions
 
          IF EXISTS(SELECT TransSno FROM [dbo].Transactions WHERE TransSno=@TransSno)
              BEGIN                 
-                  UPDATE [dbo].Transactions SET Trans_No=@Trans_No,Trans_Date=@Trans_Date,Ref_No=@Ref_No,SeriesSno=@SeriesSno,AccountSno=@AccountSno,BorrowerSno=@BorrowerSno,BankSno=@BankSno,
+                  UPDATE [dbo].Transactions SET Trans_No=@Trans_No,Trans_Date=@Trans_Date,Ref_No=@Ref_No,SeriesSno=@SeriesSno,AccountSno=@AccountSno,PartySno=@PartySno,BorrowerSno=@BorrowerSno,BankSno=@BankSno,
                   BankBranchSno=@BankBranchSno,Loan_Type=@Loan_Type,Roi=@Roi,Tenure=@Tenure,DrAmount=@DrAmount,CrAmount=@CrAmount,PrincipalAmount=@PrincipalAmount,IntAmount=@IntAmount,Other_Charges=@Other_Charges,RefSno=@RefSno,Remarks=@Remarks
                   WHERE   TransSno=@TransSno
                   IF @@ERROR <> 0 GOTO CloseNow
@@ -100,8 +101,8 @@ CREATE PROCEDURE [dbo].SSp_Transactions
                       SET @Trans_No= Dbo.[GenerateVoucherNo](@SeriesSno)               
                   END
                      
-                INSERT INTO [dbo].Transactions(Trans_No,Trans_Date,Ref_No,SeriesSno,AccountSno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,Tenure,DrAmount,CrAmount,PrincipalAmount,IntAmount,Other_Charges,RefSno,Remarks) 
-                VALUES (@Trans_No,@Trans_Date,@Ref_No,@SeriesSno,@AccountSno,@BorrowerSno,@BankSno,@BankBranchSno,@Loan_Type,@Roi,@Tenure,@DrAmount,@CrAmount,@PrincipalAmount,@IntAmount,@Other_Charges,@RefSno,@Remarks)
+                INSERT INTO [dbo].Transactions(Trans_No,Trans_Date,Ref_No,SeriesSno,AccountSno,PartySno,BorrowerSno,BankSno,BankBranchSno,Loan_Type,Roi,Tenure,DrAmount,CrAmount,PrincipalAmount,IntAmount,Other_Charges,RefSno,Remarks) 
+                VALUES (@Trans_No,@Trans_Date,@Ref_No,@SeriesSno,@AccountSno,@PartySno,@BorrowerSno,@BankSno,@BankBranchSno,@Loan_Type,@Roi,@Tenure,@DrAmount,@CrAmount,@PrincipalAmount,@IntAmount,@Other_Charges,@RefSno,@Remarks)
                 IF @@ERROR <> 0 GOTO CloseNow
                 SET @TransSno=@@IDENTITY        
         
@@ -462,6 +463,7 @@ BEGIN
 END
 GO
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='VW_REPLEDGE') BEGIN DROP VIEW VW_REPLEDGE END
 GO
 CREATE VIEW VW_REPLEDGE 
@@ -469,7 +471,7 @@ AS
 SELECT		Trans.TransSno,Trans.Trans_No, Trans.Trans_Date,Trans.Ref_No,
           Trans.SeriesSno,Ser.Series_Name,
           Acc.AccountSno, Acc.Account_No,
-			    Acc.PartySno, Pty.Party_Name,
+			    Trans.PartySno, Pty.Party_Name,
           Bwr.PartySno  as BorrowerSno,
 			    Bwr.Party_Name as Borrower_Name,
 			    Trans.BankSno, Bnk.Bank_Name,
@@ -523,8 +525,8 @@ SELECT		Trans.TransSno,Trans.Trans_No, Trans.Trans_Date,Trans.Ref_No,
 
 FROM	    Transactions Trans
 			    INNER JOIN Voucher_Series Ser ON Ser.SeriesSno = Trans.SeriesSno
-          INNER JOIN Accounts Acc ON Acc.AccountSno = Trans.AccountSno
-			    INNER JOIN Party Pty ON Pty.PartySno = Acc.PartySno
+          LEFT OUTER JOIN Accounts Acc ON Acc.AccountSno = Trans.AccountSno
+			    LEFT OUTER JOIN Party Pty ON Pty.PartySno = Trans.PartySno
 			    INNER JOIN Party Bwr ON Bwr.PartySno = Trans.BorrowerSno
 			    INNER JOIN Banks Bnk ON Bnk.BankSno = Trans.BankSno
 			    LEFT OUTER JOIN Bank_Branches Brch ON Brch.BranchSno = Trans.BankBranchSno
@@ -532,7 +534,7 @@ FROM	    Transactions Trans
 
 WHERE		  Trans.SeriesSno IN (3,4,6,8)
 
-GROUP BY  Trans.TransSno,Trans.Trans_No, Trans.Trans_Date,Trans.Ref_No,Trans.SeriesSno,Trans.BorrowerSno,Ser.Series_Name,Acc.AccountSno, Acc.Account_No,Acc.PartySno, Pty.Party_Name,Bwr.PartySno,Bwr.Party_Name,Trans.BankSno, Bnk.Bank_Name,Trans.BankBranchSno, Brch.Branch_Name,
+GROUP BY  Trans.TransSno,Trans.Trans_No, Trans.Trans_Date,Trans.Ref_No,Trans.SeriesSno,Trans.BorrowerSno,Ser.Series_Name,Acc.AccountSno, Acc.Account_No,Trans.PartySno, Pty.Party_Name,Bwr.PartySno,Bwr.Party_Name,Trans.BankSno, Bnk.Bank_Name,Trans.BankBranchSno, Brch.Branch_Name,
 			    Trans.Roi,Trans.Tenure, Trans.DrAmount, Trans.CrAmount, Trans.IntAmount, Trans.Other_Charges,Trans.RefSno,Ref.Trans_No,Trans.Remarks,Trans.Loan_Type
 GO
 

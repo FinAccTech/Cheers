@@ -97,6 +97,7 @@ export class VoucherComponent implements OnInit {
       Trans_Date      : [new Date, [Validators.required]],
       Ref_No          : [""],
       Series          : [{SeriesSno:this.globals.VtypVoucher, Series_Name:"Voucher"}],
+      RParty          : [{PartySno:0, Party_Name:""}],
       // Party           : [{PartySno:this.data.Vou.Party.PartySno, Party_Name:this.data.Vou.Party.Party_Name}],
       Account         : [{AccountSno:this.data.Vou.Account.AccountSno}],
       Account_No      : [""],

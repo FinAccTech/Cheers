@@ -102,6 +102,7 @@
         Trans_Date      : [new Date, [Validators.required]],
         Ref_No          : [""],
         Series          : [{SeriesSno:this.globals.VTypRpPayment, Series_Name:"RP Payment"}],
+        RParty          : [{PartySno:0, Party_Name:""}],
         Party           : [{PartySno:this.data.Rpp.PartySno, Party_Name:this.data.Rpp.Party_Name}],
         Borrower        : [{BorrowerSno:this.data.Rpp.BorrowerSno, Borrower_Name:this.data.Rpp.Borrower_Name}],
         Bank            : [this.formBuilder.group( this.banks), [Validators.required]],

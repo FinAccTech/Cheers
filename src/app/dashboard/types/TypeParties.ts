@@ -9,7 +9,7 @@ export interface TypeParties {
     Mobile?: string;
     Email?: string;    
     Remarks?: string;
-    Roi: number;
+    Roi?: number;
     Scheme?: number;
     Aadhar_No?: string;
     Pan_No?: string;

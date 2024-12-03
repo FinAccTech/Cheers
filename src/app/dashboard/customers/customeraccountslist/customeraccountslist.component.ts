@@ -228,6 +228,7 @@ export class CustomeraccountslistComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypPayment, Series_Name: "Payment"},
+      RParty:{PartySno:0, Party_Name:"", Party_Type:0},
       //Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
       Account: this.SelectedAccount,
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
@@ -272,6 +273,7 @@ export class CustomeraccountslistComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VTypReceipt, Series_Name: "Receipt"},
+      RParty:{PartySno:0, Party_Name:"", Party_Type:0},
       //Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
       Account: this.SelectedAccount,
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
@@ -317,6 +319,7 @@ export class CustomeraccountslistComponent implements OnInit {
       Trans_Date: new Date(),
       Ref_No: "",
       Series: {SeriesSno: this.globals.VtypVoucher, Series_Name: "Voucher"},
+      RParty:{PartySno:0, Party_Name:"", Party_Type:0},
       //Party:  {PartySno: this.Party.PartySno, Party_Name: this.Party.Party_Name},
       Account: this.SelectedAccount,
       Borrower: {BorrowerSno: 0, Borrower_Name: ""},
@@ -483,8 +486,11 @@ LoadTransactions(){
 
   LoadTransaction(Trans: TypePartyStatement)
    {
+    console.log(Trans);
+    
     this.TransService.getTransactions(Trans.TransSno, 0).subscribe((data:any ) =>  {             
       this.loadingData = false;
+    console.log(data);
       
       if (data === 0)
       {        
